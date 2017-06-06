@@ -1,9 +1,9 @@
 #define CEU_SDL_PRESENT_NO
 
 #include "sdl/sdl.ceu"
+#include "keys.ceu"
 
-output (u8,u8,u8) GFX_SET_RGB;
-
+output (u8,u8,u8)        GFX_SET_RGB;
 output (u16,u16)         GFX_DRAW_PIXEL;
 output (u16,u16,u16,u16) GFX_DRAW_RECT;
 

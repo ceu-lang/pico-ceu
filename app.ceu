@@ -11,10 +11,11 @@ par do
 with
     loop do
         var bool press;
-        (press,_) = await KEY_PRESS until press;
-        {printf(">>> press\n");}
-        (press,_) = await KEY_PRESS until not press;
-        {printf(">>> unpress\n");}
+        var u16 key;
+        (press,key) = await KEY_PRESS until press;
+        {printf(">>> press %c\n", @key);}
+        (press,key) = await KEY_PRESS until not press;
+        {printf(">>> unpress %c\n", @key);}
     end
 with
     loop do
