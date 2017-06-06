@@ -1,0 +1,146 @@
+#define CEU_SDL_PRESENT_NO
+
+#include "sdl/sdl.ceu"
+
+output (u8,u8,u8) GFX_SET_RGB;
+
+output (u16,u16)         GFX_DRAW_PIXEL;
+output (u16,u16,u16,u16) GFX_DRAW_RECT;
+
+input (bool,int,u16,u16) MOUSE_CLICK;
+input (u16,u16)          MOUSE_MOVE;
+input (bool,u16)         KEY_PRESS;
+
+native/pos do
+    SDL_Renderer* REN;
+
+    u16 REN_W = 500;
+    u16 REN_H = 500;
+    u16 USR_W =  50;
+    u16 USR_H =  50;
+
+    ##define WMUL(x) (x*(REN_W/USR_W))
+    ##define HMUL(y) (y*(REN_H/USR_H))
+    ##define WDIV(x) (x/(REN_W/USR_W))
+    ##define HDIV(y) (y/(REN_H/USR_H))
+
+    tceu_callback_ret ceu_callback_sdl_edu (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
+        tceu_callback_ret ret;
+        switch (cmd) {
+            case CEU_CALLBACK_OUTPUT:
+                switch (p1.num) {
+                    case CEU_OUTPUT_GFX_SET_RGB: {
+                        tceu_output_GFX_SET_RGB* clr = (tceu_output_GFX_SET_RGB*) p2.ptr;
+                        SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GFX_DRAW_PIXEL: {
+                        tceu_output_GFX_DRAW_PIXEL* pt = (tceu_output_GFX_DRAW_PIXEL*) p2.ptr;
+                        SDL_Rect r = { WMUL(pt->_1), HMUL(pt->_2), WMUL(1), HMUL(1) };
+                        SDL_RenderFillRect(REN, &r);
+                        SDL_RenderPresent(REN);
+                        break;
+                    }
+                    case CEU_OUTPUT_GFX_DRAW_RECT: {
+                        tceu_output_GFX_DRAW_RECT* pt = (tceu_output_GFX_DRAW_RECT*) p2.ptr;
+                        SDL_Rect r = { WMUL(pt->_1), HMUL(pt->_2), WMUL(pt->_3), HMUL(pt->_4) };
+                        SDL_RenderFillRect(REN, &r);
+                        SDL_RenderPresent(REN);
+                        break;
+                    }
+                }
+                break;
+            default:
+                ret.is_handled = 0;
+        }
+        return ret;
+    }
+    static tceu_callback CEU_CALLBACK_EDU = { &ceu_callback_sdl_edu, NULL };
+end
+
+{
+    ceu_callback_register(&CEU_CALLBACK_EDU);
+    ceu_dbg_assert(REN_W%USR_W == 0);
+    ceu_dbg_assert(REN_H%USR_H == 0);
+}
+
+var&? SDL_Init sdl = spawn SDL_Init("Ceu-Edu", {REN_W},{REN_H}, _);
+watching sdl do
+    {
+        REN = @(&&sdl!.ren);
+        SDL_SetRenderDrawColor(REN, 0x00,0x00,0x00,0xFF);
+        SDL_RenderFillRect(REN, NULL);
+        SDL_SetRenderDrawColor(REN, 0xFF,0xFF,0xFF,0xFF);
+    }
+    emit GFX_DRAW_PIXEL(0,0);
+    emit GFX_DRAW_RECT(25,0,25,25);
+
+    par/or do
+        /* KEY */
+        par do
+            // PRESS -> PRESS(true)
+            loop do
+                var _SDL_KeyboardEvent&& key = await SDL_KEYDOWN;
+                var _SDL_Keycode sym = key:keysym.sym;
+                await async (sym) do
+                    emit KEY_PRESS(true,sym);
+                end
+            end
+        with
+            // RELEASE -> PRESS(false)
+            loop do
+                var _SDL_KeyboardEvent&& key = await SDL_KEYUP;
+                var _SDL_Keycode sym = key:keysym.sym;
+                await async (sym) do
+                    emit KEY_PRESS(false,sym);
+                end
+            end
+        end
+    with
+        /* MOUSE */
+        par do
+            // DOWN -> CLICK(true)
+            loop do
+                var _SDL_MouseButtonEvent&& mse = await SDL_MOUSEBUTTONDOWN;
+                var u16 x = {WDIV(@mse:x)};
+                var u16 y = {HDIV(@mse:y)};
+                await async (x,y) do
+                    emit MOUSE_CLICK(true,0,x,y);
+                end
+            end
+        with
+            // UP -> CLICK(false)
+            loop do
+                var _SDL_MouseButtonEvent&& mse = await SDL_MOUSEBUTTONUP;
+                var u16 x = {WDIV(@mse:x)};
+                var u16 y = {HDIV(@mse:y)};
+                await async (x,y) do
+                    emit MOUSE_CLICK(false,0,x,y);
+                end
+            end
+        with
+            // MOTION -> MOVE
+            var u16 x = {U16_MAX};
+            var u16 y = {U16_MAX};
+            loop do
+                var _SDL_MouseMotionEvent&& mse = await SDL_MOUSEMOTION;
+                var u16 x_ = {WDIV(@mse:x)};
+                var u16 y_ = {HDIV(@mse:y)};
+                if x_!=x or y_!=y then
+                    x = x_;
+                    y = y_;
+                    await async (x,y) do
+                        emit MOUSE_MOVE(x,y);
+                    end
+                end
+            end
+        end
+    with
+        #include "app.ceu"
+    end
+end
+
+escape 0;
+
+
