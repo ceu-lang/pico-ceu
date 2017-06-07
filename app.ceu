@@ -1,4 +1,7 @@
+emit GFX_SET_WINDOW(500,500,50,50);
 emit GFX_GRID(true);
+await 1s;
+emit GFX_CLEAR();
 emit GFX_DRAW_RECT(25,0,25,25);
 emit GFX_DRAW_BMP("pico-ceu/star.bmp", 30,5);
 

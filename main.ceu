@@ -1,4 +1,5 @@
 #define CEU_SDL_PRESENT_NO
+#define DIM 400
 
 #include "c.ceu"
 #include "sdl/sdl.ceu"
@@ -8,6 +9,7 @@ input (bool,int,u16,u16) MOUSE_CLICK;
 input (u16,u16)          MOUSE_MOVE;
 input (bool,u16)         KEY_PRESS;
 
+output (u16,u16,u16,u16) GFX_SET_WINDOW;
 output (u8,u8,u8)        GFX_SET_RGB;
 output (_char&&,u16)     GFX_SET_FONT;
 output (u8,u8)           GFX_SET_CURSOR;
@@ -21,15 +23,16 @@ output _char&&           GFX_PRINT;
 output _char&&           GFX_PRINTLN;
 
 native/pos do
-    SDL_Renderer* REN;
+    SDL_Window*   WIN;
+    #define REN (SDL_GetRenderer(WIN))
 
     TTF_Font* FNT = NULL;
     u16       FNT_H;
 
-    u16 REN_W = 500;
-    u16 REN_H = 500;
-    u16 USR_W =  50;
-    u16 USR_H =  50;
+    u16 REN_W = DIM;
+    u16 REN_H = DIM;
+    u16 USR_W = DIM;
+    u16 USR_H = DIM;
 
     u16 CURSOR_X = 0;
     u16 CURSOR_Y = 0;
@@ -63,6 +66,16 @@ native/pos do
         switch (cmd) {
             case CEU_CALLBACK_OUTPUT:
                 switch (p1.num) {
+                    case CEU_OUTPUT_GFX_SET_WINDOW: {
+                        tceu_output_GFX_SET_WINDOW* ps = (tceu_output_GFX_SET_WINDOW*) p2.ptr;
+                        REN_W = ps->_1;
+                        REN_H = ps->_2;
+                        USR_W = ps->_3;
+                        USR_H = ps->_4;
+                        SDL_SetWindowSize(WIN, REN_W, REN_H);
+                        break;
+                    }
+
                     case CEU_OUTPUT_GFX_SET_RGB: {
                         tceu_output_GFX_SET_RGB* clr = (tceu_output_GFX_SET_RGB*) p2.ptr;
                         SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
@@ -120,6 +133,11 @@ native/pos do
                     }
 
                     case CEU_OUTPUT_GFX_CLEAR: {
+// TODO: w/o double Fill/Present, a "SET_WINDOW();CLEAR()" doesn't work
+#if 1
+                        SDL_RenderFillRect(REN, NULL);
+                        SDL_RenderPresent(REN);
+#endif
                         SDL_RenderFillRect(REN, NULL);
                         GFX_Show_Grid();
                         SDL_RenderPresent(REN);
@@ -209,7 +227,10 @@ end
 
 var&? SDL_Init sdl = spawn SDL_Init("Ceu-Edu", {REN_W},{REN_H}, _);
 watching sdl do
-    { REN = @(&&sdl!.ren); }
+    {
+        WIN = @(&&sdl!.win);
+        //REN = @(&&sdl!.ren);
+    }
     emit GFX_SET_RGB(0x00,0x00,0x00);
     emit GFX_CLEAR();
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
@@ -280,7 +301,9 @@ watching sdl do
             end
         end
     with
-        #include "app.ceu"
+        #define _STRINGIFY(X) #X
+        #define STRINGIFY(X) _STRINGIFY(X)
+        #include STRINGIFY(APP_SRC)
     end
 end
 
