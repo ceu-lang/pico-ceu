@@ -7,12 +7,13 @@ output (u8,u8,u8)        GFX_SET_RGB;
 output (_char&&,u16)     GFX_SET_FONT;
 output (u8,u8)           GFX_SET_CURSOR;
 output bool              GFX_SHOW_GRID;
+output _char&&           GFX_SCREENSHOT;
 output void              GFX_CLEAR;
 output (u16,u16)         GFX_DRAW_PIXEL;
 output (u16,u16,u16,u16) GFX_DRAW_RECT;
 output (_char&&,u16,u16) GFX_DRAW_BMP;
-output (_char&&)         GFX_PRINT;
-output (_char&&)         GFX_PRINTLN;
+output _char&&           GFX_PRINT;
+output _char&&           GFX_PRINTLN;
 
 input (bool,int,u16,u16) MOUSE_CLICK;
 input (u16,u16)          MOUSE_MOVE;
@@ -79,6 +80,16 @@ native/pos do
                         break;
                     }
 
+                    case CEU_OUTPUT_GFX_SCREENSHOT: {
+                        char** path = (char**) p2.ptr;
+                        SDL_Surface* sfc = SDL_CreateRGBSurface(0, REN_W, REN_H, 32,
+                                            0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+                        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, sfc->pixels, sfc->pitch);
+                        ceu_dbg_assert(0 == SDL_SaveBMP(sfc,*path));
+                        SDL_FreeSurface(sfc);
+                        break;
+                    }
+
                     case CEU_OUTPUT_GFX_CLEAR: {
                         SDL_RenderFillRect(REN, NULL);
                         GFX_Show_Grid();
@@ -111,6 +122,8 @@ native/pos do
 
                         SDL_Rect rct = { WMUL(ps->_2),HMUL(ps->_3), WMUL(sfc->w),HMUL(sfc->h) };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
+                        GFX_Show_Grid();
+                        SDL_RenderPresent(REN);
 
                         SDL_DestroyTexture(tex);
                         SDL_FreeSurface(sfc);
@@ -132,6 +145,8 @@ native/pos do
                         TTF_SizeText(FNT, *str, &w,&h);
                         SDL_Rect rct = { WMUL(CURSOR_X),HMUL(CURSOR_Y), WMUL(w),HMUL(h) };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
+                        GFX_Show_Grid();
+                        SDL_RenderPresent(REN);
 
                         CURSOR_X += WDIV(w);
 
