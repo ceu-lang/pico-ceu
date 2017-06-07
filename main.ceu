@@ -82,11 +82,28 @@ native/pos do
 
                     case CEU_OUTPUT_GFX_SCREENSHOT: {
                         char** path = (char**) p2.ptr;
-                        SDL_Surface* sfc = SDL_CreateRGBSurface(0, REN_W, REN_H, 32,
-                                            0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-                        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, sfc->pixels, sfc->pitch);
-                        ceu_dbg_assert(0 == SDL_SaveBMP(sfc,*path));
-                        SDL_FreeSurface(sfc);
+                        SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, REN_W, REN_H, 32,
+                                                0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+                        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, src_sfc->pixels, src_sfc->pitch);
+                        SDL_Texture* src_tex = SDL_CreateTextureFromSurface(REN, src_sfc);
+                        SDL_FreeSurface(src_sfc);
+
+                        SDL_Texture* dst_tex = SDL_CreateTexture(REN, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, USR_W, USR_H);
+                        SDL_SetRenderTarget(REN, dst_tex);
+
+                        //SDL_RenderCopy(REN, src_tex, NULL, NULL);
+                        SDL_RenderCopyEx(REN, src_tex, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
+
+                        SDL_DestroyTexture(src_tex);
+
+                        SDL_Surface* sav_sfc = SDL_CreateRGBSurface(0, USR_W, USR_H, 32,
+                                                0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+                        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, sav_sfc->pixels, sav_sfc->pitch);
+                        ceu_dbg_assert(0 == SDL_SaveBMP(sav_sfc,*path));
+                        SDL_FreeSurface(sav_sfc);
+
+                        SDL_SetRenderTarget(REN, NULL);
+                        SDL_DestroyTexture(dst_tex);
                         break;
                     }
 
@@ -180,12 +197,10 @@ end
 
 var&? SDL_Init sdl = spawn SDL_Init("Ceu-Edu", {REN_W},{REN_H}, _);
 watching sdl do
-    {
-        REN = @(&&sdl!.ren);
-        SDL_SetRenderDrawColor(REN, 0x00,0x00,0x00,0xFF);
-        SDL_RenderFillRect(REN, NULL);
-        SDL_SetRenderDrawColor(REN, 0xFF,0xFF,0xFF,0xFF);
-    }
+    { REN = @(&&sdl!.ren); }
+    emit GFX_SET_RGB(0x00,0x00,0x00);
+    emit GFX_CLEAR();
+    emit GFX_SET_RGB(0xFF,0xFF,0xFF);
 
     emit GFX_SET_FONT("pico-ceu/FreeMono.ttf", 10);
     do finalize with
@@ -258,5 +273,3 @@ watching sdl do
 end
 
 escape 0;
-
-
