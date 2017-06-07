@@ -1,3 +1,6 @@
+emit GFX_DRAW_PIXEL(0,0);
+emit GFX_DRAW_RECT(25,0,25,25);
+
 par do
     var int i;
     loop i in [1->_[, 2 do
@@ -40,7 +43,7 @@ with
 with
     emit GFX_SET_CURSOR(1,5);
     every 1s do
-        emit GFX_PRINT("Ola");
-        emit GFX_PRINTLN(" Mundo");
+        emit GFX_PRINT("|");
+        emit GFX_PRINTLN(" Ola Mundo");
     end
 end
