@@ -4,8 +4,13 @@
 #include "keys.ceu"
 
 output (u8,u8,u8)        GFX_SET_RGB;
+output (u8,u8)           GFX_SET_CURSOR;
+output bool              GFX_SHOW_GRID;
+output void              GFX_CLEAR;
 output (u16,u16)         GFX_DRAW_PIXEL;
 output (u16,u16,u16,u16) GFX_DRAW_RECT;
+output (_char&&)         GFX_PRINT;
+output (_char&&)         GFX_PRINTLN;
 
 input (bool,int,u16,u16) MOUSE_CLICK;
 input (u16,u16)          MOUSE_MOVE;
@@ -13,16 +18,35 @@ input (bool,u16)         KEY_PRESS;
 
 native/pos do
     SDL_Renderer* REN;
+    TTF_Font*     FNT;
 
     u16 REN_W = 500;
     u16 REN_H = 500;
     u16 USR_W =  50;
     u16 USR_H =  50;
 
+    u16 CURSOR_X = 0;
+    u16 CURSOR_Y = 0;
+
     ##define WMUL(x) (x*(REN_W/USR_W))
     ##define HMUL(y) (y*(REN_H/USR_H))
     ##define WDIV(x) (x/(REN_W/USR_W))
     ##define HDIV(y) (y/(REN_H/USR_H))
+
+    void GFX_Show_Grid (void) {
+        u8 r, g, b;
+        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+
+        SDL_SetRenderDrawColor(REN, 0x77,0x77,0x77, 0x00);
+        for (u16 i=0; i<=REN_W; i+=WMUL(1)) {
+            SDL_RenderDrawLine(REN, i, 0, i, REN_H);
+        }
+        for (u16 j=0; j<=REN_H; j+=HMUL(1)) {
+            SDL_RenderDrawLine(REN, 0, j, REN_W, j);
+        }
+
+        SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
+    }
 
     tceu_callback_ret ceu_callback_sdl_edu (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
         tceu_callback_ret ret;
@@ -34,19 +58,62 @@ native/pos do
                         SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
                         break;
                     }
+                    case CEU_OUTPUT_GFX_SET_CURSOR: {
+                        tceu_output_GFX_SET_CURSOR* pt = (tceu_output_GFX_SET_CURSOR*) p2.ptr;
+                        CURSOR_X = pt->_1;
+                        CURSOR_Y = pt->_2;
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GFX_CLEAR: {
+                        SDL_RenderFillRect(REN, NULL);
+                        GFX_Show_Grid();
+                        SDL_RenderPresent(REN);
+                        break;
+                    }
 
                     case CEU_OUTPUT_GFX_DRAW_PIXEL: {
                         tceu_output_GFX_DRAW_PIXEL* pt = (tceu_output_GFX_DRAW_PIXEL*) p2.ptr;
-                        SDL_Rect r = { WMUL(pt->_1), HMUL(pt->_2), WMUL(1), HMUL(1) };
-                        SDL_RenderFillRect(REN, &r);
+                        SDL_Rect rct = { WMUL(pt->_1), HMUL(pt->_2), WMUL(1), HMUL(1) };
+                        SDL_RenderFillRect(REN, &rct);
+                        GFX_Show_Grid();
                         SDL_RenderPresent(REN);
                         break;
                     }
                     case CEU_OUTPUT_GFX_DRAW_RECT: {
                         tceu_output_GFX_DRAW_RECT* pt = (tceu_output_GFX_DRAW_RECT*) p2.ptr;
-                        SDL_Rect r = { WMUL(pt->_1), HMUL(pt->_2), WMUL(pt->_3), HMUL(pt->_4) };
-                        SDL_RenderFillRect(REN, &r);
+                        SDL_Rect rct = { WMUL(pt->_1), HMUL(pt->_2), WMUL(pt->_3), HMUL(pt->_4) };
+                        SDL_RenderFillRect(REN, &rct);
+                        GFX_Show_Grid();
                         SDL_RenderPresent(REN);
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GFX_PRINT: {
+                        char** str = (char**) p2.ptr;
+
+                        u8 r, g, b;
+                        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+                        SDL_Surface* sfc = TTF_RenderText_Blended(FNT, *str, (SDL_Color){r,g,b,0xFF});
+                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+
+                        int w, h;
+                        TTF_SizeText(FNT, *str, &w,&h);
+                        SDL_Rect rct = { WMUL(CURSOR_X),HMUL(CURSOR_Y), w,h };
+                        SDL_RenderCopy(REN, tex, NULL, &rct);
+
+                        CURSOR_X += WDIV(w);
+
+                        SDL_DestroyTexture(tex);
+                        SDL_FreeSurface(sfc);
+                        break;
+                    }
+                    case CEU_OUTPUT_GFX_PRINTLN: {
+                        int cursor_x = CURSOR_X;
+                        p1.num = CEU_OUTPUT_GFX_PRINT;
+                        ceu_callback_sdl_edu(cmd, p1, p2);
+                        CURSOR_X = cursor_x;
+                        CURSOR_Y += USR_H/10;
                         break;
                     }
                 }
@@ -75,6 +142,16 @@ watching sdl do
     }
     emit GFX_DRAW_PIXEL(0,0);
     emit GFX_DRAW_RECT(25,0,25,25);
+
+    var& _TTF_Font fnt =
+        &_TTF_OpenFont("pico-ceu/FreeMono.ttf", {HMUL(USR_H/10)})   // 10 lines
+            finalize (fnt) with
+                _TTF_CloseFont(&&fnt);
+            end;
+    {
+        FNT = @(&&fnt);
+        //printf("The font max height is: %d\n", TTF_FontHeight(FNT));
+    }
 
     par/or do
         /* KEY */

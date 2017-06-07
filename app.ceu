@@ -9,6 +9,10 @@ par do
         emit GFX_DRAW_PIXEL(i+1,i+1);
     end
 with
+    await 5s;
+    emit GFX_SET_RGB(0xFF,0xFF,0xFF);
+    emit GFX_CLEAR();
+with
     loop do
         var bool press;
         var u16 key;
@@ -32,5 +36,11 @@ with
     var u16 y;
     every (x,y) in MOUSE_MOVE do
         {printf(">>> move: %d %d\n", @x,@y);}
+    end
+with
+    emit GFX_SET_CURSOR(1,5);
+    every 1s do
+        emit GFX_PRINT("Ola");
+        emit GFX_PRINTLN(" Mundo");
     end
 end
