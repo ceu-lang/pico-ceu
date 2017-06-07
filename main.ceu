@@ -10,6 +10,7 @@ output bool              GFX_SHOW_GRID;
 output void              GFX_CLEAR;
 output (u16,u16)         GFX_DRAW_PIXEL;
 output (u16,u16,u16,u16) GFX_DRAW_RECT;
+output (_char&&,u16,u16) GFX_DRAW_BMP;
 output (_char&&)         GFX_PRINT;
 output (_char&&)         GFX_PRINTLN;
 
@@ -67,7 +68,7 @@ native/pos do
                         if (FNT != NULL) {
                             TTF_CloseFont(FNT);
                         }
-                        FNT = TTF_OpenFont(fnt->_1, HMUL(FNT_H));
+                        FNT = TTF_OpenFont(fnt->_1, FNT_H);
                         ceu_dbg_assert(FNT != NULL);
                         break;
                     }
@@ -101,6 +102,20 @@ native/pos do
                         SDL_RenderPresent(REN);
                         break;
                     }
+                    case CEU_OUTPUT_GFX_DRAW_BMP: {
+                        tceu_output_GFX_DRAW_BMP* ps = (tceu_output_GFX_DRAW_BMP*) p2.ptr;
+                        SDL_Surface* sfc = SDL_LoadBMP(ps->_1);
+                        ceu_dbg_assert(sfc != NULL);
+                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+                        ceu_dbg_assert(tex != NULL);
+
+                        SDL_Rect rct = { WMUL(ps->_2),HMUL(ps->_3), WMUL(sfc->w),HMUL(sfc->h) };
+                        SDL_RenderCopy(REN, tex, NULL, &rct);
+
+                        SDL_DestroyTexture(tex);
+                        SDL_FreeSurface(sfc);
+                        break;
+                    }
 
                     case CEU_OUTPUT_GFX_PRINT: {
                         char** str = (char**) p2.ptr;
@@ -115,7 +130,7 @@ native/pos do
 
                         int w, h;
                         TTF_SizeText(FNT, *str, &w,&h);
-                        SDL_Rect rct = { WMUL(CURSOR_X),HMUL(CURSOR_Y), w,h };
+                        SDL_Rect rct = { WMUL(CURSOR_X),HMUL(CURSOR_Y), WMUL(w),HMUL(h) };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
 
                         CURSOR_X += WDIV(w);
@@ -157,7 +172,7 @@ watching sdl do
         SDL_SetRenderDrawColor(REN, 0xFF,0xFF,0xFF,0xFF);
     }
 
-    emit GFX_SET_FONT("pico-ceu/FreeMono.ttf", 5);
+    emit GFX_SET_FONT("pico-ceu/FreeMono.ttf", 10);
     do finalize with
         {TTF_CloseFont(FNT);}
     end

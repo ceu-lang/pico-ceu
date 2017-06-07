@@ -1,5 +1,5 @@
-emit GFX_DRAW_PIXEL(0,0);
 emit GFX_DRAW_RECT(25,0,25,25);
+emit GFX_DRAW_BMP("pico-ceu/star.bmp", 30,5);
 
 par do
     var int i;
@@ -44,7 +44,7 @@ with
     emit GFX_SET_CURSOR(1,5);
     spawn do
         await 5s;
-        emit GFX_SET_FONT("pico-ceu/FreeSans.ttf", 2);
+        emit GFX_SET_FONT("pico-ceu/FreeSans.ttf", 10);
         emit GFX_SET_CURSOR(1,5);
     end
     every 1s do
