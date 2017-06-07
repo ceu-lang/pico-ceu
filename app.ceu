@@ -1,3 +1,4 @@
+emit GFX_GRID(true);
 emit GFX_DRAW_RECT(25,0,25,25);
 emit GFX_DRAW_BMP("pico-ceu/star.bmp", 30,5);
 

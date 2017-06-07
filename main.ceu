@@ -1,12 +1,17 @@
 #define CEU_SDL_PRESENT_NO
 
+#include "c.ceu"
 #include "sdl/sdl.ceu"
 #include "keys.ceu"
+
+input (bool,int,u16,u16) MOUSE_CLICK;
+input (u16,u16)          MOUSE_MOVE;
+input (bool,u16)         KEY_PRESS;
 
 output (u8,u8,u8)        GFX_SET_RGB;
 output (_char&&,u16)     GFX_SET_FONT;
 output (u8,u8)           GFX_SET_CURSOR;
-output bool              GFX_SHOW_GRID;
+output bool              GFX_GRID;
 output _char&&           GFX_SCREENSHOT;
 output void              GFX_CLEAR;
 output (u16,u16)         GFX_DRAW_PIXEL;
@@ -14,10 +19,6 @@ output (u16,u16,u16,u16) GFX_DRAW_RECT;
 output (_char&&,u16,u16) GFX_DRAW_BMP;
 output _char&&           GFX_PRINT;
 output _char&&           GFX_PRINTLN;
-
-input (bool,int,u16,u16) MOUSE_CLICK;
-input (u16,u16)          MOUSE_MOVE;
-input (bool,u16)         KEY_PRESS;
 
 native/pos do
     SDL_Renderer* REN;
@@ -33,12 +34,16 @@ native/pos do
     u16 CURSOR_X = 0;
     u16 CURSOR_Y = 0;
 
+    bool GRID = 0;
+
     ##define WMUL(x) (x*(REN_W/USR_W))
     ##define HMUL(y) (y*(REN_H/USR_H))
     ##define WDIV(x) (x/(REN_W/USR_W))
     ##define HDIV(y) (y/(REN_H/USR_H))
 
     void GFX_Show_Grid (void) {
+        if (!GRID) return;
+
         u8 r, g, b;
         SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
 
@@ -80,6 +85,12 @@ native/pos do
                         break;
                     }
 
+                    case CEU_OUTPUT_GFX_GRID: {
+                        bool* on = (bool*) p2.ptr;
+                        GRID = *on;
+                        break;
+                    }
+
                     case CEU_OUTPUT_GFX_SCREENSHOT: {
                         char** path = (char**) p2.ptr;
                         SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, REN_W, REN_H, 32,
@@ -91,6 +102,7 @@ native/pos do
                         SDL_Texture* dst_tex = SDL_CreateTexture(REN, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, USR_W, USR_H);
                         SDL_SetRenderTarget(REN, dst_tex);
 
+                        // TODO: why flipping?
                         //SDL_RenderCopy(REN, src_tex, NULL, NULL);
                         SDL_RenderCopyEx(REN, src_tex, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
 
@@ -130,7 +142,7 @@ native/pos do
                         SDL_RenderPresent(REN);
                         break;
                     }
-                    case CEU_OUTPUT_GFX_DRAW_BMP: {
+                    case CEU_OUTPUT_GFX_DRAW_BMP: {     // TODO: chache
                         tceu_output_GFX_DRAW_BMP* ps = (tceu_output_GFX_DRAW_BMP*) p2.ptr;
                         SDL_Surface* sfc = SDL_LoadBMP(ps->_1);
                         ceu_dbg_assert(sfc != NULL);
@@ -147,7 +159,7 @@ native/pos do
                         break;
                     }
 
-                    case CEU_OUTPUT_GFX_PRINT: {
+                    case CEU_OUTPUT_GFX_PRINT: {        // TODO: cache
                         char** str = (char**) p2.ptr;
                         ceu_dbg_assert(FNT != NULL);
 
