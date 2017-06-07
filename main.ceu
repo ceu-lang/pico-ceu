@@ -1,4 +1,4 @@
-#define CEU_SDL_PRESENT_NO
+#define CEU_SDL_MODE_WAITING
 #define DIM 400
 
 #include "c.ceu"
