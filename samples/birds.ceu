@@ -84,7 +84,7 @@ par do
                 spawn Bird(20+_rand()%350, 100+_rand()%100) in birds;
             end
         with
-            every SDL_DT do
+            every (DT)ms do
                 var&? Bird bird1;
                 loop bird1 in birds do
                     var&? Bird bird2;
