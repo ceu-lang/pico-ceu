@@ -1,5 +1,5 @@
 #define CEU_SDL_MODE_WAITING
-#define DIM 400
+#define WIN_DIM 400
 
 #include "c.ceu"
 #include "sdl/sdl.ceu"
@@ -29,36 +29,32 @@ native/pos do
     TTF_Font* FNT = NULL;
     u16       FNT_H;
 
-    u16 REN_W = DIM;
-    u16 REN_H = DIM;
-    u16 USR_W = DIM;
-    u16 USR_H = DIM;
-
     u16 CURSOR_X = 0;
     u16 CURSOR_Y = 0;
 
     bool GRID = 0;
 
-    ##define WMUL(x) (x*(REN_W/USR_W))
-    ##define HMUL(y) (y*(REN_H/USR_H))
-    ##define WDIV(x) (x/(REN_W/USR_W))
-    ##define HDIV(y) (y/(REN_H/USR_H))
-
     void GFX_Show_Grid (void) {
         if (!GRID) return;
+
+        int ren_w,ren_h, log_w,log_h;
+        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+        SDL_RenderSetLogicalSize(REN, ren_w, ren_h);
 
         u8 r, g, b;
         SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
 
         SDL_SetRenderDrawColor(REN, 0x77,0x77,0x77, 0x00);
-        for (u16 i=0; i<=REN_W; i+=WMUL(1)) {
-            SDL_RenderDrawLine(REN, i, 0, i, REN_H);
+        for (u16 i=0; i<=ren_w; i+=(ren_w/log_w)) {
+            SDL_RenderDrawLine(REN, i, 0, i, ren_h);
         }
-        for (u16 j=0; j<=REN_H; j+=HMUL(1)) {
-            SDL_RenderDrawLine(REN, 0, j, REN_W, j);
+        for (u16 j=0; j<=ren_h; j+=(ren_h/log_h)) {
+            SDL_RenderDrawLine(REN, 0, j, ren_w, j);
         }
 
         SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
+        SDL_RenderSetLogicalSize(REN, log_w, log_w);
     }
 
     tceu_callback_ret ceu_callback_sdl_edu (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
@@ -68,11 +64,15 @@ native/pos do
                 switch (p1.num) {
                     case CEU_OUTPUT_GFX_SET_WINDOW: {
                         tceu_output_GFX_SET_WINDOW* ps = (tceu_output_GFX_SET_WINDOW*) p2.ptr;
-                        REN_W = ps->_1;
-                        REN_H = ps->_2;
-                        USR_W = ps->_3;
-                        USR_H = ps->_4;
-                        SDL_SetWindowSize(WIN, REN_W, REN_H);
+                        u16 ren_w = ps->_1;
+                        u16 ren_h = ps->_2;
+                        u16 log_w = ps->_3;
+                        u16 log_h = ps->_4;
+                        ceu_dbg_assert(ren_w%log_w == 0);
+                        ceu_dbg_assert(ren_h%log_h == 0);
+
+                        SDL_SetWindowSize(WIN, ren_w, ren_h);
+                        SDL_RenderSetLogicalSize(REN, log_w, log_h);
                         break;
                     }
 
@@ -106,13 +106,18 @@ native/pos do
 
                     case CEU_OUTPUT_GFX_SCREENSHOT: {
                         char** path = (char**) p2.ptr;
-                        SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, REN_W, REN_H, 32,
+                        int ren_w,ren_h, log_w,log_h;
+                        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+                        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+
+
+                        SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, ren_w, ren_h, 32,
                                                 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
                         SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, src_sfc->pixels, src_sfc->pitch);
                         SDL_Texture* src_tex = SDL_CreateTextureFromSurface(REN, src_sfc);
                         SDL_FreeSurface(src_sfc);
 
-                        SDL_Texture* dst_tex = SDL_CreateTexture(REN, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, USR_W, USR_H);
+                        SDL_Texture* dst_tex = SDL_CreateTexture(REN, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, log_w, log_h);
                         SDL_SetRenderTarget(REN, dst_tex);
 
                         // TODO: why flipping?
@@ -121,7 +126,7 @@ native/pos do
 
                         SDL_DestroyTexture(src_tex);
 
-                        SDL_Surface* sav_sfc = SDL_CreateRGBSurface(0, USR_W, USR_H, 32,
+                        SDL_Surface* sav_sfc = SDL_CreateRGBSurface(0, log_w, log_h, 32,
                                                 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
                         SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, sav_sfc->pixels, sav_sfc->pitch);
                         ceu_dbg_assert(0 == SDL_SaveBMP(sav_sfc,*path));
@@ -146,7 +151,7 @@ native/pos do
 
                     case CEU_OUTPUT_GFX_DRAW_PIXEL: {
                         tceu_output_GFX_DRAW_PIXEL* pt = (tceu_output_GFX_DRAW_PIXEL*) p2.ptr;
-                        SDL_Rect rct = { WMUL(pt->_1), HMUL(pt->_2), WMUL(1), HMUL(1) };
+                        SDL_Rect rct = { pt->_1, pt->_2, 1, 1 };
                         SDL_RenderFillRect(REN, &rct);
                         GFX_Show_Grid();
                         SDL_RenderPresent(REN);
@@ -154,7 +159,7 @@ native/pos do
                     }
                     case CEU_OUTPUT_GFX_DRAW_RECT: {
                         tceu_output_GFX_DRAW_RECT* pt = (tceu_output_GFX_DRAW_RECT*) p2.ptr;
-                        SDL_Rect rct = { WMUL(pt->_1), HMUL(pt->_2), WMUL(pt->_3), HMUL(pt->_4) };
+                        SDL_Rect rct = { pt->_1, pt->_2, pt->_3, pt->_4 };
                         SDL_RenderFillRect(REN, &rct);
                         GFX_Show_Grid();
                         SDL_RenderPresent(REN);
@@ -167,7 +172,7 @@ native/pos do
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
                         ceu_dbg_assert(tex != NULL);
 
-                        SDL_Rect rct = { WMUL(ps->_2),HMUL(ps->_3), WMUL(sfc->w),HMUL(sfc->h) };
+                        SDL_Rect rct = { ps->_2,ps->_3, sfc->w,sfc->h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GFX_Show_Grid();
                         SDL_RenderPresent(REN);
@@ -190,12 +195,12 @@ native/pos do
 
                         int w, h;
                         TTF_SizeText(FNT, *str, &w,&h);
-                        SDL_Rect rct = { WMUL(CURSOR_X),HMUL(CURSOR_Y), WMUL(w),HMUL(h) };
+                        SDL_Rect rct = { CURSOR_X,CURSOR_Y, w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GFX_Show_Grid();
                         SDL_RenderPresent(REN);
 
-                        CURSOR_X += WDIV(w);
+                        CURSOR_X += w;
 
                         SDL_DestroyTexture(tex);
                         SDL_FreeSurface(sfc);
@@ -221,16 +226,15 @@ end
 
 {
     ceu_callback_register(&CEU_CALLBACK_EDU);
-    ceu_dbg_assert(REN_W%USR_W == 0);
-    ceu_dbg_assert(REN_H%USR_H == 0);
 }
 
-var&? SDL_Init sdl = spawn SDL_Init("Ceu-Edu", {REN_W},{REN_H}, _);
+var&? SDL_Init sdl = spawn SDL_Init("Ceu-Edu", WIN_DIM,WIN_DIM, _);
 watching sdl do
     {
         WIN = @(&&sdl!.win);
         //REN = @(&&sdl!.ren);
     }
+    emit GFX_SET_WINDOW(WIN_DIM,WIN_DIM,WIN_DIM,WIN_DIM);
     emit GFX_SET_RGB(0x00,0x00,0x00);
     emit GFX_CLEAR();
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
@@ -267,8 +271,8 @@ watching sdl do
             // DOWN -> CLICK(true)
             loop do
                 var _SDL_MouseButtonEvent&& mse = await SDL_MOUSEBUTTONDOWN;
-                var u16 x = {WDIV(@mse:x)};
-                var u16 y = {HDIV(@mse:y)};
+                var u16 x = {@mse:x};
+                var u16 y = {@mse:y};
                 await async (x,y) do
                     emit MOUSE_CLICK(true,0,x,y);
                 end
@@ -277,8 +281,8 @@ watching sdl do
             // UP -> CLICK(false)
             loop do
                 var _SDL_MouseButtonEvent&& mse = await SDL_MOUSEBUTTONUP;
-                var u16 x = {WDIV(@mse:x)};
-                var u16 y = {HDIV(@mse:y)};
+                var u16 x = {@mse:x};
+                var u16 y = {@mse:y};
                 await async (x,y) do
                     emit MOUSE_CLICK(false,0,x,y);
                 end
@@ -289,8 +293,8 @@ watching sdl do
             var u16 y = {U16_MAX};
             loop do
                 var _SDL_MouseMotionEvent&& mse = await SDL_MOUSEMOTION;
-                var u16 x_ = {WDIV(@mse:x)};
-                var u16 y_ = {HDIV(@mse:y)};
+                var u16 x_ = {@mse:x};
+                var u16 y_ = {@mse:y};
                 if x_!=x or y_!=y then
                     x = x_;
                     y = y_;
