@@ -12,7 +12,7 @@
         }, 
         {
             "location": "/gfx/", 
-            "text": "Graphics\n\n\nProvides graphics operations, such as for drawing pixels and images on the\nscreen.\n\n\nConfiguration\n\n\nGFX_SET_RGB\n\n\noutput (u8,u8,u8) GFX_SET_RGB;\n\n\n\n\nGFX_SET_FONT\n\n\noutput (_char\n,u16) GFX_SET_FONT;\n\n\n\n\nGFX_SET_CURSOR\n\n\noutput (u8,u8) GFX_SET_CURSOR;\n\n\n\n\nGFX_SET_GRID\n\n\noutput bool GFX_SET_GRID;\n\n\n\n\nDrawing\n\n\nGFX_DRAW_PIXEL\n\n\noutput (u16,u16) GFX_DRAW_PIXEL;\n\n\n\n\nGFX_DRAW_RECT\n\n\noutput (u16,u16,u16,u16) GFX_DRAW_RECT;\n\n\n\n\nGFX_DRAW_BMP\n\n\noutput (_char\n,u16,u16) GFX_DRAW_BMP;\n\n\n\n\nGFX_DRAW_TEXT\n\n\noutput _char\n GFX_DRAW_TEXT;\n\n\n\n\nGFX_DRAW_TEXTLN\n\n\noutput _char\n GFX_DRAW_TEXTLN;\n\n\n\n\nOther\n\n\nGFX_SCREENSHOT\n\n\noutput _char\n GFX_SCREENSHOT;\n\n\n\n\nGFX_CLEAR\n\n\noutput void GFX_CLEAR;", 
+            "text": "Graphics\n\n\nProvides graphics operations, such as for drawing pixels and images on the\nscreen.\n\n\nConfiguration\n\n\nGFX_SET_RGB\n\n\noutput (u8,u8,u8) GFX_SET_RGB;\n\n\n\n\nGFX_SET_FONT\n\n\noutput (string,u16) GFX_SET_FONT;\n\n\n\n\nGFX_SET_CURSOR\n\n\noutput (u8,u8) GFX_SET_CURSOR;\n\n\n\n\nGFX_SET_GRID\n\n\noutput bool GFX_SET_GRID;\n\n\n\n\nDrawing\n\n\nGFX_DRAW_PIXEL\n\n\noutput (u16,u16) GFX_DRAW_PIXEL;\n\n\n\n\nGFX_DRAW_RECT\n\n\noutput (u16,u16,u16,u16) GFX_DRAW_RECT;\n\n\n\n\nGFX_DRAW_BMP\n\n\noutput (string,u16,u16) GFX_DRAW_BMP;\n\n\n\n\nGFX_DRAW_TEXT\n\n\noutput string GFX_DRAW_TEXT;\n\n\n\n\nGFX_DRAW_TEXTLN\n\n\noutput string GFX_DRAW_TEXTLN;\n\n\n\n\nOther\n\n\nGFX_SCREENSHOT\n\n\noutput string GFX_SCREENSHOT;\n\n\n\n\nGFX_CLEAR\n\n\noutput void GFX_CLEAR;", 
             "title": "Graphics"
         }, 
         {
@@ -32,7 +32,7 @@
         }, 
         {
             "location": "/gfx/#gfx_set_font", 
-            "text": "output (_char ,u16) GFX_SET_FONT;", 
+            "text": "output (string,u16) GFX_SET_FONT;", 
             "title": "GFX_SET_FONT"
         }, 
         {
@@ -62,17 +62,17 @@
         }, 
         {
             "location": "/gfx/#gfx_draw_bmp", 
-            "text": "output (_char ,u16,u16) GFX_DRAW_BMP;", 
+            "text": "output (string,u16,u16) GFX_DRAW_BMP;", 
             "title": "GFX_DRAW_BMP"
         }, 
         {
             "location": "/gfx/#gfx_draw_text", 
-            "text": "output _char  GFX_DRAW_TEXT;", 
+            "text": "output string GFX_DRAW_TEXT;", 
             "title": "GFX_DRAW_TEXT"
         }, 
         {
             "location": "/gfx/#gfx_draw_textln", 
-            "text": "output _char  GFX_DRAW_TEXTLN;", 
+            "text": "output string GFX_DRAW_TEXTLN;", 
             "title": "GFX_DRAW_TEXTLN"
         }, 
         {
@@ -82,7 +82,7 @@
         }, 
         {
             "location": "/gfx/#gfx_screenshot", 
-            "text": "output _char  GFX_SCREENSHOT;", 
+            "text": "output string GFX_SCREENSHOT;", 
             "title": "GFX_SCREENSHOT"
         }, 
         {
@@ -172,7 +172,7 @@
         }, 
         {
             "location": "/window/", 
-            "text": "Window Management\n\n\nManages the game window.\n\n\nConfiguration\n\n\nWINDOW_SET_SIZE\n\n\noutput (u16,u16,u16,u16) WINDOW_SET_SIZE;", 
+            "text": "Window Management\n\n\nManages the game window.\n\n\nConfiguration\n\n\nWINDOW_SET_TITLE\n\n\noutput string WINDOW_SET_TITLE;\n\n\n\n\nWINDOW_SET_SIZE\n\n\noutput (u16,u16,u16,u16) WINDOW_SET_SIZE;", 
             "title": "Window Management"
         }, 
         {
@@ -184,6 +184,11 @@
             "location": "/window/#configuration", 
             "text": "", 
             "title": "Configuration"
+        }, 
+        {
+            "location": "/window/#window_set_title", 
+            "text": "output string WINDOW_SET_TITLE;", 
+            "title": "WINDOW_SET_TITLE"
         }, 
         {
             "location": "/window/#window_set_size", 

@@ -1,5 +1,4 @@
-#define PI 3.14
-
+emit WINDOW_SET_TITLE("Birds");
 emit WINDOW_SET_SIZE(640,480,640,480);
 emit FRAMES_SET(true);
 emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
@@ -17,6 +16,8 @@ code/await Bird (var int y, var int speed)
                         -> void
 do
     rct = val SDL_Rect(20,y, 50,45);
+
+    #define PI 3.14
 
     event bool go_invisible;
     var float sin = 0;

@@ -22,7 +22,7 @@ output (u8,u8,u8) GFX_SET_RGB;
 #### GFX_SET_FONT
 
 ```ceu
-output (_char&&,u16) GFX_SET_FONT;
+output (string,u16) GFX_SET_FONT;
 ```
 
 #### GFX_SET_CURSOR
@@ -54,19 +54,19 @@ output (u16,u16,u16,u16) GFX_DRAW_RECT;
 #### GFX_DRAW_BMP
 
 ```ceu
-output (_char&&,u16,u16) GFX_DRAW_BMP;
+output (string,u16,u16) GFX_DRAW_BMP;
 ```
 
 #### GFX_DRAW_TEXT
 
 ```ceu
-output _char&& GFX_DRAW_TEXT;
+output string GFX_DRAW_TEXT;
 ```
 
 #### GFX_DRAW_TEXTLN
 
 ```ceu
-output _char&& GFX_DRAW_TEXTLN;
+output string GFX_DRAW_TEXTLN;
 ```
 
 ### Other
@@ -74,7 +74,7 @@ output _char&& GFX_DRAW_TEXTLN;
 #### GFX_SCREENSHOT
 
 ```ceu
-output _char&& GFX_SCREENSHOT;
+output string GFX_SCREENSHOT;
 ```
 
 #### GFX_CLEAR
@@ -157,6 +157,12 @@ input void FRAMES_REDRAW;
 Manages the game window.
 
 ### Configuration
+
+#### WINDOW_SET_TITLE
+
+```ceu
+output string WINDOW_SET_TITLE;
+```
 
 #### WINDOW_SET_SIZE
 

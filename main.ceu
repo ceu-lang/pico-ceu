@@ -4,6 +4,13 @@
 #include "sdl/sdl.ceu"
 #include "keys.ceu"
 
+native/plain _string;
+native/pre do
+    typedef char* string;
+end
+#define string _string
+
+output string            WINDOW_SET_TITLE;
 output (u16,u16,u16,u16) WINDOW_SET_SIZE;
 
 output bool              FRAMES_SET;
@@ -16,16 +23,16 @@ input (u16,u16)          MOUSE_MOVE;
 input (bool,u16)         KEY_PRESS;
 
 output (u8,u8,u8)        GFX_SET_RGB;
-output (_char&&,u16)     GFX_SET_FONT;
+output (string,u16)      GFX_SET_FONT;
 output (u8,u8)           GFX_SET_CURSOR;
 output bool              GFX_SET_GRID;
-output _char&&           GFX_SCREENSHOT;
+output string            GFX_SCREENSHOT;
 output void              GFX_CLEAR;
 output (u16,u16)         GFX_DRAW_PIXEL;
 output (u16,u16,u16,u16) GFX_DRAW_RECT;
-output (_char&&,u16,u16) GFX_DRAW_BMP;
-output _char&&           GFX_DRAW_TEXT;
-output _char&&           GFX_DRAW_TEXTLN;
+output (string,u16,u16)  GFX_DRAW_BMP;
+output string            GFX_DRAW_TEXT;
+output string            GFX_DRAW_TEXTLN;
 
 native/pos do
     SDL_Window*   WIN;
@@ -75,6 +82,11 @@ native/pos do
         switch (cmd) {
             case CEU_CALLBACK_OUTPUT:
                 switch (p1.num) {
+                    case CEU_OUTPUT_WINDOW_SET_TITLE: {
+                        char** title = (char**) p2.ptr;
+                        SDL_SetWindowTitle(WIN, *title);
+                        break;
+                    }
                     case CEU_OUTPUT_WINDOW_SET_SIZE: {
                         tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) p2.ptr;
                         u16 ren_w = ps->_1;
@@ -252,7 +264,7 @@ end
     ceu_callback_register(&CEU_CALLBACK_EDU);
 }
 
-var&? SDL_Init sdl = spawn SDL_Init("Ceu-Edu", WIN_DIM,WIN_DIM, _);
+var&? SDL_Init sdl = spawn SDL_Init("pico-Ceu", WIN_DIM,WIN_DIM, _);
 watching sdl do
     {
         WIN = @(&&sdl!.win);
