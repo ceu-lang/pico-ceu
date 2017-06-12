@@ -54,7 +54,7 @@ with
         emit GFX_SCREENSHOT("pico-ceu/screen.bmp");
     end
     every 1s do
-        emit GFX_PRINT("|");
-        emit GFX_PRINTLN(" Ola Mundo");
+        emit GFX_DRAW_TEXT("|");
+        emit GFX_DRAW_TEXTLN(" Ola Mundo");
     end
 end

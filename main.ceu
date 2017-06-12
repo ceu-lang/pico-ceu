@@ -19,8 +19,8 @@ output void              GFX_CLEAR;
 output (u16,u16)         GFX_DRAW_PIXEL;
 output (u16,u16,u16,u16) GFX_DRAW_RECT;
 output (_char&&,u16,u16) GFX_DRAW_BMP;
-output _char&&           GFX_PRINT;
-output _char&&           GFX_PRINTLN;
+output _char&&           GFX_DRAW_TEXT;
+output _char&&           GFX_DRAW_TEXTLN;
 
 native/pos do
     SDL_Window*   WIN;
@@ -182,7 +182,7 @@ native/pos do
                         break;
                     }
 
-                    case CEU_OUTPUT_GFX_PRINT: {        // TODO: cache
+                    case CEU_OUTPUT_GFX_DRAW_TEXT: {        // TODO: cache
                         char** str = (char**) p2.ptr;
                         ceu_dbg_assert(FNT != NULL);
 
@@ -206,9 +206,9 @@ native/pos do
                         SDL_FreeSurface(sfc);
                         break;
                     }
-                    case CEU_OUTPUT_GFX_PRINTLN: {
+                    case CEU_OUTPUT_GFX_DRAW_TEXTLN: {
                         int cursor_x = CURSOR_X;
-                        p1.num = CEU_OUTPUT_GFX_PRINT;
+                        p1.num = CEU_OUTPUT_GFX_DRAW_TEXT;
                         ceu_callback_sdl_edu(cmd, p1, p2);
                         CURSOR_X = cursor_x;
                         CURSOR_Y += FNT_H;
