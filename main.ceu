@@ -60,6 +60,11 @@ native/pos do
         SDL_RenderSetLogicalSize(REN, log_w, log_w);
     }
 
+    void GFX_Present (void) {
+        GFX_Show_Grid();
+        SDL_RenderPresent(REN);
+    }
+
     tceu_callback_ret ceu_callback_sdl_edu (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
         tceu_callback_ret ret;
         switch (cmd) {
@@ -147,8 +152,7 @@ native/pos do
                         SDL_RenderPresent(REN);
 #endif
                         SDL_RenderFillRect(REN, NULL);
-                        GFX_Show_Grid();
-                        SDL_RenderPresent(REN);
+                        GFX_Present();
                         break;
                     }
 
@@ -156,16 +160,14 @@ native/pos do
                         tceu_output_GFX_DRAW_PIXEL* pt = (tceu_output_GFX_DRAW_PIXEL*) p2.ptr;
                         SDL_Rect rct = { pt->_1, pt->_2, 1, 1 };
                         SDL_RenderFillRect(REN, &rct);
-                        GFX_Show_Grid();
-                        SDL_RenderPresent(REN);
+                        GFX_Present();
                         break;
                     }
                     case CEU_OUTPUT_GFX_DRAW_RECT: {
                         tceu_output_GFX_DRAW_RECT* pt = (tceu_output_GFX_DRAW_RECT*) p2.ptr;
                         SDL_Rect rct = { pt->_1, pt->_2, pt->_3, pt->_4 };
                         SDL_RenderFillRect(REN, &rct);
-                        GFX_Show_Grid();
-                        SDL_RenderPresent(REN);
+                        GFX_Present();
                         break;
                     }
                     case CEU_OUTPUT_GFX_DRAW_BMP: {     // TODO: chache
@@ -177,8 +179,7 @@ native/pos do
 
                         SDL_Rect rct = { ps->_2,ps->_3, sfc->w,sfc->h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
-                        GFX_Show_Grid();
-                        SDL_RenderPresent(REN);
+                        GFX_Present();
 
                         SDL_DestroyTexture(tex);
                         SDL_FreeSurface(sfc);
@@ -200,8 +201,7 @@ native/pos do
                         TTF_SizeText(FNT, *str, &w,&h);
                         SDL_Rect rct = { CURSOR_X,CURSOR_Y, w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
-                        GFX_Show_Grid();
-                        SDL_RenderPresent(REN);
+                        GFX_Present();
 
                         CURSOR_X += w;
 
