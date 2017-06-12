@@ -1,5 +1,5 @@
 emit WINDOW_SET_SIZE(500,500,50,50);
-emit GFX_GRID(true);
+emit GFX_SET_GRID(true);
 await 1s;
 emit GFX_CLEAR();
 emit GFX_DRAW_RECT(25,0,25,25);

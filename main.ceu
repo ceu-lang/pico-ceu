@@ -16,7 +16,7 @@ input (bool,u16)         KEY_PRESS;
 output (u8,u8,u8)        GFX_SET_RGB;
 output (_char&&,u16)     GFX_SET_FONT;
 output (u8,u8)           GFX_SET_CURSOR;
-output bool              GFX_GRID;
+output bool              GFX_SET_GRID;
 output _char&&           GFX_SCREENSHOT;
 output void              GFX_CLEAR;
 output (u16,u16)         GFX_DRAW_PIXEL;
@@ -32,13 +32,12 @@ native/pos do
     TTF_Font* FNT = NULL;
     u16       FNT_H;
 
-    u16 CURSOR_X = 0;
-    u16 CURSOR_Y = 0;
-
-    bool GRID = 0;
+    bool GFX_SET_GRID = 0;
+    u16  GFX_CURSOR_X = 0;
+    u16  GFX_CURSOR_Y = 0;
 
     void GFX_Show_Grid (void) {
-        if (!GRID) return;
+        if (!GFX_SET_GRID) return;
 
         int ren_w,ren_h, log_w,log_h;
         SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
@@ -101,14 +100,14 @@ native/pos do
                     }
                     case CEU_OUTPUT_GFX_SET_CURSOR: {
                         tceu_output_GFX_SET_CURSOR* pt = (tceu_output_GFX_SET_CURSOR*) p2.ptr;
-                        CURSOR_X = pt->_1;
-                        CURSOR_Y = pt->_2;
+                        GFX_CURSOR_X = pt->_1;
+                        GFX_CURSOR_Y = pt->_2;
                         break;
                     }
 
-                    case CEU_OUTPUT_GFX_GRID: {
+                    case CEU_OUTPUT_GFX_SET_GRID: {
                         bool* on = (bool*) p2.ptr;
-                        GRID = *on;
+                        GFX_SET_GRID = *on;
                         break;
                     }
 
@@ -199,22 +198,22 @@ native/pos do
 
                         int w, h;
                         TTF_SizeText(FNT, *str, &w,&h);
-                        SDL_Rect rct = { CURSOR_X,CURSOR_Y, w,h };
+                        SDL_Rect rct = { GFX_CURSOR_X,GFX_CURSOR_Y, w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GFX_Present();
 
-                        CURSOR_X += w;
+                        GFX_CURSOR_X += w;
 
                         SDL_DestroyTexture(tex);
                         SDL_FreeSurface(sfc);
                         break;
                     }
                     case CEU_OUTPUT_GFX_DRAW_TEXTLN: {
-                        int cursor_x = CURSOR_X;
+                        int cursor_x = GFX_CURSOR_X;
                         p1.num = CEU_OUTPUT_GFX_DRAW_TEXT;
                         ceu_callback_sdl_edu(cmd, p1, p2);
-                        CURSOR_X = cursor_x;
-                        CURSOR_Y += FNT_H;
+                        GFX_CURSOR_X = cursor_x;
+                        GFX_CURSOR_Y += FNT_H;
                         break;
                     }
                 }
