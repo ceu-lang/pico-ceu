@@ -2,13 +2,7 @@
 
 emit WINDOW_SET_SIZE(640,480,640,480);
 emit FRAMES_SET(true);
-
-spawn do
-    every FRAMES_REDRAW do
-        emit GFX_SET_RGB(0x00,0x00,0x00);
-        emit GFX_CLEAR();
-    end
-end
+emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
 
 code/tight Intersects (var& SDL_Rect rct1, var& SDL_Rect rct2) -> bool
 do

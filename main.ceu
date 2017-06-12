@@ -7,6 +7,7 @@
 output (u16,u16,u16,u16) WINDOW_SET_SIZE;
 
 output bool              FRAMES_SET;
+output (u8,u8,u8)        FRAMES_SET_CLEAR_RGB;
 input  int               FRAMES_UPDATE;
 input  void              FRAMES_REDRAW;
 
@@ -33,7 +34,8 @@ native/pos do
     TTF_Font* FNT = NULL;
     u16       FNT_H;
 
-    bool FRAMES_SET = 0;
+    bool      FRAMES_SET = 0;
+    SDL_Color FRAMES_SET_CLEAR_RGB;
 
     bool GFX_SET_GRID = 0;
     u16  GFX_CURSOR_X = 0;
@@ -90,6 +92,14 @@ native/pos do
                     case CEU_OUTPUT_FRAMES_SET: {
                         bool* on = (bool*) p2.ptr;
                         FRAMES_SET = *on;
+                        break;
+                    }
+                    case CEU_OUTPUT_FRAMES_SET_CLEAR_RGB: {
+                        tceu_output_FRAMES_SET_CLEAR_RGB* clr = (tceu_output_FRAMES_SET_CLEAR_RGB*) p2.ptr;
+                        FRAMES_SET_CLEAR_RGB.r = clr->_1;
+                        FRAMES_SET_CLEAR_RGB.g = clr->_2;
+                        FRAMES_SET_CLEAR_RGB.b = clr->_3;
+                        FRAMES_SET_CLEAR_RGB.a = 0xFF;
                         break;
                     }
 
@@ -249,6 +259,7 @@ watching sdl do
         //REN = @(&&sdl!.ren);
     }
     emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM,WIN_DIM);
+    emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
     emit GFX_SET_RGB(0x00,0x00,0x00);
     emit GFX_CLEAR();
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
@@ -274,6 +285,21 @@ watching sdl do
                 await SDL_REDRAW;
                 await async do
                     emit FRAMES_REDRAW;
+                end
+            end
+        with
+            // BACKGROUND
+            every FRAMES_REDRAW do
+                if {FRAMES_SET} as bool then
+                    var u8 r = _;
+                    var u8 g = _;
+                    var u8 b = _;
+                    _SDL_GetRenderDrawColor({REN}, &&r, &&g, &&b, null);
+                    emit GFX_SET_RGB({FRAMES_SET_CLEAR_RGB.r},
+                                     {FRAMES_SET_CLEAR_RGB.g},
+                                     {FRAMES_SET_CLEAR_RGB.b});
+                    emit GFX_CLEAR();
+                    emit GFX_SET_RGB(r,g,b);
                 end
             end
         end
