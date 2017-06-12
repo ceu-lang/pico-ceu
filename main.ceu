@@ -1,9 +1,11 @@
-#define CEU_SDL_MODE_WAITING
 #define WIN_DIM 400
 
 #include "c.ceu"
 #include "sdl/sdl.ceu"
 #include "keys.ceu"
+
+input  int               FRAMES_UPDATE;
+input  void              FRAMES_REDRAW;
 
 input (bool,int,u16,u16) MOUSE_CLICK;
 input (u16,u16)          MOUSE_MOVE;
@@ -245,6 +247,25 @@ watching sdl do
     end
 
     par/or do
+        /* FRAMES */
+        par do
+            // DT -> UPDATE
+            loop do
+                var int dt = await SDL_DT;
+                await async (dt) do
+                    emit FRAMES_UPDATE(dt);
+                end
+            end
+        with
+            // REDRAW -> FRAMES_REDRAW
+            loop do
+                await SDL_REDRAW;
+                await async do
+                    emit FRAMES_REDRAW;
+                end
+            end
+        end
+    with
         /* KEY */
         par do
             // PRESS -> PRESS(true)
