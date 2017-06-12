@@ -1,5 +1,7 @@
-emit WINDOW_SET_SIZE(640,480,640,480);
 #define PI 3.14
+
+emit WINDOW_SET_SIZE(640,480,640,480);
+emit FRAMES_SET(true);
 
 spawn do
     every FRAMES_REDRAW do

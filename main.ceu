@@ -6,6 +6,7 @@
 
 output (u16,u16,u16,u16) WINDOW_SET_SIZE;
 
+output bool              FRAMES_SET;
 input  int               FRAMES_UPDATE;
 input  void              FRAMES_REDRAW;
 
@@ -31,6 +32,8 @@ native/pos do
 
     TTF_Font* FNT = NULL;
     u16       FNT_H;
+
+    bool FRAMES_SET = 0;
 
     bool GFX_SET_GRID = 0;
     u16  GFX_CURSOR_X = 0;
@@ -60,6 +63,7 @@ native/pos do
     }
 
     void GFX_Present (void) {
+        if (FRAMES_SET) return;
         GFX_Show_Grid();
         SDL_RenderPresent(REN);
     }
@@ -80,6 +84,12 @@ native/pos do
 
                         SDL_SetWindowSize(WIN, ren_w, ren_h);
                         SDL_RenderSetLogicalSize(REN, log_w, log_h);
+                        break;
+                    }
+
+                    case CEU_OUTPUT_FRAMES_SET: {
+                        bool* on = (bool*) p2.ptr;
+                        FRAMES_SET = *on;
                         break;
                     }
 
@@ -148,7 +158,9 @@ native/pos do
 // TODO: w/o double Fill/Present, a "SET_WINDOW();CLEAR()" doesn't work
 #if 1
                         SDL_RenderFillRect(REN, NULL);
-                        SDL_RenderPresent(REN);
+                        if (!FRAMES_SET) {
+                            SDL_RenderPresent(REN);
+                        }
 #endif
                         SDL_RenderFillRect(REN, NULL);
                         GFX_Present();
