@@ -4,6 +4,8 @@
 #include "sdl/sdl.ceu"
 #include "keys.ceu"
 
+output (u16,u16,u16,u16) WINDOW_SET_SIZE;
+
 input  int               FRAMES_UPDATE;
 input  void              FRAMES_REDRAW;
 
@@ -11,7 +13,6 @@ input (bool,int,u16,u16) MOUSE_CLICK;
 input (u16,u16)          MOUSE_MOVE;
 input (bool,u16)         KEY_PRESS;
 
-output (u16,u16,u16,u16) GFX_SET_WINDOW;
 output (u8,u8,u8)        GFX_SET_RGB;
 output (_char&&,u16)     GFX_SET_FONT;
 output (u8,u8)           GFX_SET_CURSOR;
@@ -64,8 +65,8 @@ native/pos do
         switch (cmd) {
             case CEU_CALLBACK_OUTPUT:
                 switch (p1.num) {
-                    case CEU_OUTPUT_GFX_SET_WINDOW: {
-                        tceu_output_GFX_SET_WINDOW* ps = (tceu_output_GFX_SET_WINDOW*) p2.ptr;
+                    case CEU_OUTPUT_WINDOW_SET_SIZE: {
+                        tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) p2.ptr;
                         u16 ren_w = ps->_1;
                         u16 ren_h = ps->_2;
                         u16 log_w = ps->_3;
@@ -236,7 +237,7 @@ watching sdl do
         WIN = @(&&sdl!.win);
         //REN = @(&&sdl!.ren);
     }
-    emit GFX_SET_WINDOW(WIN_DIM,WIN_DIM,WIN_DIM,WIN_DIM);
+    emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM,WIN_DIM);
     emit GFX_SET_RGB(0x00,0x00,0x00);
     emit GFX_CLEAR();
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);

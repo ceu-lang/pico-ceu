@@ -1,4 +1,4 @@
-emit GFX_SET_WINDOW(640,480,640,480);
+emit WINDOW_SET_SIZE(640,480,640,480);
 #define PI 3.14
 
 spawn do

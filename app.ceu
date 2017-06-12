@@ -1,4 +1,4 @@
-emit GFX_SET_WINDOW(500,500,50,50);
+emit WINDOW_SET_SIZE(500,500,50,50);
 emit GFX_GRID(true);
 await 1s;
 emit GFX_CLEAR();
