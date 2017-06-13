@@ -12,26 +12,26 @@ Enables or disables the generation of periodic
 inputs to the application.
 
 ```ceu
-output (bool) FRAMES_SET
+output (switch) FRAMES_SET
 ```
 
 - Parameters:
-    - `bool`: new state
-        - `true`: enables the generation of frames
-        - `false`: disables the generation of frames
+    - `switch`: new state
+        - `on`: enables the generation of frames
+        - `off`: disables the generation of frames
 
 ### FRAMES_SET_CLEAR_RGB
 
 Changes the redrawing background color.
 
 ```
-output (u8,u8,u8) FRAMES_SET_CLEAR_RGB
+output (number,number,number) FRAMES_SET_CLEAR_RGB
 ```
 
 - Parameters:
-    - `u8`: new red component
-    - `u8`: new green component
-    - `u8`: new blue component
+    - `number`: new red component
+    - `number`: new green component
+    - `number`: new blue component
 
 On every frame before [`FRAMES_REDRAW`](#frames_redraw), the screen is cleared
 with the background color.
@@ -43,24 +43,26 @@ The default color is black.
 ### FRAMES_UPDATE
 
 ```ceu
-input (int) FRAMES_UPDATE
+input (number) FRAMES_UPDATE
 ```
 
 - Occurrences:
     - on every frame, before [`FRAMES_REDRAW`](#frames_redraw)
 - Payload:
-    - `int`: the number of elapsed milliseconds since the previous frame
+    - `number`: the number of elapsed milliseconds since the previous frame
 
 ## Redraw
 
 ### FRAMES_REDRAW
 
 ```ceu
-input (void) FRAMES_REDRAW
+input (none) FRAMES_REDRAW
 ```
 
 - Occurrences:
     - on every frame, after [`FRAMES_UPDATE`](#frames_update)
+- Parameters:
+    - `none`: no parameters
 
 Before the input occurs, the screen is cleared with the color set with
 [`FRAMES_SET_CLEAR_RGB`](#frames_set_clear_rgb).

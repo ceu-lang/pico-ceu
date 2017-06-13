@@ -9,14 +9,14 @@ Manages the application window.
 Changes the real and logical sizes of the window.
 
 ```ceu
-output (u16,u16,u16,u16) WINDOW_SET_SIZE
+output (number,number,number,number) WINDOW_SET_SIZE
 ```
 
 - Parameters:
-    - `u16`: new real width
-    - `u16`: new real height
-    - `u16`: new logical width
-    - `u16`: new logical height
+    - `number`: new real width
+    - `number`: new real height
+    - `number`: new logical width
+    - `number`: new logical height
 
 The arithmetic division between the real and logical dimensions must be exact.
 
@@ -25,8 +25,8 @@ The arithmetic division between the real and logical dimensions must be exact.
 Changes the title of the window.
 
 ```ceu
-output (string) WINDOW_SET_TITLE
+output (text) WINDOW_SET_TITLE
 ```
 
 - Parameters:
-    - `string`: new window title
+    - `text`: new window title

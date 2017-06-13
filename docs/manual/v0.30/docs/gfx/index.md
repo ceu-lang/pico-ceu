@@ -10,13 +10,13 @@ screen.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output (bool) GFX_SET_GRID
+output (switch) GFX_SET_GRID
 ```
 
 - Parameters:
-    - `bool`: new state
-        - `true`: enables the grid
-        - `false`: disables the grid
+    - `switch`: new state
+        - `on`: enables the grid
+        - `off`: disables the grid
 
 The ratio between the real and logical dimensions set with
 [`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
@@ -26,37 +26,37 @@ The ratio between the real and logical dimensions set with
 Changes the color of all subsequent drawing operations.
 
 ```ceu
-output (u8,u8,u8) GFX_SET_RGB
+output (number,number,number) GFX_SET_RGB
 ```
 
 - Parameters:
-    - `u8`: new red component
-    - `u8`: new green component
-    - `u8`: new blue component
+    - `number`: new red component
+    - `number`: new green component
+    - `number`: new blue component
 
 ### GFX_SET_TEXT_CURSOR
 
 Changes the cursor position for drawing text.
 
 ```ceu
-output (u16,u16) GFX_SET_TEXT_CURSOR
+output (number,number) GFX_SET_TEXT_CURSOR
 ```
 
 - Parameters:
-    - `u16`: new position in the `x-axis`
-    - `u16`: new position in the `y-axis`
+    - `number`: new position in the `x-axis`
+    - `number`: new position in the `y-axis`
 
 ### GFX_SET_TEXT_FONT
 
 Changes the font for drawing text.
 
 ```ceu
-output (string,u16) GFX_SET_TEXT_FONT
+output (text,number) GFX_SET_TEXT_FONT
 ```
 
 - Parameters:
-    - `string`: path for the `.ttf` font filename
-    - `u16`: height of the new font in pixels
+    - `text`: path for the `.ttf` font filename
+    - `number`: height of the new font in pixels
 
 ## Drawing Operations
 
@@ -65,8 +65,11 @@ output (string,u16) GFX_SET_TEXT_FONT
 Clears the screen.
 
 ```ceu
-output (void) GFX_CLEAR
+output (none) GFX_CLEAR
 ```
+
+- Parameters:
+    - `none`: no parameters
 
 The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -75,25 +78,25 @@ The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a bitmap image on the screen.
 
 ```ceu
-output (string,u16,u16) GFX_DRAW_BMP
+output (text,number,number) GFX_DRAW_BMP
 ```
 
 - Parameters:
-    - `string`: path for the `.bmp` image filename
-    - `u16`: drawing position in the `x-axis`
-    - `u16`: drawing position in the `y-axis`
+    - `text`: path for the `.bmp` image filename
+    - `number`: drawing position in the `x-axis`
+    - `number`: drawing position in the `y-axis`
 
 ### GFX_DRAW_PIXEL
 
 Draws a pixel on the screen.
 
 ```ceu
-output (u16,u16) GFX_DRAW_PIXEL
+output (number,number) GFX_DRAW_PIXEL
 ```
 
 - Parameters:
-    - `u16`: drawing position in the `x-axis`
-    - `u16`: drawing position in the `y-axis`
+    - `number`: drawing position in the `x-axis`
+    - `number`: drawing position in the `y-axis`
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -102,14 +105,14 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a rectangle on the screen.
 
 ```ceu
-output (u16,u16,u16,u16) GFX_DRAW_RECT
+output (number,number,number,number) GFX_DRAW_RECT
 ```
 
 - Parameters:
-    - `u16`: drawing position in the `x-axis`
-    - `u16`: drawing position in the `y-axis`
-    - `u16`: rectangle width
-    - `u16`: rectangle height
+    - `number`: drawing position in the `x-axis`
+    - `number`: drawing position in the `y-axis`
+    - `number`: rectangle width
+    - `number`: rectangle height
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -118,11 +121,11 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a text on the screen.
 
 ```ceu
-output (string) GFX_DRAW_TEXT
+output (text) GFX_DRAW_TEXT
 ```
 
 - Parameters:
-    - `string`: text to draw
+    - `text`: text to draw
 
 The drawing position is first specified with
 [`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
@@ -135,7 +138,7 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a line of text on the screen.
 
 ```ceu
-output (string) GFX_DRAW_TEXTLN
+output (text) GFX_DRAW_TEXTLN
 ```
 
 The drawing position is first specified with
@@ -152,8 +155,8 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Takes a screen shot.
 
 ```ceu
-output (string) GFX_SCREENSHOT
+output (text) GFX_SCREENSHOT
 ```
 
 - Parameters:
-    - `string`: path for the `.bmp` image filename to generate
+    - `text`: path for the `.bmp` image filename to generate

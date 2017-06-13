@@ -7,16 +7,16 @@ Provides input handling, such as for keyboard and mouse.
 ### KEY_PRESS
 
 ```ceu
-input (bool,u16) KEY_PRESS
+input (switch,number) KEY_PRESS
 ```
 
 - Occurrences:
     - whenever a keyboard key is pressed or released
 - Payload:
-    - `bool`: new key state
-        - `true`: key is now pressed
-        - `false`: key is now released
-    - `u16`: numeric key code
+    - `switch`: new key state
+        - `on`: key is now pressed
+        - `off`: key is now released
+    - `number`: numeric key code
 
 `TODO: key codes`
 
@@ -25,27 +25,27 @@ input (bool,u16) KEY_PRESS
 ### MOUSE_CLICK
 
 ```ceu
-input (bool,int,u16,u16) MOUSE_CLICK
+input (switch,number,number,number) MOUSE_CLICK
 ```
 
 - Occurrences:
     - whenever a mouse button is pressed or released
 - Payload:
-    - `bool`: new button state
-        - `true`: button is now pressed
-        - `false`: button is now released
-    - `int`:  numeric button code (`TODO: left, middle, right?`)
-    - `u16`:  current mouse position in the `x-axis`
-    - `u16`:  current mouse position in the `y-axis`
+    - `switch`: new button state
+        - `on`: button is now pressed
+        - `off`: button is now released
+    - `number`:  numeric button code (`TODO: left, middle, right?`)
+    - `number`:  current mouse position in the `x-axis`
+    - `number`:  current mouse position in the `y-axis`
 
 ### MOUSE_MOVE
 
 ```ceu
-input (u16,u16) MOUSE_MOVE
+input (number,number) MOUSE_MOVE
 ```
 
 - Occurrences:
     - whenever the mouse moves
 - Payload:
-    - `u16`:  current mouse position in the `x-axis`
-    - `u16`:  current mouse position in the `y-axis`
+    - `number`:  current mouse position in the `x-axis`
+    - `number`:  current mouse position in the `y-axis`

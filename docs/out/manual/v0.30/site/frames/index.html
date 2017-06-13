@@ -149,14 +149,14 @@ screen.</p>
 <p>Enables or disables the generation of periodic
 <a href="#frames_update"><code>FRAMES_UPDATE</code></a> and <a href="#frames_redraw"><code>FRAMES_REDRAW</code></a>
 inputs to the application.</p>
-<pre><code class="ceu">output (bool) FRAMES_SET
+<pre><code class="ceu">output (switch) FRAMES_SET
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>bool</code>: new state<ul>
-<li><code>true</code>: enables the generation of frames</li>
-<li><code>false</code>: disables the generation of frames</li>
+<li><code>switch</code>: new state<ul>
+<li><code>on</code>: enables the generation of frames</li>
+<li><code>off</code>: disables the generation of frames</li>
 </ul>
 </li>
 </ul>
@@ -164,14 +164,14 @@ inputs to the application.</p>
 </ul>
 <h3 id="frames_set_clear_rgb">FRAMES_SET_CLEAR_RGB<a class="headerlink" href="#frames_set_clear_rgb" title="Permanent link">&para;</a></h3>
 <p>Changes the redrawing background color.</p>
-<pre><code>output (u8,u8,u8) FRAMES_SET_CLEAR_RGB
+<pre><code>output (number,number,number) FRAMES_SET_CLEAR_RGB
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>u8</code>: new red component</li>
-<li><code>u8</code>: new green component</li>
-<li><code>u8</code>: new blue component</li>
+<li><code>number</code>: new red component</li>
+<li><code>number</code>: new green component</li>
+<li><code>number</code>: new blue component</li>
 </ul>
 </li>
 </ul>
@@ -180,7 +180,7 @@ with the background color.</p>
 <p>The default color is black.</p>
 <h2 id="update">Update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <h3 id="frames_update">FRAMES_UPDATE<a class="headerlink" href="#frames_update" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input (int) FRAMES_UPDATE
+<pre><code class="ceu">input (number) FRAMES_UPDATE
 </code></pre>
 
 <ul>
@@ -189,18 +189,22 @@ with the background color.</p>
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>int</code>: the number of elapsed milliseconds since the previous frame</li>
+<li><code>number</code>: the number of elapsed milliseconds since the previous frame</li>
 </ul>
 </li>
 </ul>
 <h2 id="redraw">Redraw<a class="headerlink" href="#redraw" title="Permanent link">&para;</a></h2>
 <h3 id="frames_redraw">FRAMES_REDRAW<a class="headerlink" href="#frames_redraw" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input (void) FRAMES_REDRAW
+<pre><code class="ceu">input (none) FRAMES_REDRAW
 </code></pre>
 
 <ul>
 <li>Occurrences:<ul>
 <li>on every frame, after <a href="#frames_update"><code>FRAMES_UPDATE</code></a></li>
+</ul>
+</li>
+<li>Parameters:<ul>
+<li><code>none</code>: no parameters</li>
 </ul>
 </li>
 </ul>

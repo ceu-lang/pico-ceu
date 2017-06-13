@@ -18,13 +18,13 @@ screen.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output (bool) GFX_SET_GRID
+output (switch) GFX_SET_GRID
 ```
 
 - Parameters:
-    - `bool`: new state
-        - `true`: enables the grid
-        - `false`: disables the grid
+    - `switch`: new state
+        - `on`: enables the grid
+        - `off`: disables the grid
 
 The ratio between the real and logical dimensions set with
 [`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
@@ -34,37 +34,37 @@ The ratio between the real and logical dimensions set with
 Changes the color of all subsequent drawing operations.
 
 ```ceu
-output (u8,u8,u8) GFX_SET_RGB
+output (number,number,number) GFX_SET_RGB
 ```
 
 - Parameters:
-    - `u8`: new red component
-    - `u8`: new green component
-    - `u8`: new blue component
+    - `number`: new red component
+    - `number`: new green component
+    - `number`: new blue component
 
 #### GFX_SET_TEXT_CURSOR
 
 Changes the cursor position for drawing text.
 
 ```ceu
-output (u16,u16) GFX_SET_TEXT_CURSOR
+output (number,number) GFX_SET_TEXT_CURSOR
 ```
 
 - Parameters:
-    - `u16`: new position in the `x-axis`
-    - `u16`: new position in the `y-axis`
+    - `number`: new position in the `x-axis`
+    - `number`: new position in the `y-axis`
 
 #### GFX_SET_TEXT_FONT
 
 Changes the font for drawing text.
 
 ```ceu
-output (string,u16) GFX_SET_TEXT_FONT
+output (text,number) GFX_SET_TEXT_FONT
 ```
 
 - Parameters:
-    - `string`: path for the `.ttf` font filename
-    - `u16`: height of the new font in pixels
+    - `text`: path for the `.ttf` font filename
+    - `number`: height of the new font in pixels
 
 ### Drawing Operations
 
@@ -73,8 +73,11 @@ output (string,u16) GFX_SET_TEXT_FONT
 Clears the screen.
 
 ```ceu
-output (void) GFX_CLEAR
+output (none) GFX_CLEAR
 ```
+
+- Parameters:
+    - `none`: no parameters
 
 The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -83,25 +86,25 @@ The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a bitmap image on the screen.
 
 ```ceu
-output (string,u16,u16) GFX_DRAW_BMP
+output (text,number,number) GFX_DRAW_BMP
 ```
 
 - Parameters:
-    - `string`: path for the `.bmp` image filename
-    - `u16`: drawing position in the `x-axis`
-    - `u16`: drawing position in the `y-axis`
+    - `text`: path for the `.bmp` image filename
+    - `number`: drawing position in the `x-axis`
+    - `number`: drawing position in the `y-axis`
 
 #### GFX_DRAW_PIXEL
 
 Draws a pixel on the screen.
 
 ```ceu
-output (u16,u16) GFX_DRAW_PIXEL
+output (number,number) GFX_DRAW_PIXEL
 ```
 
 - Parameters:
-    - `u16`: drawing position in the `x-axis`
-    - `u16`: drawing position in the `y-axis`
+    - `number`: drawing position in the `x-axis`
+    - `number`: drawing position in the `y-axis`
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -110,14 +113,14 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a rectangle on the screen.
 
 ```ceu
-output (u16,u16,u16,u16) GFX_DRAW_RECT
+output (number,number,number,number) GFX_DRAW_RECT
 ```
 
 - Parameters:
-    - `u16`: drawing position in the `x-axis`
-    - `u16`: drawing position in the `y-axis`
-    - `u16`: rectangle width
-    - `u16`: rectangle height
+    - `number`: drawing position in the `x-axis`
+    - `number`: drawing position in the `y-axis`
+    - `number`: rectangle width
+    - `number`: rectangle height
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -126,11 +129,11 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a text on the screen.
 
 ```ceu
-output (string) GFX_DRAW_TEXT
+output (text) GFX_DRAW_TEXT
 ```
 
 - Parameters:
-    - `string`: text to draw
+    - `text`: text to draw
 
 The drawing position is first specified with
 [`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
@@ -143,7 +146,7 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a line of text on the screen.
 
 ```ceu
-output (string) GFX_DRAW_TEXTLN
+output (text) GFX_DRAW_TEXTLN
 ```
 
 The drawing position is first specified with
@@ -160,11 +163,11 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Takes a screen shot.
 
 ```ceu
-output (string) GFX_SCREENSHOT
+output (text) GFX_SCREENSHOT
 ```
 
 - Parameters:
-    - `string`: path for the `.bmp` image filename to generate
+    - `text`: path for the `.bmp` image filename to generate
 
 # Input Devices
 
@@ -177,16 +180,16 @@ Provides input handling, such as for keyboard and mouse.
 #### KEY_PRESS
 
 ```ceu
-input (bool,u16) KEY_PRESS
+input (switch,number) KEY_PRESS
 ```
 
 - Occurrences:
     - whenever a keyboard key is pressed or released
 - Payload:
-    - `bool`: new key state
-        - `true`: key is now pressed
-        - `false`: key is now released
-    - `u16`: numeric key code
+    - `switch`: new key state
+        - `on`: key is now pressed
+        - `off`: key is now released
+    - `number`: numeric key code
 
 `TODO: key codes`
 
@@ -195,30 +198,30 @@ input (bool,u16) KEY_PRESS
 #### MOUSE_CLICK
 
 ```ceu
-input (bool,int,u16,u16) MOUSE_CLICK
+input (switch,number,number,number) MOUSE_CLICK
 ```
 
 - Occurrences:
     - whenever a mouse button is pressed or released
 - Payload:
-    - `bool`: new button state
-        - `true`: button is now pressed
-        - `false`: button is now released
-    - `int`:  numeric button code (`TODO: left, middle, right?`)
-    - `u16`:  current mouse position in the `x-axis`
-    - `u16`:  current mouse position in the `y-axis`
+    - `switch`: new button state
+        - `on`: button is now pressed
+        - `off`: button is now released
+    - `number`:  numeric button code (`TODO: left, middle, right?`)
+    - `number`:  current mouse position in the `x-axis`
+    - `number`:  current mouse position in the `y-axis`
 
 #### MOUSE_MOVE
 
 ```ceu
-input (u16,u16) MOUSE_MOVE
+input (number,number) MOUSE_MOVE
 ```
 
 - Occurrences:
     - whenever the mouse moves
 - Payload:
-    - `u16`:  current mouse position in the `x-axis`
-    - `u16`:  current mouse position in the `y-axis`
+    - `number`:  current mouse position in the `x-axis`
+    - `number`:  current mouse position in the `y-axis`
 
 # Frame Management
 
@@ -236,26 +239,26 @@ Enables or disables the generation of periodic
 inputs to the application.
 
 ```ceu
-output (bool) FRAMES_SET
+output (switch) FRAMES_SET
 ```
 
 - Parameters:
-    - `bool`: new state
-        - `true`: enables the generation of frames
-        - `false`: disables the generation of frames
+    - `switch`: new state
+        - `on`: enables the generation of frames
+        - `off`: disables the generation of frames
 
 #### FRAMES_SET_CLEAR_RGB
 
 Changes the redrawing background color.
 
 ```
-output (u8,u8,u8) FRAMES_SET_CLEAR_RGB
+output (number,number,number) FRAMES_SET_CLEAR_RGB
 ```
 
 - Parameters:
-    - `u8`: new red component
-    - `u8`: new green component
-    - `u8`: new blue component
+    - `number`: new red component
+    - `number`: new green component
+    - `number`: new blue component
 
 On every frame before [`FRAMES_REDRAW`](#frames_redraw), the screen is cleared
 with the background color.
@@ -267,24 +270,26 @@ The default color is black.
 #### FRAMES_UPDATE
 
 ```ceu
-input (int) FRAMES_UPDATE
+input (number) FRAMES_UPDATE
 ```
 
 - Occurrences:
     - on every frame, before [`FRAMES_REDRAW`](#frames_redraw)
 - Payload:
-    - `int`: the number of elapsed milliseconds since the previous frame
+    - `number`: the number of elapsed milliseconds since the previous frame
 
 ### Redraw
 
 #### FRAMES_REDRAW
 
 ```ceu
-input (void) FRAMES_REDRAW
+input (none) FRAMES_REDRAW
 ```
 
 - Occurrences:
     - on every frame, after [`FRAMES_UPDATE`](#frames_update)
+- Parameters:
+    - `none`: no parameters
 
 Before the input occurs, the screen is cleared with the color set with
 [`FRAMES_SET_CLEAR_RGB`](#frames_set_clear_rgb).
@@ -302,14 +307,14 @@ Manages the application window.
 Changes the real and logical sizes of the window.
 
 ```ceu
-output (u16,u16,u16,u16) WINDOW_SET_SIZE
+output (number,number,number,number) WINDOW_SET_SIZE
 ```
 
 - Parameters:
-    - `u16`: new real width
-    - `u16`: new real height
-    - `u16`: new logical width
-    - `u16`: new logical height
+    - `number`: new real width
+    - `number`: new real height
+    - `number`: new logical width
+    - `number`: new logical height
 
 The arithmetic division between the real and logical dimensions must be exact.
 
@@ -318,11 +323,11 @@ The arithmetic division between the real and logical dimensions must be exact.
 Changes the title of the window.
 
 ```ceu
-output (string) WINDOW_SET_TITLE
+output (text) WINDOW_SET_TITLE
 ```
 
 - Parameters:
-    - `string`: new window title
+    - `text`: new window title
 
 # License
 

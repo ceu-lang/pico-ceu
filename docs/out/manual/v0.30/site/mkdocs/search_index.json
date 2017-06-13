@@ -12,7 +12,7 @@
         }, 
         {
             "location": "/gfx/", 
-            "text": "Graphics\n\n\nProvides graphics operations, such as for drawing pixels and images on the\nscreen.\n\n\nConfiguration\n\n\nGFX_SET_GRID\n\n\nEnables or disables a visual grid delimiting the screen pixels.\n\n\noutput (bool) GFX_SET_GRID\n\n\n\n\n\n\nParameters:\n\n\nbool\n: new state\n\n\ntrue\n: enables the grid\n\n\nfalse\n: disables the grid\n\n\n\n\n\n\n\n\n\n\n\n\nThe ratio between the real and logical dimensions set with\n\nWINDOW_SET_SIZE\n must be greater then one.\n\n\nGFX_SET_RGB\n\n\nChanges the color of all subsequent drawing operations.\n\n\noutput (u8,u8,u8) GFX_SET_RGB\n\n\n\n\n\n\nParameters:\n\n\nu8\n: new red component\n\n\nu8\n: new green component\n\n\nu8\n: new blue component\n\n\n\n\n\n\n\n\nGFX_SET_TEXT_CURSOR\n\n\nChanges the cursor position for drawing text.\n\n\noutput (u16,u16) GFX_SET_TEXT_CURSOR\n\n\n\n\n\n\nParameters:\n\n\nu16\n: new position in the \nx-axis\n\n\nu16\n: new position in the \ny-axis\n\n\n\n\n\n\n\n\nGFX_SET_TEXT_FONT\n\n\nChanges the font for drawing text.\n\n\noutput (string,u16) GFX_SET_TEXT_FONT\n\n\n\n\n\n\nParameters:\n\n\nstring\n: path for the \n.ttf\n font filename\n\n\nu16\n: height of the new font in pixels\n\n\n\n\n\n\n\n\nDrawing Operations\n\n\nGFX_CLEAR\n\n\nClears the screen.\n\n\noutput (void) GFX_CLEAR\n\n\n\n\nThe clear color is specified with \nGFX_SET_RGB\n.\n\n\nGFX_DRAW_BMP\n\n\nDraws a bitmap image on the screen.\n\n\noutput (string,u16,u16) GFX_DRAW_BMP\n\n\n\n\n\n\nParameters:\n\n\nstring\n: path for the \n.bmp\n image filename\n\n\nu16\n: drawing position in the \nx-axis\n\n\nu16\n: drawing position in the \ny-axis\n\n\n\n\n\n\n\n\nGFX_DRAW_PIXEL\n\n\nDraws a pixel on the screen.\n\n\noutput (u16,u16) GFX_DRAW_PIXEL\n\n\n\n\n\n\nParameters:\n\n\nu16\n: drawing position in the \nx-axis\n\n\nu16\n: drawing position in the \ny-axis\n\n\n\n\n\n\n\n\nThe drawing color is specified with \nGFX_SET_RGB\n.\n\n\nGFX_DRAW_RECT\n\n\nDraws a rectangle on the screen.\n\n\noutput (u16,u16,u16,u16) GFX_DRAW_RECT\n\n\n\n\n\n\nParameters:\n\n\nu16\n: drawing position in the \nx-axis\n\n\nu16\n: drawing position in the \ny-axis\n\n\nu16\n: rectangle width\n\n\nu16\n: rectangle height\n\n\n\n\n\n\n\n\nThe drawing color is specified with \nGFX_SET_RGB\n.\n\n\nGFX_DRAW_TEXT\n\n\nDraws a text on the screen.\n\n\noutput (string) GFX_DRAW_TEXT\n\n\n\n\n\n\nParameters:\n\n\nstring\n: text to draw\n\n\n\n\n\n\n\n\nThe drawing position is first specified with\n\nGFX_SET_TEXT_CURSOR\n.\nThe cursor advances automatically for the position after the text.\nThe drawing font is specified with \nGFX_SET_TEXT_FONT\n.\nThe drawing color is specified with \nGFX_SET_RGB\n.\n\n\nGFX_DRAW_TEXTLN\n\n\nDraws a line of text on the screen.\n\n\noutput (string) GFX_DRAW_TEXTLN\n\n\n\n\nThe drawing position is first specified with\n\nGFX_SET_TEXT_CURSOR\n.\nThe cursor advances automatically for the next line after the text, at the same\ninitial position.\nThe drawing font is specified with \nGFX_SET_TEXT_FONT\n.\nThe drawing color is specified with \nGFX_SET_RGB\n.\n\n\nOther\n\n\nGFX_SCREENSHOT\n\n\nTakes a screen shot.\n\n\noutput (string) GFX_SCREENSHOT\n\n\n\n\n\n\nParameters:\n\n\nstring\n: path for the \n.bmp\n image filename to generate", 
+            "text": "Graphics\n\n\nProvides graphics operations, such as for drawing pixels and images on the\nscreen.\n\n\nConfiguration\n\n\nGFX_SET_GRID\n\n\nEnables or disables a visual grid delimiting the screen pixels.\n\n\noutput (switch) GFX_SET_GRID\n\n\n\n\n\n\nParameters:\n\n\nswitch\n: new state\n\n\non\n: enables the grid\n\n\noff\n: disables the grid\n\n\n\n\n\n\n\n\n\n\n\n\nThe ratio between the real and logical dimensions set with\n\nWINDOW_SET_SIZE\n must be greater then one.\n\n\nGFX_SET_RGB\n\n\nChanges the color of all subsequent drawing operations.\n\n\noutput (number,number,number) GFX_SET_RGB\n\n\n\n\n\n\nParameters:\n\n\nnumber\n: new red component\n\n\nnumber\n: new green component\n\n\nnumber\n: new blue component\n\n\n\n\n\n\n\n\nGFX_SET_TEXT_CURSOR\n\n\nChanges the cursor position for drawing text.\n\n\noutput (number,number) GFX_SET_TEXT_CURSOR\n\n\n\n\n\n\nParameters:\n\n\nnumber\n: new position in the \nx-axis\n\n\nnumber\n: new position in the \ny-axis\n\n\n\n\n\n\n\n\nGFX_SET_TEXT_FONT\n\n\nChanges the font for drawing text.\n\n\noutput (text,number) GFX_SET_TEXT_FONT\n\n\n\n\n\n\nParameters:\n\n\ntext\n: path for the \n.ttf\n font filename\n\n\nnumber\n: height of the new font in pixels\n\n\n\n\n\n\n\n\nDrawing Operations\n\n\nGFX_CLEAR\n\n\nClears the screen.\n\n\noutput (none) GFX_CLEAR\n\n\n\n\n\n\nParameters:\n\n\nnone\n: no parameters\n\n\n\n\n\n\n\n\nThe clear color is specified with \nGFX_SET_RGB\n.\n\n\nGFX_DRAW_BMP\n\n\nDraws a bitmap image on the screen.\n\n\noutput (text,number,number) GFX_DRAW_BMP\n\n\n\n\n\n\nParameters:\n\n\ntext\n: path for the \n.bmp\n image filename\n\n\nnumber\n: drawing position in the \nx-axis\n\n\nnumber\n: drawing position in the \ny-axis\n\n\n\n\n\n\n\n\nGFX_DRAW_PIXEL\n\n\nDraws a pixel on the screen.\n\n\noutput (number,number) GFX_DRAW_PIXEL\n\n\n\n\n\n\nParameters:\n\n\nnumber\n: drawing position in the \nx-axis\n\n\nnumber\n: drawing position in the \ny-axis\n\n\n\n\n\n\n\n\nThe drawing color is specified with \nGFX_SET_RGB\n.\n\n\nGFX_DRAW_RECT\n\n\nDraws a rectangle on the screen.\n\n\noutput (number,number,number,number) GFX_DRAW_RECT\n\n\n\n\n\n\nParameters:\n\n\nnumber\n: drawing position in the \nx-axis\n\n\nnumber\n: drawing position in the \ny-axis\n\n\nnumber\n: rectangle width\n\n\nnumber\n: rectangle height\n\n\n\n\n\n\n\n\nThe drawing color is specified with \nGFX_SET_RGB\n.\n\n\nGFX_DRAW_TEXT\n\n\nDraws a text on the screen.\n\n\noutput (text) GFX_DRAW_TEXT\n\n\n\n\n\n\nParameters:\n\n\ntext\n: text to draw\n\n\n\n\n\n\n\n\nThe drawing position is first specified with\n\nGFX_SET_TEXT_CURSOR\n.\nThe cursor advances automatically for the position after the text.\nThe drawing font is specified with \nGFX_SET_TEXT_FONT\n.\nThe drawing color is specified with \nGFX_SET_RGB\n.\n\n\nGFX_DRAW_TEXTLN\n\n\nDraws a line of text on the screen.\n\n\noutput (text) GFX_DRAW_TEXTLN\n\n\n\n\nThe drawing position is first specified with\n\nGFX_SET_TEXT_CURSOR\n.\nThe cursor advances automatically for the next line after the text, at the same\ninitial position.\nThe drawing font is specified with \nGFX_SET_TEXT_FONT\n.\nThe drawing color is specified with \nGFX_SET_RGB\n.\n\n\nOther\n\n\nGFX_SCREENSHOT\n\n\nTakes a screen shot.\n\n\noutput (text) GFX_SCREENSHOT\n\n\n\n\n\n\nParameters:\n\n\ntext\n: path for the \n.bmp\n image filename to generate", 
             "title": "Graphics"
         }, 
         {
@@ -27,22 +27,22 @@
         }, 
         {
             "location": "/gfx/#gfx_set_grid", 
-            "text": "Enables or disables a visual grid delimiting the screen pixels.  output (bool) GFX_SET_GRID   Parameters:  bool : new state  true : enables the grid  false : disables the grid       The ratio between the real and logical dimensions set with WINDOW_SET_SIZE  must be greater then one.", 
+            "text": "Enables or disables a visual grid delimiting the screen pixels.  output (switch) GFX_SET_GRID   Parameters:  switch : new state  on : enables the grid  off : disables the grid       The ratio between the real and logical dimensions set with WINDOW_SET_SIZE  must be greater then one.", 
             "title": "GFX_SET_GRID"
         }, 
         {
             "location": "/gfx/#gfx_set_rgb", 
-            "text": "Changes the color of all subsequent drawing operations.  output (u8,u8,u8) GFX_SET_RGB   Parameters:  u8 : new red component  u8 : new green component  u8 : new blue component", 
+            "text": "Changes the color of all subsequent drawing operations.  output (number,number,number) GFX_SET_RGB   Parameters:  number : new red component  number : new green component  number : new blue component", 
             "title": "GFX_SET_RGB"
         }, 
         {
             "location": "/gfx/#gfx_set_text_cursor", 
-            "text": "Changes the cursor position for drawing text.  output (u16,u16) GFX_SET_TEXT_CURSOR   Parameters:  u16 : new position in the  x-axis  u16 : new position in the  y-axis", 
+            "text": "Changes the cursor position for drawing text.  output (number,number) GFX_SET_TEXT_CURSOR   Parameters:  number : new position in the  x-axis  number : new position in the  y-axis", 
             "title": "GFX_SET_TEXT_CURSOR"
         }, 
         {
             "location": "/gfx/#gfx_set_text_font", 
-            "text": "Changes the font for drawing text.  output (string,u16) GFX_SET_TEXT_FONT   Parameters:  string : path for the  .ttf  font filename  u16 : height of the new font in pixels", 
+            "text": "Changes the font for drawing text.  output (text,number) GFX_SET_TEXT_FONT   Parameters:  text : path for the  .ttf  font filename  number : height of the new font in pixels", 
             "title": "GFX_SET_TEXT_FONT"
         }, 
         {
@@ -52,32 +52,32 @@
         }, 
         {
             "location": "/gfx/#gfx_clear", 
-            "text": "Clears the screen.  output (void) GFX_CLEAR  The clear color is specified with  GFX_SET_RGB .", 
+            "text": "Clears the screen.  output (none) GFX_CLEAR   Parameters:  none : no parameters     The clear color is specified with  GFX_SET_RGB .", 
             "title": "GFX_CLEAR"
         }, 
         {
             "location": "/gfx/#gfx_draw_bmp", 
-            "text": "Draws a bitmap image on the screen.  output (string,u16,u16) GFX_DRAW_BMP   Parameters:  string : path for the  .bmp  image filename  u16 : drawing position in the  x-axis  u16 : drawing position in the  y-axis", 
+            "text": "Draws a bitmap image on the screen.  output (text,number,number) GFX_DRAW_BMP   Parameters:  text : path for the  .bmp  image filename  number : drawing position in the  x-axis  number : drawing position in the  y-axis", 
             "title": "GFX_DRAW_BMP"
         }, 
         {
             "location": "/gfx/#gfx_draw_pixel", 
-            "text": "Draws a pixel on the screen.  output (u16,u16) GFX_DRAW_PIXEL   Parameters:  u16 : drawing position in the  x-axis  u16 : drawing position in the  y-axis     The drawing color is specified with  GFX_SET_RGB .", 
+            "text": "Draws a pixel on the screen.  output (number,number) GFX_DRAW_PIXEL   Parameters:  number : drawing position in the  x-axis  number : drawing position in the  y-axis     The drawing color is specified with  GFX_SET_RGB .", 
             "title": "GFX_DRAW_PIXEL"
         }, 
         {
             "location": "/gfx/#gfx_draw_rect", 
-            "text": "Draws a rectangle on the screen.  output (u16,u16,u16,u16) GFX_DRAW_RECT   Parameters:  u16 : drawing position in the  x-axis  u16 : drawing position in the  y-axis  u16 : rectangle width  u16 : rectangle height     The drawing color is specified with  GFX_SET_RGB .", 
+            "text": "Draws a rectangle on the screen.  output (number,number,number,number) GFX_DRAW_RECT   Parameters:  number : drawing position in the  x-axis  number : drawing position in the  y-axis  number : rectangle width  number : rectangle height     The drawing color is specified with  GFX_SET_RGB .", 
             "title": "GFX_DRAW_RECT"
         }, 
         {
             "location": "/gfx/#gfx_draw_text", 
-            "text": "Draws a text on the screen.  output (string) GFX_DRAW_TEXT   Parameters:  string : text to draw     The drawing position is first specified with GFX_SET_TEXT_CURSOR .\nThe cursor advances automatically for the position after the text.\nThe drawing font is specified with  GFX_SET_TEXT_FONT .\nThe drawing color is specified with  GFX_SET_RGB .", 
+            "text": "Draws a text on the screen.  output (text) GFX_DRAW_TEXT   Parameters:  text : text to draw     The drawing position is first specified with GFX_SET_TEXT_CURSOR .\nThe cursor advances automatically for the position after the text.\nThe drawing font is specified with  GFX_SET_TEXT_FONT .\nThe drawing color is specified with  GFX_SET_RGB .", 
             "title": "GFX_DRAW_TEXT"
         }, 
         {
             "location": "/gfx/#gfx_draw_textln", 
-            "text": "Draws a line of text on the screen.  output (string) GFX_DRAW_TEXTLN  The drawing position is first specified with GFX_SET_TEXT_CURSOR .\nThe cursor advances automatically for the next line after the text, at the same\ninitial position.\nThe drawing font is specified with  GFX_SET_TEXT_FONT .\nThe drawing color is specified with  GFX_SET_RGB .", 
+            "text": "Draws a line of text on the screen.  output (text) GFX_DRAW_TEXTLN  The drawing position is first specified with GFX_SET_TEXT_CURSOR .\nThe cursor advances automatically for the next line after the text, at the same\ninitial position.\nThe drawing font is specified with  GFX_SET_TEXT_FONT .\nThe drawing color is specified with  GFX_SET_RGB .", 
             "title": "GFX_DRAW_TEXTLN"
         }, 
         {
@@ -87,12 +87,12 @@
         }, 
         {
             "location": "/gfx/#gfx_screenshot", 
-            "text": "Takes a screen shot.  output (string) GFX_SCREENSHOT   Parameters:  string : path for the  .bmp  image filename to generate", 
+            "text": "Takes a screen shot.  output (text) GFX_SCREENSHOT   Parameters:  text : path for the  .bmp  image filename to generate", 
             "title": "GFX_SCREENSHOT"
         }, 
         {
             "location": "/input/", 
-            "text": "Input Devices\n\n\nProvides input handling, such as for keyboard and mouse.\n\n\nKeyboard\n\n\nKEY_PRESS\n\n\ninput (bool,u16) KEY_PRESS\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a keyboard key is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nbool\n: new key state\n\n\ntrue\n: key is now pressed\n\n\nfalse\n: key is now released\n\n\n\n\n\n\nu16\n: numeric key code\n\n\n\n\n\n\n\n\nTODO: key codes\n\n\nMouse\n\n\nMOUSE_CLICK\n\n\ninput (bool,int,u16,u16) MOUSE_CLICK\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a mouse button is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nbool\n: new button state\n\n\ntrue\n: button is now pressed\n\n\nfalse\n: button is now released\n\n\n\n\n\n\nint\n:  numeric button code (\nTODO: left, middle, right?\n)\n\n\nu16\n:  current mouse position in the \nx-axis\n\n\nu16\n:  current mouse position in the \ny-axis\n\n\n\n\n\n\n\n\nMOUSE_MOVE\n\n\ninput (u16,u16) MOUSE_MOVE\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever the mouse moves\n\n\n\n\n\n\nPayload:\n\n\nu16\n:  current mouse position in the \nx-axis\n\n\nu16\n:  current mouse position in the \ny-axis", 
+            "text": "Input Devices\n\n\nProvides input handling, such as for keyboard and mouse.\n\n\nKeyboard\n\n\nKEY_PRESS\n\n\ninput (switch,number) KEY_PRESS\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a keyboard key is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nswitch\n: new key state\n\n\non\n: key is now pressed\n\n\noff\n: key is now released\n\n\n\n\n\n\nnumber\n: numeric key code\n\n\n\n\n\n\n\n\nTODO: key codes\n\n\nMouse\n\n\nMOUSE_CLICK\n\n\ninput (switch,number,number,number) MOUSE_CLICK\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a mouse button is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nswitch\n: new button state\n\n\non\n: button is now pressed\n\n\noff\n: button is now released\n\n\n\n\n\n\nnumber\n:  numeric button code (\nTODO: left, middle, right?\n)\n\n\nnumber\n:  current mouse position in the \nx-axis\n\n\nnumber\n:  current mouse position in the \ny-axis\n\n\n\n\n\n\n\n\nMOUSE_MOVE\n\n\ninput (number,number) MOUSE_MOVE\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever the mouse moves\n\n\n\n\n\n\nPayload:\n\n\nnumber\n:  current mouse position in the \nx-axis\n\n\nnumber\n:  current mouse position in the \ny-axis", 
             "title": "Input Devices"
         }, 
         {
@@ -107,7 +107,7 @@
         }, 
         {
             "location": "/input/#key_press", 
-            "text": "input (bool,u16) KEY_PRESS   Occurrences:  whenever a keyboard key is pressed or released    Payload:  bool : new key state  true : key is now pressed  false : key is now released    u16 : numeric key code     TODO: key codes", 
+            "text": "input (switch,number) KEY_PRESS   Occurrences:  whenever a keyboard key is pressed or released    Payload:  switch : new key state  on : key is now pressed  off : key is now released    number : numeric key code     TODO: key codes", 
             "title": "KEY_PRESS"
         }, 
         {
@@ -117,17 +117,17 @@
         }, 
         {
             "location": "/input/#mouse_click", 
-            "text": "input (bool,int,u16,u16) MOUSE_CLICK   Occurrences:  whenever a mouse button is pressed or released    Payload:  bool : new button state  true : button is now pressed  false : button is now released    int :  numeric button code ( TODO: left, middle, right? )  u16 :  current mouse position in the  x-axis  u16 :  current mouse position in the  y-axis", 
+            "text": "input (switch,number,number,number) MOUSE_CLICK   Occurrences:  whenever a mouse button is pressed or released    Payload:  switch : new button state  on : button is now pressed  off : button is now released    number :  numeric button code ( TODO: left, middle, right? )  number :  current mouse position in the  x-axis  number :  current mouse position in the  y-axis", 
             "title": "MOUSE_CLICK"
         }, 
         {
             "location": "/input/#mouse_move", 
-            "text": "input (u16,u16) MOUSE_MOVE   Occurrences:  whenever the mouse moves    Payload:  u16 :  current mouse position in the  x-axis  u16 :  current mouse position in the  y-axis", 
+            "text": "input (number,number) MOUSE_MOVE   Occurrences:  whenever the mouse moves    Payload:  number :  current mouse position in the  x-axis  number :  current mouse position in the  y-axis", 
             "title": "MOUSE_MOVE"
         }, 
         {
             "location": "/frames/", 
-            "text": "Frame Management\n\n\nManages the game frames, such as for updating animations and redrawing the\nscreen.\n\n\nConfiguration\n\n\nFRAMES_SET\n\n\nEnables or disables the generation of periodic\n\nFRAMES_UPDATE\n and \nFRAMES_REDRAW\n\ninputs to the application.\n\n\noutput (bool) FRAMES_SET\n\n\n\n\n\n\nParameters:\n\n\nbool\n: new state\n\n\ntrue\n: enables the generation of frames\n\n\nfalse\n: disables the generation of frames\n\n\n\n\n\n\n\n\n\n\n\n\nFRAMES_SET_CLEAR_RGB\n\n\nChanges the redrawing background color.\n\n\noutput (u8,u8,u8) FRAMES_SET_CLEAR_RGB\n\n\n\n\n\n\nParameters:\n\n\nu8\n: new red component\n\n\nu8\n: new green component\n\n\nu8\n: new blue component\n\n\n\n\n\n\n\n\nOn every frame before \nFRAMES_REDRAW\n, the screen is cleared\nwith the background color.\n\n\nThe default color is black.\n\n\nUpdate\n\n\nFRAMES_UPDATE\n\n\ninput (int) FRAMES_UPDATE\n\n\n\n\n\n\nOccurrences:\n\n\non every frame, before \nFRAMES_REDRAW\n\n\n\n\n\n\nPayload:\n\n\nint\n: the number of elapsed milliseconds since the previous frame\n\n\n\n\n\n\n\n\nRedraw\n\n\nFRAMES_REDRAW\n\n\ninput (void) FRAMES_REDRAW\n\n\n\n\n\n\nOccurrences:\n\n\non every frame, after \nFRAMES_UPDATE\n\n\n\n\n\n\n\n\nBefore the input occurs, the screen is cleared with the color set with\n\nFRAMES_SET_CLEAR_RGB\n.", 
+            "text": "Frame Management\n\n\nManages the game frames, such as for updating animations and redrawing the\nscreen.\n\n\nConfiguration\n\n\nFRAMES_SET\n\n\nEnables or disables the generation of periodic\n\nFRAMES_UPDATE\n and \nFRAMES_REDRAW\n\ninputs to the application.\n\n\noutput (switch) FRAMES_SET\n\n\n\n\n\n\nParameters:\n\n\nswitch\n: new state\n\n\non\n: enables the generation of frames\n\n\noff\n: disables the generation of frames\n\n\n\n\n\n\n\n\n\n\n\n\nFRAMES_SET_CLEAR_RGB\n\n\nChanges the redrawing background color.\n\n\noutput (number,number,number) FRAMES_SET_CLEAR_RGB\n\n\n\n\n\n\nParameters:\n\n\nnumber\n: new red component\n\n\nnumber\n: new green component\n\n\nnumber\n: new blue component\n\n\n\n\n\n\n\n\nOn every frame before \nFRAMES_REDRAW\n, the screen is cleared\nwith the background color.\n\n\nThe default color is black.\n\n\nUpdate\n\n\nFRAMES_UPDATE\n\n\ninput (number) FRAMES_UPDATE\n\n\n\n\n\n\nOccurrences:\n\n\non every frame, before \nFRAMES_REDRAW\n\n\n\n\n\n\nPayload:\n\n\nnumber\n: the number of elapsed milliseconds since the previous frame\n\n\n\n\n\n\n\n\nRedraw\n\n\nFRAMES_REDRAW\n\n\ninput (none) FRAMES_REDRAW\n\n\n\n\n\n\nOccurrences:\n\n\non every frame, after \nFRAMES_UPDATE\n\n\n\n\n\n\nParameters:\n\n\nnone\n: no parameters\n\n\n\n\n\n\n\n\nBefore the input occurs, the screen is cleared with the color set with\n\nFRAMES_SET_CLEAR_RGB\n.", 
             "title": "Frame Management"
         }, 
         {
@@ -142,12 +142,12 @@
         }, 
         {
             "location": "/frames/#frames_set", 
-            "text": "Enables or disables the generation of periodic FRAMES_UPDATE  and  FRAMES_REDRAW \ninputs to the application.  output (bool) FRAMES_SET   Parameters:  bool : new state  true : enables the generation of frames  false : disables the generation of frames", 
+            "text": "Enables or disables the generation of periodic FRAMES_UPDATE  and  FRAMES_REDRAW \ninputs to the application.  output (switch) FRAMES_SET   Parameters:  switch : new state  on : enables the generation of frames  off : disables the generation of frames", 
             "title": "FRAMES_SET"
         }, 
         {
             "location": "/frames/#frames_set_clear_rgb", 
-            "text": "Changes the redrawing background color.  output (u8,u8,u8) FRAMES_SET_CLEAR_RGB   Parameters:  u8 : new red component  u8 : new green component  u8 : new blue component     On every frame before  FRAMES_REDRAW , the screen is cleared\nwith the background color.  The default color is black.", 
+            "text": "Changes the redrawing background color.  output (number,number,number) FRAMES_SET_CLEAR_RGB   Parameters:  number : new red component  number : new green component  number : new blue component     On every frame before  FRAMES_REDRAW , the screen is cleared\nwith the background color.  The default color is black.", 
             "title": "FRAMES_SET_CLEAR_RGB"
         }, 
         {
@@ -157,7 +157,7 @@
         }, 
         {
             "location": "/frames/#frames_update", 
-            "text": "input (int) FRAMES_UPDATE   Occurrences:  on every frame, before  FRAMES_REDRAW    Payload:  int : the number of elapsed milliseconds since the previous frame", 
+            "text": "input (number) FRAMES_UPDATE   Occurrences:  on every frame, before  FRAMES_REDRAW    Payload:  number : the number of elapsed milliseconds since the previous frame", 
             "title": "FRAMES_UPDATE"
         }, 
         {
@@ -167,12 +167,12 @@
         }, 
         {
             "location": "/frames/#frames_redraw", 
-            "text": "input (void) FRAMES_REDRAW   Occurrences:  on every frame, after  FRAMES_UPDATE     Before the input occurs, the screen is cleared with the color set with FRAMES_SET_CLEAR_RGB .", 
+            "text": "input (none) FRAMES_REDRAW   Occurrences:  on every frame, after  FRAMES_UPDATE    Parameters:  none : no parameters     Before the input occurs, the screen is cleared with the color set with FRAMES_SET_CLEAR_RGB .", 
             "title": "FRAMES_REDRAW"
         }, 
         {
             "location": "/window/", 
-            "text": "Window Management\n\n\nManages the application window.\n\n\nConfiguration\n\n\nWINDOW_SET_SIZE\n\n\nChanges the real and logical sizes of the window.\n\n\noutput (u16,u16,u16,u16) WINDOW_SET_SIZE\n\n\n\n\n\n\nParameters:\n\n\nu16\n: new real width\n\n\nu16\n: new real height\n\n\nu16\n: new logical width\n\n\nu16\n: new logical height\n\n\n\n\n\n\n\n\nThe arithmetic division between the real and logical dimensions must be exact.\n\n\nWINDOW_SET_TITLE\n\n\nChanges the title of the window.\n\n\noutput (string) WINDOW_SET_TITLE\n\n\n\n\n\n\nParameters:\n\n\nstring\n: new window title", 
+            "text": "Window Management\n\n\nManages the application window.\n\n\nConfiguration\n\n\nWINDOW_SET_SIZE\n\n\nChanges the real and logical sizes of the window.\n\n\noutput (number,number,number,number) WINDOW_SET_SIZE\n\n\n\n\n\n\nParameters:\n\n\nnumber\n: new real width\n\n\nnumber\n: new real height\n\n\nnumber\n: new logical width\n\n\nnumber\n: new logical height\n\n\n\n\n\n\n\n\nThe arithmetic division between the real and logical dimensions must be exact.\n\n\nWINDOW_SET_TITLE\n\n\nChanges the title of the window.\n\n\noutput (text) WINDOW_SET_TITLE\n\n\n\n\n\n\nParameters:\n\n\ntext\n: new window title", 
             "title": "Window Management"
         }, 
         {
@@ -187,12 +187,12 @@
         }, 
         {
             "location": "/window/#window_set_size", 
-            "text": "Changes the real and logical sizes of the window.  output (u16,u16,u16,u16) WINDOW_SET_SIZE   Parameters:  u16 : new real width  u16 : new real height  u16 : new logical width  u16 : new logical height     The arithmetic division between the real and logical dimensions must be exact.", 
+            "text": "Changes the real and logical sizes of the window.  output (number,number,number,number) WINDOW_SET_SIZE   Parameters:  number : new real width  number : new real height  number : new logical width  number : new logical height     The arithmetic division between the real and logical dimensions must be exact.", 
             "title": "WINDOW_SET_SIZE"
         }, 
         {
             "location": "/window/#window_set_title", 
-            "text": "Changes the title of the window.  output (string) WINDOW_SET_TITLE   Parameters:  string : new window title", 
+            "text": "Changes the title of the window.  output (text) WINDOW_SET_TITLE   Parameters:  text : new window title", 
             "title": "WINDOW_SET_TITLE"
         }, 
         {
