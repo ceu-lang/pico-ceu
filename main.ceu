@@ -4,49 +4,59 @@
 #include "sdl/sdl.ceu"
 #include "keys.ceu"
 
-native/plain _string;
+native/plain _none, _yesno, _integer, _real, _text;
 native/pre do
-    typedef char* string;
+    typedef void  none;
+    typedef bool  yesno;
+    typedef int   integer;
+    typedef float real;
+    typedef char* text;
 end
-#define string _string
+#define none    void
+#define yesno   bool
+#define integer int
+#define real    float
+#define text    _text
+#define yes     true
+#define no      false
 
-output (string)          WINDOW_SET_TITLE;
-output (u16,u16,u16,u16) WINDOW_SET_SIZE;
+output (text)            WINDOW_SET_TITLE;
+output (int,int,int,int) WINDOW_SET_SIZE;
 
 output (bool)            FRAMES_SET;
-output (u8,u8,u8)        FRAMES_SET_CLEAR_RGB;
+output (int,int,int)     FRAMES_SET_CLEAR_RGB;
 input  (int)             FRAMES_UPDATE;
 input  (void)            FRAMES_REDRAW;
 
-input (bool,int,u16,u16) MOUSE_CLICK;
-input (u16,u16)          MOUSE_MOVE;
-input (bool,u16)         KEY_PRESS;
+input (bool,int,int,int) MOUSE_CLICK;
+input (int,int)          MOUSE_MOVE;
+input (bool,int)         KEY_PRESS;
 
-output (u8,u8,u8)        GFX_SET_RGB;
-output (string,u16)      GFX_SET_TEXT_FONT;
-output (u16,u16)         GFX_SET_TEXT_CURSOR;
+output (int,int,int)     GFX_SET_RGB;
+output (text,int)        GFX_SET_TEXT_FONT;
+output (int,int)         GFX_SET_TEXT_CURSOR;
 output (bool)            GFX_SET_GRID;
-output (string)          GFX_SCREENSHOT;
+output (text)            GFX_SCREENSHOT;
 output (void)            GFX_CLEAR;
-output (u16,u16)         GFX_DRAW_PIXEL;
-output (u16,u16,u16,u16) GFX_DRAW_RECT;
-output (string,u16,u16)  GFX_DRAW_BMP;
-output (string)          GFX_DRAW_TEXT;
-output (string)          GFX_DRAW_TEXTLN;
+output (int,int)         GFX_DRAW_PIXEL;
+output (int,int,int,int) GFX_DRAW_RECT;
+output (text,int,int)    GFX_DRAW_BMP;
+output (text)            GFX_DRAW_TEXT;
+output (text)            GFX_DRAW_TEXTLN;
 
 native/pos do
     SDL_Window*   WIN;
     #define REN (SDL_GetRenderer(WIN))
 
     TTF_Font* FNT = NULL;
-    u16       FNT_H;
+    int       FNT_H;
 
     bool      FRAMES_SET = 0;
     SDL_Color FRAMES_SET_CLEAR_RGB;
 
     bool GFX_SET_GRID = 0;
-    u16  GFX_TEXT_CURSOR_X = 0;
-    u16  GFX_TEXT_CURSOR_Y = 0;
+    int  GFX_TEXT_CURSOR_X = 0;
+    int  GFX_TEXT_CURSOR_Y = 0;
 
     void GFX_Show_Grid (void) {
         if (!GFX_SET_GRID) return;
@@ -60,10 +70,10 @@ native/pos do
         SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
 
         SDL_SetRenderDrawColor(REN, 0x77,0x77,0x77, 0x00);
-        for (u16 i=0; i<=ren_w; i+=(ren_w/log_w)) {
+        for (int i=0; i<=ren_w; i+=(ren_w/log_w)) {
             SDL_RenderDrawLine(REN, i, 0, i, ren_h);
         }
-        for (u16 j=0; j<=ren_h; j+=(ren_h/log_h)) {
+        for (int j=0; j<=ren_h; j+=(ren_h/log_h)) {
             SDL_RenderDrawLine(REN, 0, j, ren_w, j);
         }
 
@@ -89,10 +99,10 @@ native/pos do
                     }
                     case CEU_OUTPUT_WINDOW_SET_SIZE: {
                         tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) p2.ptr;
-                        u16 ren_w = ps->_1;
-                        u16 ren_h = ps->_2;
-                        u16 log_w = ps->_3;
-                        u16 log_h = ps->_4;
+                        int ren_w = ps->_1;
+                        int ren_h = ps->_2;
+                        int log_w = ps->_3;
+                        int log_h = ps->_4;
                         ceu_dbg_assert(ren_w%log_w == 0);
                         ceu_dbg_assert(ren_h%log_h == 0);
 
@@ -308,10 +318,10 @@ watching sdl do
             // BACKGROUND
             every FRAMES_REDRAW do
                 if {FRAMES_SET} as bool then
-                    var u8 r = _;
-                    var u8 g = _;
-                    var u8 b = _;
-                    _SDL_GetRenderDrawColor({REN}, &&r, &&g, &&b, null);
+                    var int r = _;
+                    var int g = _;
+                    var int b = _;
+                    _SDL_GetRenderDrawColor({REN}, &&r as u8&&, &&g as u8&&, &&b as u8&&, null);
                     emit GFX_SET_RGB({FRAMES_SET_CLEAR_RGB.r},
                                      {FRAMES_SET_CLEAR_RGB.g},
                                      {FRAMES_SET_CLEAR_RGB.b});
@@ -347,8 +357,8 @@ watching sdl do
             // DOWN -> CLICK(true)
             loop do
                 var _SDL_MouseButtonEvent&& mse = await SDL_MOUSEBUTTONDOWN;
-                var u16 x = {@mse:x};
-                var u16 y = {@mse:y};
+                var int x = {@mse:x};
+                var int y = {@mse:y};
                 await async (x,y) do
                     emit MOUSE_CLICK(true,0,x,y);
                 end
@@ -357,20 +367,20 @@ watching sdl do
             // UP -> CLICK(false)
             loop do
                 var _SDL_MouseButtonEvent&& mse = await SDL_MOUSEBUTTONUP;
-                var u16 x = {@mse:x};
-                var u16 y = {@mse:y};
+                var int x = {@mse:x};
+                var int y = {@mse:y};
                 await async (x,y) do
                     emit MOUSE_CLICK(false,0,x,y);
                 end
             end
         with
             // MOTION -> MOVE
-            var u16 x = {U16_MAX};
-            var u16 y = {U16_MAX};
+            var int x = {U16_MAX};
+            var int y = {U16_MAX};
             loop do
                 var _SDL_MouseMotionEvent&& mse = await SDL_MOUSEMOTION;
-                var u16 x_ = {@mse:x};
-                var u16 y_ = {@mse:y};
+                var int x_ = {@mse:x};
+                var int y_ = {@mse:y};
                 if x_!=x or y_!=y then
                     x = x_;
                     y = y_;
