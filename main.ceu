@@ -39,6 +39,7 @@ output (bool)            GFX_SET_GRID;
 output (text)            GFX_SCREENSHOT;
 output (void)            GFX_CLEAR;
 output (int,int)         GFX_DRAW_PIXEL;
+output (int,int,int,int) GFX_DRAW_LINE;
 output (int,int,int,int) GFX_DRAW_RECT;
 output (text,int,int)    GFX_DRAW_BMP;
 output (text)            GFX_DRAW_TEXT;
@@ -211,9 +212,20 @@ native/pos do
                         GFX_Present();
                         break;
                     }
+                    case CEU_OUTPUT_GFX_DRAW_LINE: {
+                        tceu_output_GFX_DRAW_LINE* ps = (tceu_output_GFX_DRAW_LINE*) p2.ptr;
+//int ren_w,ren_h, log_w,log_h;
+//SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+//SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+//SDL_RenderSetScale(REN, 10,10);
+                        SDL_RenderDrawLine(REN, ps->_1, ps->_2, ps->_3, ps->_4);
+//SDL_RenderSetScale(REN, 1, 1);
+                        GFX_Present();
+                        break;
+                    }
                     case CEU_OUTPUT_GFX_DRAW_RECT: {
-                        tceu_output_GFX_DRAW_RECT* pt = (tceu_output_GFX_DRAW_RECT*) p2.ptr;
-                        SDL_Rect rct = { pt->_1, pt->_2, pt->_3, pt->_4 };
+                        tceu_output_GFX_DRAW_RECT* ps = (tceu_output_GFX_DRAW_RECT*) p2.ptr;
+                        SDL_Rect rct = { ps->_1, ps->_2, ps->_3, ps->_4 };
                         SDL_RenderFillRect(REN, &rct);
                         GFX_Present();
                         break;

@@ -113,8 +113,8 @@ par do
                 end;
                 watching bird do
                     every FRAMES_REDRAW do
-                        //_SDL_SetRenderDrawColor(&&sdl!.ren, 0xFF,0xFF,0xFF, 0xFF);
-                        //_SDL_RenderDrawLine(&&sdl!.ren, 320,480, bird!.rct.x+20,bird!.rct.y+20);
+                        emit GFX_SET_RGB(0xFF,0xFF,0xFF);
+                        emit GFX_DRAW_LINE(320,480, bird!.rct.x+20,bird!.rct.y+20);
                     end
                 end
             end

@@ -83,8 +83,8 @@ output (text,integer,integer) GFX_DRAW_BMP
 
 - Parameters:
     - `text`: path for the `.bmp` image filename
-    - `integer`: drawing position in the `x-axis`
-    - `integer`: drawing position in the `y-axis`
+    - `integer`: position in the `x-axis`
+    - `integer`: position in the `y-axis`
 
 ### GFX_DRAW_PIXEL
 
@@ -95,8 +95,24 @@ output (integer,integer) GFX_DRAW_PIXEL
 ```
 
 - Parameters:
-    - `integer`: drawing position in the `x-axis`
-    - `integer`: drawing position in the `y-axis`
+    - `integer`: position in the `x-axis`
+    - `integer`: position in the `y-axis`
+
+The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+
+### GFX_DRAW_LINE
+
+Draws a line on the screen.
+
+```ceu
+output (integer,integer,integer,integer) GFX_DRAW_LINE;
+```
+
+- Parameters:
+    - `integer`: start position in the `x-axis`
+    - `integer`: start position in the `y-axis`
+    - `integer`: end position in the `x-axis`
+    - `integer`: end position in the `y-axis`
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -109,8 +125,8 @@ output (integer,integer,integer,integer) GFX_DRAW_RECT
 ```
 
 - Parameters:
-    - `integer`: drawing position in the `x-axis`
-    - `integer`: drawing position in the `y-axis`
+    - `integer`: position in the `x-axis`
+    - `integer`: position in the `y-axis`
     - `integer`: rectangle width
     - `integer`: rectangle height
 
