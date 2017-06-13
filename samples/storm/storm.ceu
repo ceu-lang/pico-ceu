@@ -1,0 +1,35 @@
+#include "c.ceu"
+#include "sdl/sdl.ceu"
+
+native/pos do
+    ##include <time.h>
+end
+
+#define WIN_W 640
+#define WIN_H 480
+
+#define PI 3.14159265
+_srand(_time(null));
+
+data Vector2D with
+    var int x;
+    var int y;
+end
+
+emit WINDOW_SET_TITLE("Storm");
+emit WINDOW_SET_SIZE(WIN_W,WIN_H,WIN_W,WIN_H);
+emit FRAMES_SET(yes);
+emit FRAMES_SET_CLEAR_RGB(0x21,0x2c,0x34);
+
+#include "physics.ceu"
+#include "car.ceu"
+#include "light.ceu"
+#include "clouds.ceu"
+
+var& Car car = spawn Car();
+spawn Clouds();
+
+#include "collisions.ceu"
+spawn Collisions();
+
+await FOREVER;

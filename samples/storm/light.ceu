@@ -1,0 +1,113 @@
+code/tight Boom_Vel (var& IPhysics boom, var& IPhysics other) -> Vector2D
+do
+    var int radius    = 80;
+    var int magnitude = 20;
+
+    var Vector2D c1 = val Vector2D((boom.x.pst+boom.x.len/2) as int,
+                                   (boom.y.pst+boom.y.len/2) as int);
+    var Vector2D c2 = val Vector2D((other.x.pst+other.x.len/2) as int,
+                                   (other.y.pst+other.y.len/2) as int);
+
+    var float dist = _sqrt(_pow(c2.x-c1.x,2) + _pow(c2.y-c1.y,2));
+
+    var float pct = dist/radius;
+    if pct > 1 then
+        var Vector2D vel = val Vector2D(0,0);
+        escape vel;
+    else/if pct < 0.1 then
+        pct = 0.1;
+    end
+    pct = 1.0 - (_cos(pct * PI));
+
+    var Vector2D vel = val Vector2D(_cos(pct)*magnitude, _sin(pct)*magnitude*-1);
+    if c2.x < c1.x then
+        vel.x = -vel.x;
+    end
+    if c2.y < c1.y then
+        vel.y = -vel.y;
+    end
+
+    escape vel;
+end
+
+code/await Boom (var int x) -> (var& IPhysics physics) -> void
+do
+    var int radius = 80;
+    var SDL_Rect rct = val SDL_Rect(x - radius,
+                                    (WIN_H + radius*0.2 - radius) as int,
+                                    radius*2,
+                                    radius*2);
+    var& Physics boom = spawn Physics(rct,_);
+    physics = &boom.physics;
+    await 100ms;
+end
+pool[] Boom  booms;
+
+code/await Light (pool&[] Light    lights,
+                  var     Vector2D pos_ini,
+                  var     int?     direction,
+                  var     int?     magnitude,
+                  var     bool?    is_fork,
+                 ) -> void
+do
+    var int dir = 270;
+    if direction? then
+        dir = direction!;
+    end
+
+    var int mag = 50;
+    if magnitude? then
+        mag = magnitude!;
+    end
+
+    var bool fork = false;
+    if is_fork? then
+        fork = is_fork!;
+    end
+
+    var int chaos = 30;
+    var float d = PI * (dir - chaos + _rand()%(chaos*2)) / 180.0;
+    var Vector2D pos_end = val Vector2D(pos_ini.x + (_cos(d) * mag),
+                                        pos_ini.y - (_sin(d) * mag));
+
+    watching 150ms do
+        par do
+            if pos_end.y >= WIN_H then
+                if not fork then
+                    spawn Boom((pos_ini.x + pos_end.x)/2) in outer.booms;
+                end
+            else/if mag > 5 then
+                await 20ms;
+
+                var int m = mag;
+                if fork then
+                    m = (mag * 0.75) as int;
+                end
+                spawn Light(&lights, pos_end, dir, m, fork) in lights;
+
+                if (_rand()%WIN_H) > pos_ini.y then
+                    spawn Light(&lights, pos_ini, _rand()%180+180, (mag*0.5) as int, true)
+                        in lights;
+                end
+            end
+            await FOREVER;
+        with
+            every SDL_REDRAW do
+                _SDL_SetRenderDrawColor(&&outer.sdl!.ren, 0xEA, 0xD7, 0xFF, 0 );
+                _SDL_RenderDrawLine(&&outer.sdl!.ren,
+                                    pos_ini.x, pos_ini.y,
+                                    pos_end.x, pos_end.y);
+            end
+        end
+    end
+end
+pool[] Light lights;
+
+// DEBUG
+spawn do
+    loop do
+        var _SDL_KeyboardEvent&& key =
+            await SDL_KEYDOWN until key:keysym.sym==_SDLK_DOWN;
+        spawn Light(&lights,Vector2D(300,0),_,_,_) in lights;
+    end
+end
