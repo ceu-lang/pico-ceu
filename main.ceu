@@ -127,6 +127,15 @@ native/pos do
 
                         SDL_SetWindowSize(WIN, ren_w, ren_h);
                         SDL_RenderSetLogicalSize(REN, log_w, log_h);
+
+                        { // clears the window
+                            u8 r, g, b;
+                            SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+                            SDL_SetRenderDrawColor(REN, 0,0,0, 0xFF);
+                            p1.num = CEU_OUTPUT_GFX_CLEAR;
+                            ceu_callback_sdl_pico(cmd, p1, p2);
+                            SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
+                        }
                         break;
                     }
 

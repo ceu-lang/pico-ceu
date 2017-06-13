@@ -18,6 +18,8 @@ output (integer,integer,integer,integer) WINDOW_SET_SIZE
     - `integer`: new logical width
     - `integer`: new logical height
 
+The window is automatically cleared with black.
+
 The arithmetic division between the real and logical dimensions must be exact.
 
 ### WINDOW_SET_TITLE
