@@ -1,7 +1,5 @@
-#CEU_DIR     = $(error set absolute path to "<ceu>" repository)
-#CEU_SDL_DIR = $(error set absolute path to "<ceu-sdl>" repository)
-CEU_DIR     = /data/ceu/ceu
-CEU_SDL_DIR = /data/ceu/ceu-sdl
+CEU_DIR     = $(error set absolute path to "<ceu>" repository)
+CEU_SDL_DIR = $(error set absolute path to "<ceu-sdl>" repository)
 
 all:
 	ceu --pre --pre-args="-I$(CEU_DIR)/include -I$(CEU_SDL_DIR)/include -DCEU_SRC=$(CEU_SRC)"    \
