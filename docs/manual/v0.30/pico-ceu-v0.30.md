@@ -93,7 +93,7 @@ output (u16,u16) GFX_DRAW_PIXEL
     - `u16`: drawing position in the `x-axis`
     - `u16`: drawing position in the `y-axis`
 
-The drawing color is specified with [`GFX_SET_RGB`][#GFX_SET_RGB].
+The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 #### GFX_DRAW_RECT
 
@@ -109,7 +109,7 @@ output (u16,u16,u16,u16) GFX_DRAW_RECT
     - `u16`: rectangle width
     - `u16`: rectangle height
 
-The drawing color is specified with [`GFX_SET_RGB`][#GFX_SET_RGB].
+The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 #### GFX_DRAW_TEXT
 
@@ -123,12 +123,12 @@ output string GFX_DRAW_TEXT
     - `string`: text to draw
 
 The drawing position is first specified with
-[`GFX_SET_TEXT_CURSOR`][#GFX_SET_TEXT_CURSOR].
+[`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
 The cursor advances automatically for the position after the text.
 
-The drawing font is specified with [`GFX_SET_TEXT_FONT`][#GFX_SET_TEXT_FONT].
+The drawing font is specified with [`GFX_SET_TEXT_FONT`](#gfx_set_text_font).
 
-The drawing color is specified with [`GFX_SET_RGB`][#GFX_SET_RGB].
+The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 #### GFX_DRAW_TEXTLN
 
@@ -139,13 +139,13 @@ output string GFX_DRAW_TEXTLN
 ```
 
 The drawing position is first specified with
-[`GFX_SET_TEXT_CURSOR`][#GFX_SET_TEXT_CURSOR].
+[`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
 The cursor advances automatically for the next line after the text, at the same
 initial position.
 
-The drawing font is specified with [`GFX_SET_TEXT_FONT`][#GFX_SET_TEXT_FONT].
+The drawing font is specified with [`GFX_SET_TEXT_FONT`](#gfx_set_text_font).
 
-The drawing color is specified with [`GFX_SET_RGB`][#GFX_SET_RGB].
+The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 ### Other
 
@@ -157,7 +157,7 @@ Clears the screen.
 output void GFX_CLEAR
 ```
 
-The clear color is specified with [`GFX_SET_RGB`][#GFX_SET_RGB].
+The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 #### GFX_SCREENSHOT
 
@@ -273,7 +273,7 @@ input int FRAMES_UPDATE
 ```
 
 - Occurrence:
-    - on every frame, before [`FRAMES_REDRAW`][#FRAMES_REDRAW]
+    - on every frame, before [`FRAMES_REDRAW`](#frames_redraw)
 - Payload:
     - `int`: the number of elapsed milliseconds since the previous frame
 
@@ -286,10 +286,10 @@ input void FRAMES_REDRAW
 ```
 
 - Occurrence:
-    - on every frame, after [`FRAMES_UPDATE`][#FRAMES_UPDATE]
+    - on every frame, after [`FRAMES_UPDATE`](#frames_update)
 
 Before the event occurs, the screen is cleared with the color set on
-[`FRAMES_SET_CLEAR_RGB`][#FRAMES_SET_CLEAR_RGB].
+[`FRAMES_SET_CLEAR_RGB`](#frames_set_clear_rgb).
 
 # Window Management
 
