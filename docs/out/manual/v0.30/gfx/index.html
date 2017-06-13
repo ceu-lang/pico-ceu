@@ -147,14 +147,14 @@ screen.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="gfx_set_grid">GFX_SET_GRID<a class="headerlink" href="#gfx_set_grid" title="Permanent link">&para;</a></h3>
 <p>Enables or disables a visual grid delimiting the screen pixels.</p>
-<pre><code class="ceu">output (switch) GFX_SET_GRID
+<pre><code class="ceu">output (yesno) GFX_SET_GRID
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>switch</code>: new state<ul>
-<li><code>on</code>: enables the grid</li>
-<li><code>off</code>: disables the grid</li>
+<li><code>yesno</code>: new state<ul>
+<li><code>yes</code>: enables the grid</li>
+<li><code>no</code>: disables the grid</li>
 </ul>
 </li>
 </ul>
@@ -164,38 +164,38 @@ screen.</p>
 <a href="./../window/#window_set_size"><code>WINDOW_SET_SIZE</code></a> must be greater then one.</p>
 <h3 id="gfx_set_rgb">GFX_SET_RGB<a class="headerlink" href="#gfx_set_rgb" title="Permanent link">&para;</a></h3>
 <p>Changes the color of all subsequent drawing operations.</p>
-<pre><code class="ceu">output (number,number,number) GFX_SET_RGB
+<pre><code class="ceu">output (integer,integer,integer) GFX_SET_RGB
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>number</code>: new red component</li>
-<li><code>number</code>: new green component</li>
-<li><code>number</code>: new blue component</li>
+<li><code>integer</code>: new red component</li>
+<li><code>integer</code>: new green component</li>
+<li><code>integer</code>: new blue component</li>
 </ul>
 </li>
 </ul>
 <h3 id="gfx_set_text_cursor">GFX_SET_TEXT_CURSOR<a class="headerlink" href="#gfx_set_text_cursor" title="Permanent link">&para;</a></h3>
 <p>Changes the cursor position for drawing text.</p>
-<pre><code class="ceu">output (number,number) GFX_SET_TEXT_CURSOR
+<pre><code class="ceu">output (integer,integer) GFX_SET_TEXT_CURSOR
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>number</code>: new position in the <code>x-axis</code></li>
-<li><code>number</code>: new position in the <code>y-axis</code></li>
+<li><code>integer</code>: new position in the <code>x-axis</code></li>
+<li><code>integer</code>: new position in the <code>y-axis</code></li>
 </ul>
 </li>
 </ul>
 <h3 id="gfx_set_text_font">GFX_SET_TEXT_FONT<a class="headerlink" href="#gfx_set_text_font" title="Permanent link">&para;</a></h3>
 <p>Changes the font for drawing text.</p>
-<pre><code class="ceu">output (text,number) GFX_SET_TEXT_FONT
+<pre><code class="ceu">output (text,integer) GFX_SET_TEXT_FONT
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
 <li><code>text</code>: path for the <code>.ttf</code> font filename</li>
-<li><code>number</code>: height of the new font in pixels</li>
+<li><code>integer</code>: height of the new font in pixels</li>
 </ul>
 </li>
 </ul>
@@ -214,41 +214,41 @@ screen.</p>
 <p>The clear color is specified with <a href="#gfx_set_rgb"><code>GFX_SET_RGB</code></a>.</p>
 <h3 id="gfx_draw_bmp">GFX_DRAW_BMP<a class="headerlink" href="#gfx_draw_bmp" title="Permanent link">&para;</a></h3>
 <p>Draws a bitmap image on the screen.</p>
-<pre><code class="ceu">output (text,number,number) GFX_DRAW_BMP
+<pre><code class="ceu">output (text,integer,integer) GFX_DRAW_BMP
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
 <li><code>text</code>: path for the <code>.bmp</code> image filename</li>
-<li><code>number</code>: drawing position in the <code>x-axis</code></li>
-<li><code>number</code>: drawing position in the <code>y-axis</code></li>
+<li><code>integer</code>: drawing position in the <code>x-axis</code></li>
+<li><code>integer</code>: drawing position in the <code>y-axis</code></li>
 </ul>
 </li>
 </ul>
 <h3 id="gfx_draw_pixel">GFX_DRAW_PIXEL<a class="headerlink" href="#gfx_draw_pixel" title="Permanent link">&para;</a></h3>
 <p>Draws a pixel on the screen.</p>
-<pre><code class="ceu">output (number,number) GFX_DRAW_PIXEL
+<pre><code class="ceu">output (integer,integer) GFX_DRAW_PIXEL
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>number</code>: drawing position in the <code>x-axis</code></li>
-<li><code>number</code>: drawing position in the <code>y-axis</code></li>
+<li><code>integer</code>: drawing position in the <code>x-axis</code></li>
+<li><code>integer</code>: drawing position in the <code>y-axis</code></li>
 </ul>
 </li>
 </ul>
 <p>The drawing color is specified with <a href="#gfx_set_rgb"><code>GFX_SET_RGB</code></a>.</p>
 <h3 id="gfx_draw_rect">GFX_DRAW_RECT<a class="headerlink" href="#gfx_draw_rect" title="Permanent link">&para;</a></h3>
 <p>Draws a rectangle on the screen.</p>
-<pre><code class="ceu">output (number,number,number,number) GFX_DRAW_RECT
+<pre><code class="ceu">output (integer,integer,integer,integer) GFX_DRAW_RECT
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>number</code>: drawing position in the <code>x-axis</code></li>
-<li><code>number</code>: drawing position in the <code>y-axis</code></li>
-<li><code>number</code>: rectangle width</li>
-<li><code>number</code>: rectangle height</li>
+<li><code>integer</code>: drawing position in the <code>x-axis</code></li>
+<li><code>integer</code>: drawing position in the <code>y-axis</code></li>
+<li><code>integer</code>: rectangle width</li>
+<li><code>integer</code>: rectangle height</li>
 </ul>
 </li>
 </ul>

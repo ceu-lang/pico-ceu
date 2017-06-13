@@ -143,7 +143,7 @@
 <p>Provides input handling, such as for keyboard and mouse.</p>
 <h2 id="keyboard">Keyboard<a class="headerlink" href="#keyboard" title="Permanent link">&para;</a></h2>
 <h3 id="key_press">KEY_PRESS<a class="headerlink" href="#key_press" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input (switch,number) KEY_PRESS
+<pre><code class="ceu">input KEY_PRESS: (yesno,integer)
 </code></pre>
 
 <ul>
@@ -152,19 +152,19 @@
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>switch</code>: new key state<ul>
-<li><code>on</code>: key is now pressed</li>
-<li><code>off</code>: key is now released</li>
+<li><code>yesno</code>: new key state<ul>
+<li><code>yes</code>: key is now pressed</li>
+<li><code>no</code>: key is now released</li>
 </ul>
 </li>
-<li><code>number</code>: numeric key code</li>
+<li><code>integer</code>: numeric key code</li>
 </ul>
 </li>
 </ul>
 <p><code>TODO: key codes</code></p>
 <h2 id="mouse">Mouse<a class="headerlink" href="#mouse" title="Permanent link">&para;</a></h2>
 <h3 id="mouse_click">MOUSE_CLICK<a class="headerlink" href="#mouse_click" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input (switch,number,number,number) MOUSE_CLICK
+<pre><code class="ceu">input MOUSE_CLICK (yesno,integer,integer,integer)
 </code></pre>
 
 <ul>
@@ -173,19 +173,19 @@
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>switch</code>: new button state<ul>
-<li><code>on</code>: button is now pressed</li>
-<li><code>off</code>: button is now released</li>
+<li><code>yesno</code>: new button state<ul>
+<li><code>yes</code>: button is now pressed</li>
+<li><code>no</code>: button is now released</li>
 </ul>
 </li>
-<li><code>number</code>:  numeric button code (<code>TODO: left, middle, right?</code>)</li>
-<li><code>number</code>:  current mouse position in the <code>x-axis</code></li>
-<li><code>number</code>:  current mouse position in the <code>y-axis</code></li>
+<li><code>integer</code>:  numeric button code (<code>TODO: left, middle, right?</code>)</li>
+<li><code>integer</code>:  current mouse position in the <code>x-axis</code></li>
+<li><code>integer</code>:  current mouse position in the <code>y-axis</code></li>
 </ul>
 </li>
 </ul>
 <h3 id="mouse_move">MOUSE_MOVE<a class="headerlink" href="#mouse_move" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input (number,number) MOUSE_MOVE
+<pre><code class="ceu">input (integer,integer) MOUSE_MOVE
 </code></pre>
 
 <ul>
@@ -194,8 +194,8 @@
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>number</code>:  current mouse position in the <code>x-axis</code></li>
-<li><code>number</code>:  current mouse position in the <code>y-axis</code></li>
+<li><code>integer</code>:  current mouse position in the <code>x-axis</code></li>
+<li><code>integer</code>:  current mouse position in the <code>y-axis</code></li>
 </ul>
 </li>
 </ul>

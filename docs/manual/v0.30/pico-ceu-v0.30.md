@@ -18,13 +18,13 @@ screen.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output (switch) GFX_SET_GRID
+output (yesno) GFX_SET_GRID
 ```
 
 - Parameters:
-    - `switch`: new state
-        - `on`: enables the grid
-        - `off`: disables the grid
+    - `yesno`: new state
+        - `yes`: enables the grid
+        - `no`: disables the grid
 
 The ratio between the real and logical dimensions set with
 [`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
@@ -34,37 +34,37 @@ The ratio between the real and logical dimensions set with
 Changes the color of all subsequent drawing operations.
 
 ```ceu
-output (number,number,number) GFX_SET_RGB
+output (integer,integer,integer) GFX_SET_RGB
 ```
 
 - Parameters:
-    - `number`: new red component
-    - `number`: new green component
-    - `number`: new blue component
+    - `integer`: new red component
+    - `integer`: new green component
+    - `integer`: new blue component
 
 #### GFX_SET_TEXT_CURSOR
 
 Changes the cursor position for drawing text.
 
 ```ceu
-output (number,number) GFX_SET_TEXT_CURSOR
+output (integer,integer) GFX_SET_TEXT_CURSOR
 ```
 
 - Parameters:
-    - `number`: new position in the `x-axis`
-    - `number`: new position in the `y-axis`
+    - `integer`: new position in the `x-axis`
+    - `integer`: new position in the `y-axis`
 
 #### GFX_SET_TEXT_FONT
 
 Changes the font for drawing text.
 
 ```ceu
-output (text,number) GFX_SET_TEXT_FONT
+output (text,integer) GFX_SET_TEXT_FONT
 ```
 
 - Parameters:
     - `text`: path for the `.ttf` font filename
-    - `number`: height of the new font in pixels
+    - `integer`: height of the new font in pixels
 
 ### Drawing Operations
 
@@ -86,25 +86,25 @@ The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a bitmap image on the screen.
 
 ```ceu
-output (text,number,number) GFX_DRAW_BMP
+output (text,integer,integer) GFX_DRAW_BMP
 ```
 
 - Parameters:
     - `text`: path for the `.bmp` image filename
-    - `number`: drawing position in the `x-axis`
-    - `number`: drawing position in the `y-axis`
+    - `integer`: drawing position in the `x-axis`
+    - `integer`: drawing position in the `y-axis`
 
 #### GFX_DRAW_PIXEL
 
 Draws a pixel on the screen.
 
 ```ceu
-output (number,number) GFX_DRAW_PIXEL
+output (integer,integer) GFX_DRAW_PIXEL
 ```
 
 - Parameters:
-    - `number`: drawing position in the `x-axis`
-    - `number`: drawing position in the `y-axis`
+    - `integer`: drawing position in the `x-axis`
+    - `integer`: drawing position in the `y-axis`
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -113,14 +113,14 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a rectangle on the screen.
 
 ```ceu
-output (number,number,number,number) GFX_DRAW_RECT
+output (integer,integer,integer,integer) GFX_DRAW_RECT
 ```
 
 - Parameters:
-    - `number`: drawing position in the `x-axis`
-    - `number`: drawing position in the `y-axis`
-    - `number`: rectangle width
-    - `number`: rectangle height
+    - `integer`: drawing position in the `x-axis`
+    - `integer`: drawing position in the `y-axis`
+    - `integer`: rectangle width
+    - `integer`: rectangle height
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -180,16 +180,16 @@ Provides input handling, such as for keyboard and mouse.
 #### KEY_PRESS
 
 ```ceu
-input (switch,number) KEY_PRESS
+input KEY_PRESS: (yesno,integer)
 ```
 
 - Occurrences:
     - whenever a keyboard key is pressed or released
 - Payload:
-    - `switch`: new key state
-        - `on`: key is now pressed
-        - `off`: key is now released
-    - `number`: numeric key code
+    - `yesno`: new key state
+        - `yes`: key is now pressed
+        - `no`: key is now released
+    - `integer`: numeric key code
 
 `TODO: key codes`
 
@@ -198,30 +198,30 @@ input (switch,number) KEY_PRESS
 #### MOUSE_CLICK
 
 ```ceu
-input (switch,number,number,number) MOUSE_CLICK
+input MOUSE_CLICK (yesno,integer,integer,integer)
 ```
 
 - Occurrences:
     - whenever a mouse button is pressed or released
 - Payload:
-    - `switch`: new button state
-        - `on`: button is now pressed
-        - `off`: button is now released
-    - `number`:  numeric button code (`TODO: left, middle, right?`)
-    - `number`:  current mouse position in the `x-axis`
-    - `number`:  current mouse position in the `y-axis`
+    - `yesno`: new button state
+        - `yes`: button is now pressed
+        - `no`: button is now released
+    - `integer`:  numeric button code (`TODO: left, middle, right?`)
+    - `integer`:  current mouse position in the `x-axis`
+    - `integer`:  current mouse position in the `y-axis`
 
 #### MOUSE_MOVE
 
 ```ceu
-input (number,number) MOUSE_MOVE
+input (integer,integer) MOUSE_MOVE
 ```
 
 - Occurrences:
     - whenever the mouse moves
 - Payload:
-    - `number`:  current mouse position in the `x-axis`
-    - `number`:  current mouse position in the `y-axis`
+    - `integer`:  current mouse position in the `x-axis`
+    - `integer`:  current mouse position in the `y-axis`
 
 # Frame Management
 
@@ -239,26 +239,26 @@ Enables or disables the generation of periodic
 inputs to the application.
 
 ```ceu
-output (switch) FRAMES_SET
+output (yesno) FRAMES_SET
 ```
 
 - Parameters:
-    - `switch`: new state
-        - `on`: enables the generation of frames
-        - `off`: disables the generation of frames
+    - `yesno`: new state
+        - `yes`: enables the generation of frames
+        - `no`: disables the generation of frames
 
 #### FRAMES_SET_CLEAR_RGB
 
 Changes the redrawing background color.
 
 ```
-output (number,number,number) FRAMES_SET_CLEAR_RGB
+output (integer,integer,integer) FRAMES_SET_CLEAR_RGB
 ```
 
 - Parameters:
-    - `number`: new red component
-    - `number`: new green component
-    - `number`: new blue component
+    - `integer`: new red component
+    - `integer`: new green component
+    - `integer`: new blue component
 
 On every frame before [`FRAMES_REDRAW`](#frames_redraw), the screen is cleared
 with the background color.
@@ -270,13 +270,13 @@ The default color is black.
 #### FRAMES_UPDATE
 
 ```ceu
-input (number) FRAMES_UPDATE
+input (integer) FRAMES_UPDATE
 ```
 
 - Occurrences:
     - on every frame, before [`FRAMES_REDRAW`](#frames_redraw)
 - Payload:
-    - `number`: the number of elapsed milliseconds since the previous frame
+    - `integer`: the number of elapsed milliseconds since the previous frame
 
 ### Redraw
 
@@ -288,8 +288,8 @@ input (none) FRAMES_REDRAW
 
 - Occurrences:
     - on every frame, after [`FRAMES_UPDATE`](#frames_update)
-- Parameters:
-    - `none`: no parameters
+- Payload:
+    - `none`: no payload
 
 Before the input occurs, the screen is cleared with the color set with
 [`FRAMES_SET_CLEAR_RGB`](#frames_set_clear_rgb).
@@ -307,14 +307,14 @@ Manages the application window.
 Changes the real and logical sizes of the window.
 
 ```ceu
-output (number,number,number,number) WINDOW_SET_SIZE
+output (integer,integer,integer,integer) WINDOW_SET_SIZE
 ```
 
 - Parameters:
-    - `number`: new real width
-    - `number`: new real height
-    - `number`: new logical width
-    - `number`: new logical height
+    - `integer`: new real width
+    - `integer`: new real height
+    - `integer`: new logical width
+    - `integer`: new logical height
 
 The arithmetic division between the real and logical dimensions must be exact.
 

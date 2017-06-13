@@ -10,13 +10,13 @@ screen.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output (switch) GFX_SET_GRID
+output (yesno) GFX_SET_GRID
 ```
 
 - Parameters:
-    - `switch`: new state
-        - `on`: enables the grid
-        - `off`: disables the grid
+    - `yesno`: new state
+        - `yes`: enables the grid
+        - `no`: disables the grid
 
 The ratio between the real and logical dimensions set with
 [`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
@@ -26,37 +26,37 @@ The ratio between the real and logical dimensions set with
 Changes the color of all subsequent drawing operations.
 
 ```ceu
-output (number,number,number) GFX_SET_RGB
+output (integer,integer,integer) GFX_SET_RGB
 ```
 
 - Parameters:
-    - `number`: new red component
-    - `number`: new green component
-    - `number`: new blue component
+    - `integer`: new red component
+    - `integer`: new green component
+    - `integer`: new blue component
 
 ### GFX_SET_TEXT_CURSOR
 
 Changes the cursor position for drawing text.
 
 ```ceu
-output (number,number) GFX_SET_TEXT_CURSOR
+output (integer,integer) GFX_SET_TEXT_CURSOR
 ```
 
 - Parameters:
-    - `number`: new position in the `x-axis`
-    - `number`: new position in the `y-axis`
+    - `integer`: new position in the `x-axis`
+    - `integer`: new position in the `y-axis`
 
 ### GFX_SET_TEXT_FONT
 
 Changes the font for drawing text.
 
 ```ceu
-output (text,number) GFX_SET_TEXT_FONT
+output (text,integer) GFX_SET_TEXT_FONT
 ```
 
 - Parameters:
     - `text`: path for the `.ttf` font filename
-    - `number`: height of the new font in pixels
+    - `integer`: height of the new font in pixels
 
 ## Drawing Operations
 
@@ -78,25 +78,25 @@ The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a bitmap image on the screen.
 
 ```ceu
-output (text,number,number) GFX_DRAW_BMP
+output (text,integer,integer) GFX_DRAW_BMP
 ```
 
 - Parameters:
     - `text`: path for the `.bmp` image filename
-    - `number`: drawing position in the `x-axis`
-    - `number`: drawing position in the `y-axis`
+    - `integer`: drawing position in the `x-axis`
+    - `integer`: drawing position in the `y-axis`
 
 ### GFX_DRAW_PIXEL
 
 Draws a pixel on the screen.
 
 ```ceu
-output (number,number) GFX_DRAW_PIXEL
+output (integer,integer) GFX_DRAW_PIXEL
 ```
 
 - Parameters:
-    - `number`: drawing position in the `x-axis`
-    - `number`: drawing position in the `y-axis`
+    - `integer`: drawing position in the `x-axis`
+    - `integer`: drawing position in the `y-axis`
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
@@ -105,14 +105,14 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a rectangle on the screen.
 
 ```ceu
-output (number,number,number,number) GFX_DRAW_RECT
+output (integer,integer,integer,integer) GFX_DRAW_RECT
 ```
 
 - Parameters:
-    - `number`: drawing position in the `x-axis`
-    - `number`: drawing position in the `y-axis`
-    - `number`: rectangle width
-    - `number`: rectangle height
+    - `integer`: drawing position in the `x-axis`
+    - `integer`: drawing position in the `y-axis`
+    - `integer`: rectangle width
+    - `integer`: rectangle height
 
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
