@@ -3,7 +3,7 @@ emit WINDOW_SET_SIZE(640,480,640,480);
 emit FRAMES_SET(yes);
 emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
 
-code/tight Intersects (var& SDL_Rect rct1, var& SDL_Rect rct2) -> bool
+code/tight Intersects (var& SDL_Rect rct1, var& SDL_Rect rct2) -> yesno
 do
     escape rct1.x+rct1.w/2 >= rct2.x-rct2.w/2 and
            rct1.x-rct1.w/2 <= rct2.x+rct2.w/2 and
@@ -12,24 +12,24 @@ do
 end
 
 code/await Bird (var integer y, var integer speed)
-                    -> (var SDL_Rect rct, event void go_collided)
-                        -> void
+                    -> (var SDL_Rect rct, event none go_collided)
+                        -> none
 do
     rct = val SDL_Rect(20,y, 50,45);
 
     #define PI 3.14
 
-    event bool go_invisible;
-    var float sin = 0;
+    event yesno go_invisible;
+    var real sin = 0;
     par/or do
         var integer out = _;
         do/out
             watching go_collided do
                 var integer yy = rct.y;
-                var float x = rct.x;
+                var real x = rct.x;
                 var integer dt;
                 every dt in FRAMES_UPDATE do
-                    var float v = dt*speed;
+                    var real v = dt*speed;
                     x = x + v/1000;
                     rct.x = x as integer;
                     rct.y = yy + speed/5*_sin(sin);
@@ -40,7 +40,7 @@ do
                 end
             end
 
-            var float yy = rct.y;
+            var real yy = rct.y;
             var integer dt;
             every dt in FRAMES_UPDATE do
                 yy = yy + dt*0.5;
@@ -53,9 +53,9 @@ do
 
             watching 1s do
                 loop do
-                    emit go_invisible(true);
+                    emit go_invisible(yes);
                     await 100ms;
-                    emit go_invisible(false);
+                    emit go_invisible(no);
                     await 100ms;
                 end
             end
@@ -73,7 +73,7 @@ do
     end
 end
 
-event bool go_pause;
+event yesno go_pause;
 par do
     pause/if go_pause do
         pool[] Bird birds;
@@ -127,7 +127,7 @@ with
             var integer key;
             (pressed,key) = await KEY_PRESS until pressed and key==K_o;
         end
-        emit go_pause(true);
+        emit go_pause(yes);
         par/or do
             every FRAMES_REDRAW do
                 emit GFX_DRAW_BMP("res/pause.bmp", 150,80);
@@ -137,6 +137,6 @@ with
             var integer key;
             (pressed,key) = await KEY_PRESS until pressed and key==K_o;
         end
-        emit go_pause(false);
+        emit go_pause(no);
     end
 end
