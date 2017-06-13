@@ -300,10 +300,13 @@ watching sdl do
         /* FRAMES */
         par do
             // DT -> UPDATE
+            var u32 old = _SDL_GetTicks();
             loop do
-                var int dt = await SDL_DT;
-                await async (dt) do
-                    emit FRAMES_UPDATE(dt);
+                await SDL_DT;
+                await async (old) do
+                    var u32 now = _SDL_GetTicks();
+                    emit FRAMES_UPDATE((now-old) as int);
+                    old = now;
                 end
             end
         with
