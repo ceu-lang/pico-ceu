@@ -23,8 +23,8 @@ input (u16,u16)          MOUSE_MOVE;
 input (bool,u16)         KEY_PRESS;
 
 output (u8,u8,u8)        GFX_SET_RGB;
-output (string,u16)      GFX_SET_FONT;
-output (u8,u8)           GFX_SET_CURSOR;
+output (string,u16)      GFX_SET_TEXT_FONT;
+output (u16,u16)         GFX_SET_TEXT_CURSOR;
 output bool              GFX_SET_GRID;
 output string            GFX_SCREENSHOT;
 output void              GFX_CLEAR;
@@ -45,8 +45,8 @@ native/pos do
     SDL_Color FRAMES_SET_CLEAR_RGB;
 
     bool GFX_SET_GRID = 0;
-    u16  GFX_CURSOR_X = 0;
-    u16  GFX_CURSOR_Y = 0;
+    u16  GFX_TEXT_CURSOR_X = 0;
+    u16  GFX_TEXT_CURSOR_Y = 0;
 
     void GFX_Show_Grid (void) {
         if (!GFX_SET_GRID) return;
@@ -120,8 +120,8 @@ native/pos do
                         SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
                         break;
                     }
-                    case CEU_OUTPUT_GFX_SET_FONT: {
-                        tceu_output_GFX_SET_FONT* fnt = (tceu_output_GFX_SET_FONT*) p2.ptr;
+                    case CEU_OUTPUT_GFX_SET_TEXT_FONT: {
+                        tceu_output_GFX_SET_TEXT_FONT* fnt = (tceu_output_GFX_SET_TEXT_FONT*) p2.ptr;
                         FNT_H = fnt->_2;
                         if (FNT != NULL) {
                             TTF_CloseFont(FNT);
@@ -130,16 +130,21 @@ native/pos do
                         ceu_dbg_assert(FNT != NULL);
                         break;
                     }
-                    case CEU_OUTPUT_GFX_SET_CURSOR: {
-                        tceu_output_GFX_SET_CURSOR* pt = (tceu_output_GFX_SET_CURSOR*) p2.ptr;
-                        GFX_CURSOR_X = pt->_1;
-                        GFX_CURSOR_Y = pt->_2;
+                    case CEU_OUTPUT_GFX_SET_TEXT_CURSOR: {
+                        tceu_output_GFX_SET_TEXT_CURSOR* pt = (tceu_output_GFX_SET_TEXT_CURSOR*) p2.ptr;
+                        GFX_TEXT_CURSOR_X = pt->_1;
+                        GFX_TEXT_CURSOR_Y = pt->_2;
                         break;
                     }
 
                     case CEU_OUTPUT_GFX_SET_GRID: {
                         bool* on = (bool*) p2.ptr;
                         GFX_SET_GRID = *on;
+
+                        int ren_w,ren_h, log_w,log_h;
+                        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+                        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+                        ceu_dbg_assert(ren_w/log_w>1 && ren_h/log_h>1);
                         break;
                     }
 
@@ -232,22 +237,22 @@ native/pos do
 
                         int w, h;
                         TTF_SizeText(FNT, *str, &w,&h);
-                        SDL_Rect rct = { GFX_CURSOR_X,GFX_CURSOR_Y, w,h };
+                        SDL_Rect rct = { GFX_TEXT_CURSOR_X,GFX_TEXT_CURSOR_Y, w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GFX_Present();
 
-                        GFX_CURSOR_X += w;
+                        GFX_TEXT_CURSOR_X += w;
 
                         SDL_DestroyTexture(tex);
                         SDL_FreeSurface(sfc);
                         break;
                     }
                     case CEU_OUTPUT_GFX_DRAW_TEXTLN: {
-                        int cursor_x = GFX_CURSOR_X;
+                        int cursor_x = GFX_TEXT_CURSOR_X;
                         p1.num = CEU_OUTPUT_GFX_DRAW_TEXT;
                         ceu_callback_sdl_edu(cmd, p1, p2);
-                        GFX_CURSOR_X = cursor_x;
-                        GFX_CURSOR_Y += FNT_H;
+                        GFX_TEXT_CURSOR_X = cursor_x;
+                        GFX_TEXT_CURSOR_Y += FNT_H;
                         break;
                     }
                 }
@@ -276,7 +281,7 @@ watching sdl do
     emit GFX_CLEAR();
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
 
-    emit GFX_SET_FONT("pico-ceu/FreeMono.ttf", 10);
+    emit GFX_SET_TEXT_FONT("pico-ceu/FreeMono.ttf", 10);
     do finalize with
         {TTF_CloseFont(FNT);}
     end
