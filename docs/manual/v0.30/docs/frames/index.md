@@ -45,7 +45,7 @@ input int FRAMES_UPDATE
 ```
 
 - Occurrence:
-    - on every frame, before [`FRAMES_REDRAW`][FRAMES_REDRAW]
+    - on every frame, before [`FRAMES_REDRAW`][#FRAMES_REDRAW]
 - Payload:
     - `int`: the number of elapsed milliseconds since the previous frame
 
@@ -58,7 +58,7 @@ input void FRAMES_REDRAW
 ```
 
 - Occurrence:
-    - on every frame, after [`FRAMES_UPDATE`][FRAMES_UPDATE]
+    - on every frame, after [`FRAMES_UPDATE`][#FRAMES_UPDATE]
 
 Before the event occurs, the screen is cleared with the color set on
-[`FRAMES_SET_CLEAR_RGB`][FRAMES_SET_CLEAR_RGB].
+[`FRAMES_SET_CLEAR_RGB`][#FRAMES_SET_CLEAR_RGB].

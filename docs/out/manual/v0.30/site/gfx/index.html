@@ -160,9 +160,10 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<p>The ratio between the real and logical dimensions must be greater then one.</p>
+<p>The ratio between the real and logical dimensions set with
+[<code>WINDOW_SET_SIZE</code>][../window/#WINDOW_SET_SIZE] must be greater then one.</p>
 <h3 id="gfx_set_rgb">GFX_SET_RGB<a class="headerlink" href="#gfx_set_rgb" title="Permanent link">&para;</a></h3>
-<p>Changes the color for all subsequent drawing operation.</p>
+<p>Changes the color of all subsequent drawing operations.</p>
 <pre><code class="ceu">output (u8,u8,u8) GFX_SET_RGB
 </code></pre>
 
@@ -194,7 +195,7 @@ screen.</p>
 <ul>
 <li>Parameters:<ul>
 <li><code>string</code>: path for the <code>.ttf</code> font filename</li>
-<li><code>u16</code>: size of the new font</li>
+<li><code>u16</code>: height of the new font in pixels</li>
 </ul>
 </li>
 </ul>
@@ -224,7 +225,7 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
+<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][#GFX_SET_RGB].</p>
 <h3 id="gfx_draw_rect">GFX_DRAW_RECT<a class="headerlink" href="#gfx_draw_rect" title="Permanent link">&para;</a></h3>
 <p>Draws a rectangle on the screen.</p>
 <pre><code class="ceu">output (u16,u16,u16,u16) GFX_DRAW_RECT
@@ -239,7 +240,7 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
+<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][#GFX_SET_RGB].</p>
 <h3 id="gfx_draw_text">GFX_DRAW_TEXT<a class="headerlink" href="#gfx_draw_text" title="Permanent link">&para;</a></h3>
 <p>Draws a text on the screen.</p>
 <pre><code class="ceu">output string GFX_DRAW_TEXT
@@ -252,28 +253,28 @@ screen.</p>
 </li>
 </ul>
 <p>The drawing position is first specified with
-[<code>GFX_SET_TEXT_CURSOR</code>][GFX_SET_TEXT_CURSOR].
+[<code>GFX_SET_TEXT_CURSOR</code>][#GFX_SET_TEXT_CURSOR].
 The cursor advances automatically for the position after the text.</p>
-<p>The drawing font is specified with [<code>GFX_SET_TEXT_FONT</code>][GFX_SET_TEXT_FONT].</p>
-<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
+<p>The drawing font is specified with [<code>GFX_SET_TEXT_FONT</code>][#GFX_SET_TEXT_FONT].</p>
+<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][#GFX_SET_RGB].</p>
 <h3 id="gfx_draw_textln">GFX_DRAW_TEXTLN<a class="headerlink" href="#gfx_draw_textln" title="Permanent link">&para;</a></h3>
 <p>Draws a line of text on the screen.</p>
 <pre><code class="ceu">output string GFX_DRAW_TEXTLN
 </code></pre>
 
 <p>The drawing position is first specified with
-[<code>GFX_SET_TEXT_CURSOR</code>][GFX_SET_TEXT_CURSOR].
+[<code>GFX_SET_TEXT_CURSOR</code>][#GFX_SET_TEXT_CURSOR].
 The cursor advances automatically for the next line after the text, at the same
 initial position.</p>
-<p>The drawing font is specified with [<code>GFX_SET_TEXT_FONT</code>][GFX_SET_TEXT_FONT].</p>
-<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
+<p>The drawing font is specified with [<code>GFX_SET_TEXT_FONT</code>][#GFX_SET_TEXT_FONT].</p>
+<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][#GFX_SET_RGB].</p>
 <h2 id="other">Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h2>
 <h3 id="gfx_clear">GFX_CLEAR<a class="headerlink" href="#gfx_clear" title="Permanent link">&para;</a></h3>
 <p>Clears the screen.</p>
 <pre><code class="ceu">output void GFX_CLEAR
 </code></pre>
 
-<p>The clear color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
+<p>The clear color is specified with [<code>GFX_SET_RGB</code>][#GFX_SET_RGB].</p>
 <h3 id="gfx_screenshot">GFX_SCREENSHOT<a class="headerlink" href="#gfx_screenshot" title="Permanent link">&para;</a></h3>
 <p>Takes a screen shot.</p>
 <pre><code class="ceu">output string GFX_SCREENSHOT
