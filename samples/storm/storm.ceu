@@ -9,11 +9,23 @@ end
 #define WIN_H 480
 
 #define PI 3.14159265
-_srand(_time(null));
+
+data Color with
+    var integer r;
+    var integer g;
+    var integer b;
+end
 
 data Vector2D with
-    var int x;
-    var int y;
+    var integer x;
+    var integer y;
+end
+
+data Rect with
+    var integer x;
+    var integer y;
+    var integer w;
+    var integer h;
 end
 
 emit WINDOW_SET_TITLE("Storm");

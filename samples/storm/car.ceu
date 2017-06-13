@@ -1,13 +1,13 @@
-code/await Wheel (var& IPhysics car, var Vector2D offset) -> void
+code/await Wheel (var& IPhysics car, var Vector2D offset) -> none
 do
-    var int radius = 15;
-    var float esp = (2 * PI / 12);
-    var float pst = 0;
+    var integer radius = 15;
+    var real esp = (2 * PI / 12);
+    var real pst = 0;
 
     par do
-        var int dt;
-        every dt in SDL_DT do
-            var int s = do
+        var integer dt;
+        every dt in FRAMES_UPDATE do
+            var integer s = do
                 if car.x.vel >= 0 then
                     escape  1;
                 else
@@ -15,29 +15,26 @@ do
                 end
             end;
 
-            var float mod = _sqrt(_pow(car.x.vel,2) + _pow(car.y.vel,2));
+            var real mod = _sqrt(_pow(car.x.vel,2) + _pow(car.y.vel,2));
             pst = pst + (s * mod * dt / 1000 / radius);
         end
     with
-        every SDL_REDRAW do
-            _SDL_SetRenderDrawColor(&&outer.sdl!.ren, 0xFF, 0x9D, 0x46, 0x00);
-            var int i;
+        every FRAMES_REDRAW do
+            emit GFX_SET_RGB(0xFF, 0x9D, 0x46);
+            var integer i;
             loop i in [0 -> 12[ do
-                var SDL_Rect r =
-                    val SDL_Rect(
-                        (car.x.pst + offset.x + (radius * _cos(i*esp + pst))) as int,
-                        (car.y.pst + offset.y + (radius * _sin(i*esp + pst))) as int,
-                        5, 5
-                    );
-                _SDL_RenderFillRect(&&outer.sdl!.ren, (&&r as _SDL_Rect&&));
+                emit GFX_DRAW_RECT(
+                        (car.x.pst + offset.x + (radius * _cos(i*esp + pst))) as integer,
+                        (car.y.pst + offset.y + (radius * _sin(i*esp + pst))) as integer,
+                        5, 5);
             end
         end
     end
 end
 
-code/await Car (void) -> (var& IPhysics physics) -> FOREVER
+code/await Car (none) -> (var& IPhysics physics) -> FOREVER
 do
-    var& Physics car = spawn Physics(SDL_Rect(320,430, 60,30), SDL_Color(0x3B,0xBC,0x48,0));
+    var& Physics car = spawn Physics(Rect(320,430, 60,30), Color(0x3B,0xBC,0x48));
     physics = &car.physics;
 
     spawn Wheel(&physics, Vector2D(            0, physics.y.len));
@@ -48,18 +45,20 @@ do
 
     par do
         loop do
-            var _SDL_KeyboardEvent&& key;
-            key = await SDL_KEYDOWN until key:keysym.sym==_SDLK_LEFT;
+            var yesno pressed;
+            var integer key;
+            (pressed,key) = await KEY_PRESS until pressed and key==KEY_LEFT;
             physics.x.acc = -400;
-            key = await SDL_KEYUP   until key:keysym.sym==_SDLK_LEFT;
+            (pressed,key) = await KEY_PRESS until (not pressed) and key==KEY_LEFT;
             physics.x.acc = 0;
         end
     with
         loop do
-            var _SDL_KeyboardEvent&& key;
-            key = await SDL_KEYDOWN until key:keysym.sym==_SDLK_RIGHT;
+            var yesno pressed;
+            var integer key;
+            (pressed,key) = await KEY_PRESS until pressed and key==KEY_RIGHT;
             physics.x.acc = 400;
-            key = await SDL_KEYUP   until key:keysym.sym==_SDLK_RIGHT;
+            (pressed,key) = await KEY_PRESS until (not pressed) and key==KEY_RIGHT;
             physics.x.acc = 0;
         end
     end

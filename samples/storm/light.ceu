@@ -1,12 +1,12 @@
 code/tight Boom_Vel (var& IPhysics boom, var& IPhysics other) -> Vector2D
 do
-    var int radius    = 80;
-    var int magnitude = 20;
+    var integer radius    = 80;
+    var integer magnitude = 20;
 
-    var Vector2D c1 = val Vector2D((boom.x.pst+boom.x.len/2) as int,
-                                   (boom.y.pst+boom.y.len/2) as int);
-    var Vector2D c2 = val Vector2D((other.x.pst+other.x.len/2) as int,
-                                   (other.y.pst+other.y.len/2) as int);
+    var Vector2D c1 = val Vector2D((boom.x.pst+boom.x.len/2) as integer,
+                                   (boom.y.pst+boom.y.len/2) as integer);
+    var Vector2D c2 = val Vector2D((other.x.pst+other.x.len/2) as integer,
+                                   (other.y.pst+other.y.len/2) as integer);
 
     var float dist = _sqrt(_pow(c2.x-c1.x,2) + _pow(c2.y-c1.y,2));
 
@@ -30,13 +30,13 @@ do
     escape vel;
 end
 
-code/await Boom (var int x) -> (var& IPhysics physics) -> void
+code/await Boom (var integer x) -> (var& IPhysics physics) -> none
 do
-    var int radius = 80;
-    var SDL_Rect rct = val SDL_Rect(x - radius,
-                                    (WIN_H + radius*0.2 - radius) as int,
-                                    radius*2,
-                                    radius*2);
+    var integer radius = 80;
+    var Rect rct = val Rect(x - radius,
+                            (WIN_H + radius*0.2 - radius) as integer,
+                            radius*2,
+                            radius*2);
     var& Physics boom = spawn Physics(rct,_);
     physics = &boom.physics;
     await 100ms;
@@ -45,27 +45,27 @@ pool[] Boom  booms;
 
 code/await Light (pool&[] Light    lights,
                   var     Vector2D pos_ini,
-                  var     int?     direction,
-                  var     int?     magnitude,
-                  var     bool?    is_fork,
-                 ) -> void
+                  var     integer? direction,
+                  var     integer? magnitude,
+                  var     yesno?   is_fork,
+                 ) -> none
 do
-    var int dir = 270;
+    var integer dir = 270;
     if direction? then
         dir = direction!;
     end
 
-    var int mag = 50;
+    var integer mag = 50;
     if magnitude? then
         mag = magnitude!;
     end
 
-    var bool fork = false;
+    var yesno fork = no;
     if is_fork? then
         fork = is_fork!;
     end
 
-    var int chaos = 30;
+    var integer chaos = 30;
     var float d = PI * (dir - chaos + _rand()%(chaos*2)) / 180.0;
     var Vector2D pos_end = val Vector2D(pos_ini.x + (_cos(d) * mag),
                                         pos_ini.y - (_sin(d) * mag));
@@ -79,21 +79,21 @@ do
             else/if mag > 5 then
                 await 20ms;
 
-                var int m = mag;
+                var integer m = mag;
                 if fork then
-                    m = (mag * 0.75) as int;
+                    m = (mag * 0.75) as integer;
                 end
                 spawn Light(&lights, pos_end, dir, m, fork) in lights;
 
                 if (_rand()%WIN_H) > pos_ini.y then
-                    spawn Light(&lights, pos_ini, _rand()%180+180, (mag*0.5) as int, true)
+                    spawn Light(&lights, pos_ini, _rand()%180+180, (mag*0.5) as integer, yes)
                         in lights;
                 end
             end
             await FOREVER;
         with
-            every SDL_REDRAW do
-                _SDL_SetRenderDrawColor(&&outer.sdl!.ren, 0xEA, 0xD7, 0xFF, 0 );
+            every FRAMES_REDRAW do
+                emit GFX_SET_RGB(0xEA, 0xD7, 0xFF);
                 _SDL_RenderDrawLine(&&outer.sdl!.ren,
                                     pos_ini.x, pos_ini.y,
                                     pos_end.x, pos_end.y);
@@ -106,8 +106,9 @@ pool[] Light lights;
 // DEBUG
 spawn do
     loop do
-        var _SDL_KeyboardEvent&& key =
-            await SDL_KEYDOWN until key:keysym.sym==_SDLK_DOWN;
+        var yesno pressed;
+        var integer key;
+        (pressed,key) = await KEY_PRESS until pressed and key==KEY_DOWN;
         spawn Light(&lights,Vector2D(300,0),_,_,_) in lights;
     end
 end

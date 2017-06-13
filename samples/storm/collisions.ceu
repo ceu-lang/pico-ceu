@@ -1,4 +1,4 @@
-code/await Collisions (void) -> FOREVER
+code/await Collisions (none) -> FOREVER
 do
     par do
         // cloud vs cloud
@@ -14,8 +14,8 @@ do
                         emit cloud2.go_blink;
                         var Vector2D pst =
                             val Vector2D(
-                                ((cloud1.physics.x.pst + cloud2.physics.x.pst + cloud2.physics.x.len)/2) as int,
-                                ((cloud1.physics.y.pst + cloud1.physics.y.len + cloud2.physics.y.pst + cloud2.physics.y.len)/2) as int,
+                                ((cloud1.physics.x.pst + cloud2.physics.x.pst + cloud2.physics.x.len)/2) as integer,
+                                ((cloud1.physics.y.pst + cloud1.physics.y.len + cloud2.physics.y.pst + cloud2.physics.y.len)/2) as integer,
                             );
                         spawn Light(&outer.lights,pst,_,_,_) in outer.lights;
                     end
@@ -24,8 +24,8 @@ do
         end
     with
         // car vs boom
-        var int dt;
-        every dt in SDL_DT do
+        var integer dt;
+        every dt in FRAMES_UPDATE do
             var&? Boom boom;
             loop boom in outer.booms do
                 if (call Intersects(&boom!.physics, &outer.car.physics)) then
@@ -36,8 +36,8 @@ do
         end
     with
         // drop vs *
-        var int dt;
-        every dt in SDL_DT do
+        var integer dt;
+        every dt in FRAMES_UPDATE do
             var&? Drop drop1;
             loop drop1 in outer.drops
             do
@@ -62,7 +62,7 @@ do
                         drop1!.physics.y.pst = outer.car.physics.y.pst - drop1!.physics.y.len;
                         drop1!.physics.y.vel = -(drop1!.physics.y.vel/3);
                         drop1!.physics.x.vel = outer.car.physics.x.vel / 2;
-                        drop1!.has_collided = true;
+                        drop1!.has_collided = yes;
                     else
                         drop1!.physics.x.vel = outer.car.physics.x.vel * 2;
                         drop1!.physics.y.vel = -(_abs(outer.car.physics.x.vel));

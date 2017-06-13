@@ -1,18 +1,18 @@
 data Axis with
-    var float pst;
-    var int   len;
-    var float vel;
-    var float acc;
-    var float drag;
+    var real    pst;
+    var integer len;
+    var real    vel;
+    var real    acc;
+    var real    drag;
 end
 
 data IPhysics with
-    var Axis       x;
-    var Axis       y;
-    var SDL_Color? clr;
+    var Axis   x;
+    var Axis   y;
+    var Color? clr;
 end
 
-code/await Physics (var SDL_Rect rct, var SDL_Color? clr)
+code/await Physics (var Rect rct, var Color? clr)
                     -> (var IPhysics physics)
                         -> FOREVER
 do
@@ -21,9 +21,9 @@ do
                            clr);
 
     par do
-        var int dt_;
-        every dt_ in SDL_DT do
-            var float dt = (dt_ as float)/1000;
+        var integer dt_;
+        every dt_ in FRAMES_UPDATE do
+            var real dt = (dt_ as real)/1000;
             physics.x.vel = (physics.x.vel + physics.x.acc*dt)
                                 * (1 - physics.x.drag*dt);
             physics.y.vel = (physics.y.vel + physics.y.acc*dt)
@@ -32,20 +32,15 @@ do
             physics.y.pst = physics.y.pst + physics.y.vel*dt;
         end
     with
-        every SDL_REDRAW do
+        every FRAMES_REDRAW do
             if not physics.clr? then
                 continue;
             end
-            _SDL_SetRenderDrawColor(&&outer.sdl!.ren,
-                                    physics.clr!.r,
-                                    physics.clr!.g,
-                                    physics.clr!.b,
-                                    physics.clr!.a);
-            var SDL_Rect r = val SDL_Rect(physics.x.pst as int,
-                                          physics.y.pst as int,
-                                          physics.x.len as int,
-                                          physics.y.len as int);
-            _SDL_RenderFillRect(&&outer.sdl!.ren, (&&r as _SDL_Rect&&));
+            emit GFX_SET_RGB(physics.clr!.r, physics.clr!.g, physics.clr!.b);
+            emit GFX_DRAW_RECT(physics.x.pst as integer,
+                               physics.y.pst as integer,
+                               physics.x.len as integer,
+                               physics.y.len as integer);
         end
     end
 end
