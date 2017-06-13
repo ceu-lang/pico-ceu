@@ -148,18 +148,22 @@ screen.</p>
 <h3 id="frames_set">FRAMES_SET<a class="headerlink" href="#frames_set" title="Permanent link">&para;</a></h3>
 <p>Enables or disables the generation of periodic <code>FRAMES_UPDATE</code> and
 <code>FRAMES_REDRAW</code> inputs to the application.</p>
-<pre><code class="ceu">output bool FRAMES_SET;
+<pre><code class="ceu">output bool FRAMES_SET
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>bool</code>: enables (<code>true</code>) or disables (<code>false</code>) the generation of frames</li>
+<li><code>bool</code>: new state<ul>
+<li><code>true</code>: enables the generation of frames</li>
+<li><code>false</code>: disables the generation of frames</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <h3 id="frames_set_clear_rgb">FRAMES_SET_CLEAR_RGB<a class="headerlink" href="#frames_set_clear_rgb" title="Permanent link">&para;</a></h3>
 <p>Changes the redrawing background color.</p>
-<pre><code>output (u8,u8,u8) FRAMES_SET_CLEAR_RGB;
+<pre><code>output (u8,u8,u8) FRAMES_SET_CLEAR_RGB
 </code></pre>
 
 <ul>
@@ -174,7 +178,7 @@ screen.</p>
 <p>The default color is black.</p>
 <h2 id="update">Update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <h3 id="frames_update">FRAMES_UPDATE<a class="headerlink" href="#frames_update" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input int FRAMES_UPDATE;
+<pre><code class="ceu">input int FRAMES_UPDATE
 </code></pre>
 
 <ul>
@@ -189,7 +193,7 @@ screen.</p>
 </ul>
 <h2 id="redraw">Redraw<a class="headerlink" href="#redraw" title="Permanent link">&para;</a></h2>
 <h3 id="frames_redraw">FRAMES_REDRAW<a class="headerlink" href="#frames_redraw" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input void FRAMES_REDRAW;
+<pre><code class="ceu">input void FRAMES_REDRAW
 </code></pre>
 
 <ul>

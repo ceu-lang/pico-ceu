@@ -10,11 +10,13 @@ screen.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output bool GFX_SET_GRID;
+output bool GFX_SET_GRID
 ```
 
 - Parameters:
-    - `bool`: enables (`true`) or disables (`false`) the grid
+    - `bool`: new state
+        - `true`: enables the grid
+        - `false`: disables the grid
 
 The ratio between the real and logical dimensions must be greater then one.
 
@@ -23,7 +25,7 @@ The ratio between the real and logical dimensions must be greater then one.
 Changes the color for all subsequent drawing operation.
 
 ```ceu
-output (u8,u8,u8) GFX_SET_RGB;
+output (u8,u8,u8) GFX_SET_RGB
 ```
 
 - Parameters:
@@ -36,7 +38,7 @@ output (u8,u8,u8) GFX_SET_RGB;
 Changes the cursor position for drawing text.
 
 ```ceu
-output (u16,u16) GFX_SET_TEXT_CURSOR;
+output (u16,u16) GFX_SET_TEXT_CURSOR
 ```
 
 - Parameters:
@@ -48,7 +50,7 @@ output (u16,u16) GFX_SET_TEXT_CURSOR;
 Changes the font for drawing text.
 
 ```ceu
-output (string,u16) GFX_SET_TEXT_FONT;
+output (string,u16) GFX_SET_TEXT_FONT
 ```
 
 - Parameters:
@@ -62,7 +64,7 @@ output (string,u16) GFX_SET_TEXT_FONT;
 Draws a bitmap image on the screen.
 
 ```ceu
-output (string,u16,u16) GFX_DRAW_BMP;
+output (string,u16,u16) GFX_DRAW_BMP
 ```
 
 - Parameters:
@@ -75,7 +77,7 @@ output (string,u16,u16) GFX_DRAW_BMP;
 Draws a pixel on the screen.
 
 ```ceu
-output (u16,u16) GFX_DRAW_PIXEL;
+output (u16,u16) GFX_DRAW_PIXEL
 ```
 
 - Parameters:
@@ -89,7 +91,7 @@ The drawing color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Draws a rectangle on the screen.
 
 ```ceu
-output (u16,u16,u16,u16) GFX_DRAW_RECT;
+output (u16,u16,u16,u16) GFX_DRAW_RECT
 ```
 
 - Parameters:
@@ -105,7 +107,7 @@ The drawing color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Draws a text on the screen.
 
 ```ceu
-output string GFX_DRAW_TEXT;
+output string GFX_DRAW_TEXT
 ```
 
 - Parameters:
@@ -124,7 +126,7 @@ The drawing color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Draws a line of text on the screen.
 
 ```ceu
-output string GFX_DRAW_TEXTLN;
+output string GFX_DRAW_TEXTLN
 ```
 
 The drawing position is first specified with
@@ -143,7 +145,7 @@ The drawing color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Clears the screen.
 
 ```ceu
-output void GFX_CLEAR;
+output void GFX_CLEAR
 ```
 
 The clear color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
@@ -153,7 +155,7 @@ The clear color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Takes a screen shot.
 
 ```ceu
-output string GFX_SCREENSHOT;
+output string GFX_SCREENSHOT
 ```
 
 - Parameters:

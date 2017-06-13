@@ -18,11 +18,13 @@ screen.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output bool GFX_SET_GRID;
+output bool GFX_SET_GRID
 ```
 
 - Parameters:
-    - `bool`: enables (`true`) or disables (`false`) the grid
+    - `bool`: new state
+        - `true`: enables the grid
+        - `false`: disables the grid
 
 The ratio between the real and logical dimensions must be greater then one.
 
@@ -31,7 +33,7 @@ The ratio between the real and logical dimensions must be greater then one.
 Changes the color for all subsequent drawing operation.
 
 ```ceu
-output (u8,u8,u8) GFX_SET_RGB;
+output (u8,u8,u8) GFX_SET_RGB
 ```
 
 - Parameters:
@@ -44,7 +46,7 @@ output (u8,u8,u8) GFX_SET_RGB;
 Changes the cursor position for drawing text.
 
 ```ceu
-output (u16,u16) GFX_SET_TEXT_CURSOR;
+output (u16,u16) GFX_SET_TEXT_CURSOR
 ```
 
 - Parameters:
@@ -56,7 +58,7 @@ output (u16,u16) GFX_SET_TEXT_CURSOR;
 Changes the font for drawing text.
 
 ```ceu
-output (string,u16) GFX_SET_TEXT_FONT;
+output (string,u16) GFX_SET_TEXT_FONT
 ```
 
 - Parameters:
@@ -70,7 +72,7 @@ output (string,u16) GFX_SET_TEXT_FONT;
 Draws a bitmap image on the screen.
 
 ```ceu
-output (string,u16,u16) GFX_DRAW_BMP;
+output (string,u16,u16) GFX_DRAW_BMP
 ```
 
 - Parameters:
@@ -83,7 +85,7 @@ output (string,u16,u16) GFX_DRAW_BMP;
 Draws a pixel on the screen.
 
 ```ceu
-output (u16,u16) GFX_DRAW_PIXEL;
+output (u16,u16) GFX_DRAW_PIXEL
 ```
 
 - Parameters:
@@ -97,7 +99,7 @@ The drawing color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Draws a rectangle on the screen.
 
 ```ceu
-output (u16,u16,u16,u16) GFX_DRAW_RECT;
+output (u16,u16,u16,u16) GFX_DRAW_RECT
 ```
 
 - Parameters:
@@ -113,7 +115,7 @@ The drawing color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Draws a text on the screen.
 
 ```ceu
-output string GFX_DRAW_TEXT;
+output string GFX_DRAW_TEXT
 ```
 
 - Parameters:
@@ -132,7 +134,7 @@ The drawing color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Draws a line of text on the screen.
 
 ```ceu
-output string GFX_DRAW_TEXTLN;
+output string GFX_DRAW_TEXTLN
 ```
 
 The drawing position is first specified with
@@ -151,7 +153,7 @@ The drawing color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Clears the screen.
 
 ```ceu
-output void GFX_CLEAR;
+output void GFX_CLEAR
 ```
 
 The clear color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
@@ -161,7 +163,7 @@ The clear color is specified with [`GFX_SET_RGB`][GFX_SET_RGB].
 Takes a screen shot.
 
 ```ceu
-output string GFX_SCREENSHOT;
+output string GFX_SCREENSHOT
 ```
 
 - Parameters:
@@ -178,13 +180,15 @@ Provides input handling, such as for keyboard and mouse.
 #### KEY_PRESS
 
 ```ceu
-input (bool,u16) KEY_PRESS;
+input (bool,u16) KEY_PRESS
 ```
 
 - Occurrence:
     - whenever a keyboard key is pressed or released
 - Payload:
-    - `bool`: if the key was pressed (`true`) or released (`false`)
+    - `bool`: new key state
+        - `true`: key is now pressed
+        - `false`: key is now released
     - `u16`:  the numeric key code
 
 `TODO: key codes`
@@ -194,13 +198,15 @@ input (bool,u16) KEY_PRESS;
 #### MOUSE_CLICK
 
 ```ceu
-input (bool,int,u16,u16) MOUSE_CLICK;
+input (bool,int,u16,u16) MOUSE_CLICK
 ```
 
 - Occurrence:
     - whenever a mouse button is pressed or released
 - Payload:
-    - `bool`: if the button was pressed (`true`) or released (`false`)
+    - `bool`: new button state
+        - `true`: button is now pressed
+        - `false`: button is now released
     - `int`:  the numeric button code (`TODO: left, middle, right?`)
     - `u16`:  the current mouse position in the `x-axis`
     - `u16`:  the current mouse position in the `y-axis`
@@ -208,7 +214,7 @@ input (bool,int,u16,u16) MOUSE_CLICK;
 #### MOUSE_MOVE
 
 ```ceu
-input (u16,u16) MOUSE_MOVE;
+input (u16,u16) MOUSE_MOVE
 ```
 
 - Occurrence:
@@ -232,18 +238,20 @@ Enables or disables the generation of periodic `FRAMES_UPDATE` and
 `FRAMES_REDRAW` inputs to the application.
 
 ```ceu
-output bool FRAMES_SET;
+output bool FRAMES_SET
 ```
 
 - Parameters:
-    - `bool`: enables (`true`) or disables (`false`) the generation of frames
+    - `bool`: new state
+        - `true`: enables the generation of frames
+        - `false`: disables the generation of frames
 
 #### FRAMES_SET_CLEAR_RGB
 
 Changes the redrawing background color.
 
 ```
-output (u8,u8,u8) FRAMES_SET_CLEAR_RGB;
+output (u8,u8,u8) FRAMES_SET_CLEAR_RGB
 ```
 
 - Parameters:
@@ -260,7 +268,7 @@ The default color is black.
 #### FRAMES_UPDATE
 
 ```ceu
-input int FRAMES_UPDATE;
+input int FRAMES_UPDATE
 ```
 
 - Occurrence:
@@ -273,7 +281,7 @@ input int FRAMES_UPDATE;
 #### FRAMES_REDRAW
 
 ```ceu
-input void FRAMES_REDRAW;
+input void FRAMES_REDRAW
 ```
 
 - Occurrence:
@@ -295,7 +303,7 @@ Manages the game window.
 Changes the real and logical sizes of the window.
 
 ```ceu
-output (u16,u16,u16,u16) WINDOW_SET_SIZE;
+output (u16,u16,u16,u16) WINDOW_SET_SIZE
 ```
 
 - Parameters:
@@ -311,7 +319,7 @@ The division between the real and logical dimensions must be exact.
 Changes the title of the window.
 
 ```ceu
-output string WINDOW_SET_TITLE;
+output string WINDOW_SET_TITLE
 ```
 
 - Parameters:

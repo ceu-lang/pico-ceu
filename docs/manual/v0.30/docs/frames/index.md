@@ -11,18 +11,20 @@ Enables or disables the generation of periodic `FRAMES_UPDATE` and
 `FRAMES_REDRAW` inputs to the application.
 
 ```ceu
-output bool FRAMES_SET;
+output bool FRAMES_SET
 ```
 
 - Parameters:
-    - `bool`: enables (`true`) or disables (`false`) the generation of frames
+    - `bool`: new state
+        - `true`: enables the generation of frames
+        - `false`: disables the generation of frames
 
 ### FRAMES_SET_CLEAR_RGB
 
 Changes the redrawing background color.
 
 ```
-output (u8,u8,u8) FRAMES_SET_CLEAR_RGB;
+output (u8,u8,u8) FRAMES_SET_CLEAR_RGB
 ```
 
 - Parameters:
@@ -39,7 +41,7 @@ The default color is black.
 ### FRAMES_UPDATE
 
 ```ceu
-input int FRAMES_UPDATE;
+input int FRAMES_UPDATE
 ```
 
 - Occurrence:
@@ -52,7 +54,7 @@ input int FRAMES_UPDATE;
 ### FRAMES_REDRAW
 
 ```ceu
-input void FRAMES_REDRAW;
+input void FRAMES_REDRAW
 ```
 
 - Occurrence:

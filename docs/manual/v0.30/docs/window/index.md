@@ -9,7 +9,7 @@ Manages the game window.
 Changes the real and logical sizes of the window.
 
 ```ceu
-output (u16,u16,u16,u16) WINDOW_SET_SIZE;
+output (u16,u16,u16,u16) WINDOW_SET_SIZE
 ```
 
 - Parameters:
@@ -25,7 +25,7 @@ The division between the real and logical dimensions must be exact.
 Changes the title of the window.
 
 ```ceu
-output string WINDOW_SET_TITLE;
+output string WINDOW_SET_TITLE
 ```
 
 - Parameters:
