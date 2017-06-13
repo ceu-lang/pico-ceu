@@ -283,7 +283,6 @@ var&? SDL_Init sdl = spawn SDL_Init("pico-Ceu", WIN_DIM,WIN_DIM, _);
 watching sdl do
     {
         WIN = @(&&sdl!.win);
-        //REN = @(&&sdl!.ren);
     }
     emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM,WIN_DIM);
     emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
@@ -295,6 +294,8 @@ watching sdl do
     do finalize with
         {TTF_CloseFont(FNT);}
     end
+
+    _srand(_time(null));
 
     par/or do
         /* FRAMES */

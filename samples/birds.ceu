@@ -125,7 +125,7 @@ with
         do
             var yesno pressed;
             var integer key;
-            (pressed,key) = await KEY_PRESS until pressed and key==K_o;
+            (pressed,key) = await KEY_PRESS until pressed and key==KEY_o;
         end
         emit go_pause(yes);
         par/or do
@@ -135,7 +135,7 @@ with
         with
             var yesno pressed;
             var integer key;
-            (pressed,key) = await KEY_PRESS until pressed and key==K_o;
+            (pressed,key) = await KEY_PRESS until pressed and key==KEY_o;
         end
         emit go_pause(no);
     end
