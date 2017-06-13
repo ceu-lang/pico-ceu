@@ -92,7 +92,7 @@
         }, 
         {
             "location": "/input/", 
-            "text": "Input Devices\n\n\nProvides input handling, such as for keyboard and mouse.\n\n\nKeyboard\n\n\nKEY_PRESS\n\n\ninput KEY_PRESS: (yesno,integer)\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a keyboard key is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nyesno\n: new key state\n\n\nyes\n: key is now pressed\n\n\nno\n: key is now released\n\n\n\n\n\n\ninteger\n: numeric key code\n\n\n\n\n\n\n\n\nTODO: key codes\n\n\nMouse\n\n\nMOUSE_CLICK\n\n\ninput MOUSE_CLICK (yesno,integer,integer,integer)\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a mouse button is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nyesno\n: new button state\n\n\nyes\n: button is now pressed\n\n\nno\n: button is now released\n\n\n\n\n\n\ninteger\n:  numeric button code (\nTODO: left, middle, right?\n)\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis\n\n\n\n\n\n\n\n\nMOUSE_MOVE\n\n\ninput (integer,integer) MOUSE_MOVE\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever the mouse moves\n\n\n\n\n\n\nPayload:\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis", 
+            "text": "Input Devices\n\n\nProvides input handling, such as for keyboard and mouse.\n\n\nKeyboard\n\n\nKEY_PRESS\n\n\ninput (yesno,integer) KEY_PRESS\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a keyboard key is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nyesno\n: new key state\n\n\nyes\n: key is now pressed\n\n\nno\n: key is now released\n\n\n\n\n\n\ninteger\n: numeric key code\n\n\n\n\n\n\n\n\nTODO: key codes\n\n\nMouse\n\n\nMOUSE_CLICK\n\n\ninput (yesno,integer,integer,integer) MOUSE_CLICK\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a mouse button is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nyesno\n: new button state\n\n\nyes\n: button is now pressed\n\n\nno\n: button is now released\n\n\n\n\n\n\ninteger\n:  numeric button code (\nTODO: left, middle, right?\n)\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis\n\n\n\n\n\n\n\n\nMOUSE_MOVE\n\n\ninput (integer,integer) MOUSE_MOVE\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever the mouse moves\n\n\n\n\n\n\nPayload:\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis", 
             "title": "Input Devices"
         }, 
         {
@@ -107,7 +107,7 @@
         }, 
         {
             "location": "/input/#key_press", 
-            "text": "input KEY_PRESS: (yesno,integer)   Occurrences:  whenever a keyboard key is pressed or released    Payload:  yesno : new key state  yes : key is now pressed  no : key is now released    integer : numeric key code     TODO: key codes", 
+            "text": "input (yesno,integer) KEY_PRESS   Occurrences:  whenever a keyboard key is pressed or released    Payload:  yesno : new key state  yes : key is now pressed  no : key is now released    integer : numeric key code     TODO: key codes", 
             "title": "KEY_PRESS"
         }, 
         {
@@ -117,7 +117,7 @@
         }, 
         {
             "location": "/input/#mouse_click", 
-            "text": "input MOUSE_CLICK (yesno,integer,integer,integer)   Occurrences:  whenever a mouse button is pressed or released    Payload:  yesno : new button state  yes : button is now pressed  no : button is now released    integer :  numeric button code ( TODO: left, middle, right? )  integer :  current mouse position in the  x-axis  integer :  current mouse position in the  y-axis", 
+            "text": "input (yesno,integer,integer,integer) MOUSE_CLICK   Occurrences:  whenever a mouse button is pressed or released    Payload:  yesno : new button state  yes : button is now pressed  no : button is now released    integer :  numeric button code ( TODO: left, middle, right? )  integer :  current mouse position in the  x-axis  integer :  current mouse position in the  y-axis", 
             "title": "MOUSE_CLICK"
         }, 
         {

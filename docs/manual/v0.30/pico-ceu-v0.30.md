@@ -180,7 +180,7 @@ Provides input handling, such as for keyboard and mouse.
 #### KEY_PRESS
 
 ```ceu
-input KEY_PRESS: (yesno,integer)
+input (yesno,integer) KEY_PRESS
 ```
 
 - Occurrences:
@@ -198,7 +198,7 @@ input KEY_PRESS: (yesno,integer)
 #### MOUSE_CLICK
 
 ```ceu
-input MOUSE_CLICK (yesno,integer,integer,integer)
+input (yesno,integer,integer,integer) MOUSE_CLICK
 ```
 
 - Occurrences:
