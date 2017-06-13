@@ -146,15 +146,51 @@
 <pre><code class="ceu">input (bool,u16) KEY_PRESS;
 </code></pre>
 
+<ul>
+<li>Occurrence:<ul>
+<li>whenever a keyboard key is pressed or released</li>
+</ul>
+</li>
+<li>Payload:<ul>
+<li><code>bool</code>: if the key was pressed (<code>true</code>) or released (<code>false</code>)</li>
+<li><code>u16</code>:  the numeric key code</li>
+</ul>
+</li>
+</ul>
 <p><code>TODO: key codes</code></p>
 <h2 id="mouse">Mouse<a class="headerlink" href="#mouse" title="Permanent link">&para;</a></h2>
 <h3 id="mouse_click">MOUSE_CLICK<a class="headerlink" href="#mouse_click" title="Permanent link">&para;</a></h3>
 <pre><code class="ceu">input (bool,int,u16,u16) MOUSE_CLICK;
 </code></pre>
 
+<ul>
+<li>Occurrence:<ul>
+<li>whenever a mouse button is pressed or released</li>
+</ul>
+</li>
+<li>Payload:<ul>
+<li><code>bool</code>: if the button was pressed (<code>true</code>) or released (<code>false</code>)</li>
+<li><code>int</code>:  the numeric button code (<code>TODO: left, middle, right?</code>)</li>
+<li><code>u16</code>:  the current mouse position in the <code>x-axis</code></li>
+<li><code>u16</code>:  the current mouse position in the <code>y-axis</code></li>
+</ul>
+</li>
+</ul>
 <h3 id="mouse_move">MOUSE_MOVE<a class="headerlink" href="#mouse_move" title="Permanent link">&para;</a></h3>
 <pre><code class="ceu">input (u16,u16) MOUSE_MOVE;
 </code></pre>
+
+<ul>
+<li>Occurrence:<ul>
+<li>whenever the mouse moves</li>
+</ul>
+</li>
+<li>Payload:<ul>
+<li><code>u16</code>:  the current mouse position in the <code>x-axis</code></li>
+<li><code>u16</code>:  the current mouse position in the <code>y-axis</code></li>
+</ul>
+</li>
+</ul>
               
             </div>
           </div>

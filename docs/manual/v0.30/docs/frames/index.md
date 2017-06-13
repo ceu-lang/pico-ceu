@@ -7,15 +7,32 @@ screen.
 
 ### FRAMES_SET
 
+Enables or disables the generation of periodic `FRAMES_UPDATE` and
+`FRAMES_REDRAW` inputs to the application.
+
 ```ceu
 output bool FRAMES_SET;
 ```
 
+- Parameters:
+    - `bool`: enables (`true`) or disables (`false`) the generation of frames
+
 ### FRAMES_SET_CLEAR_RGB
 
+Changes the redrawing background color.
+
 ```
-output (u8,u8,u8)        FRAMES_SET_CLEAR_RGB;
+output (u8,u8,u8) FRAMES_SET_CLEAR_RGB;
 ```
+
+- Parameters:
+    - `u8`: new red component
+    - `u8`: new green component
+    - `u8`: new blue component
+
+On every frame, the screen is cleared with the background color.
+
+The default color is black.
 
 ## Update
 
@@ -25,6 +42,11 @@ output (u8,u8,u8)        FRAMES_SET_CLEAR_RGB;
 input int FRAMES_UPDATE;
 ```
 
+- Occurrence:
+    - on every frame, before [`FRAMES_REDRAW`][FRAMES_REDRAW]
+- Payload:
+    - `int`: the number of elapsed milliseconds since the previous frame
+
 ## Redraw
 
 ### FRAMES_REDRAW
@@ -32,3 +54,9 @@ input int FRAMES_UPDATE;
 ```ceu
 input void FRAMES_REDRAW;
 ```
+
+- Occurrence:
+    - on every frame, after [`FRAMES_UPDATE`][FRAMES_UPDATE]
+
+Before the event occurs, the screen is cleared with the color set on
+[`FRAMES_SET_CLEAR_RGB`][FRAMES_SET_CLEAR_RGB].

@@ -145,51 +145,142 @@
 <p>Provides graphics operations, such as for drawing pixels and images on the
 screen.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<h3 id="gfx_set_rgb">GFX_SET_RGB<a class="headerlink" href="#gfx_set_rgb" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">output (u8,u8,u8) GFX_SET_RGB;
-</code></pre>
-
-<h3 id="gfx_set_font">GFX_SET_FONT<a class="headerlink" href="#gfx_set_font" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">output (string,u16) GFX_SET_FONT;
-</code></pre>
-
-<h3 id="gfx_set_cursor">GFX_SET_CURSOR<a class="headerlink" href="#gfx_set_cursor" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">output (u8,u8) GFX_SET_CURSOR;
-</code></pre>
-
 <h3 id="gfx_set_grid">GFX_SET_GRID<a class="headerlink" href="#gfx_set_grid" title="Permanent link">&para;</a></h3>
+<p>Enables or disables a visual grid delimiting the screen pixels.</p>
 <pre><code class="ceu">output bool GFX_SET_GRID;
 </code></pre>
 
+<ul>
+<li>Parameters:<ul>
+<li><code>bool</code>: enables (<code>true</code>) or disables (<code>false</code>) the grid</li>
+</ul>
+</li>
+</ul>
+<p>The ratio between the real and logical dimensions must be greater then one.</p>
+<h3 id="gfx_set_rgb">GFX_SET_RGB<a class="headerlink" href="#gfx_set_rgb" title="Permanent link">&para;</a></h3>
+<p>Changes the color for all subsequent drawing operation.</p>
+<pre><code class="ceu">output (u8,u8,u8) GFX_SET_RGB;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>u8</code>: new red component</li>
+<li><code>u8</code>: new green component</li>
+<li><code>u8</code>: new blue component</li>
+</ul>
+</li>
+</ul>
+<h3 id="gfx_set_text_cursor">GFX_SET_TEXT_CURSOR<a class="headerlink" href="#gfx_set_text_cursor" title="Permanent link">&para;</a></h3>
+<p>Changes the cursor position for drawing text.</p>
+<pre><code class="ceu">output (u16,u16) GFX_SET_TEXT_CURSOR;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>u16</code>: new position in the <code>x-axis</code></li>
+<li><code>u16</code>: new position in the <code>y-axis</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="gfx_set_text_font">GFX_SET_TEXT_FONT<a class="headerlink" href="#gfx_set_text_font" title="Permanent link">&para;</a></h3>
+<p>Changes the font for drawing text.</p>
+<pre><code class="ceu">output (string,u16) GFX_SET_TEXT_FONT;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>string</code>: path for the <code>.ttf</code> font filename</li>
+<li><code>u16</code>: size of the new font</li>
+</ul>
+</li>
+</ul>
 <h2 id="drawing">Drawing<a class="headerlink" href="#drawing" title="Permanent link">&para;</a></h2>
-<h3 id="gfx_draw_pixel">GFX_DRAW_PIXEL<a class="headerlink" href="#gfx_draw_pixel" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">output (u16,u16) GFX_DRAW_PIXEL;
-</code></pre>
-
-<h3 id="gfx_draw_rect">GFX_DRAW_RECT<a class="headerlink" href="#gfx_draw_rect" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">output (u16,u16,u16,u16) GFX_DRAW_RECT;
-</code></pre>
-
 <h3 id="gfx_draw_bmp">GFX_DRAW_BMP<a class="headerlink" href="#gfx_draw_bmp" title="Permanent link">&para;</a></h3>
+<p>Draws a bitmap image on the screen.</p>
 <pre><code class="ceu">output (string,u16,u16) GFX_DRAW_BMP;
 </code></pre>
 
+<ul>
+<li>Parameters:<ul>
+<li><code>string</code>: path for the <code>.bmp</code> image filename</li>
+<li><code>u16</code>: drawing position in the <code>x-axis</code></li>
+<li><code>u16</code>: drawing position in the <code>y-axis</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="gfx_draw_pixel">GFX_DRAW_PIXEL<a class="headerlink" href="#gfx_draw_pixel" title="Permanent link">&para;</a></h3>
+<p>Draws a pixel on the screen.</p>
+<pre><code class="ceu">output (u16,u16) GFX_DRAW_PIXEL;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>u16</code>: drawing position in the <code>x-axis</code></li>
+<li><code>u16</code>: drawing position in the <code>y-axis</code></li>
+</ul>
+</li>
+</ul>
+<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
+<h3 id="gfx_draw_rect">GFX_DRAW_RECT<a class="headerlink" href="#gfx_draw_rect" title="Permanent link">&para;</a></h3>
+<p>Draws a rectangle on the screen.</p>
+<pre><code class="ceu">output (u16,u16,u16,u16) GFX_DRAW_RECT;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>u16</code>: drawing position in the <code>x-axis</code></li>
+<li><code>u16</code>: drawing position in the <code>y-axis</code></li>
+<li><code>u16</code>: rectangle width</li>
+<li><code>u16</code>: rectangle height</li>
+</ul>
+</li>
+</ul>
+<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
 <h3 id="gfx_draw_text">GFX_DRAW_TEXT<a class="headerlink" href="#gfx_draw_text" title="Permanent link">&para;</a></h3>
+<p>Draws a text on the screen.</p>
 <pre><code class="ceu">output string GFX_DRAW_TEXT;
 </code></pre>
 
+<ul>
+<li>Parameters:<ul>
+<li><code>string</code>: text to draw</li>
+</ul>
+</li>
+</ul>
+<p>The drawing position is first specified with
+[<code>GFX_SET_TEXT_CURSOR</code>][GFX_SET_TEXT_CURSOR].
+The cursor advances automatically for the position after the text.</p>
+<p>The drawing font is specified with [<code>GFX_SET_TEXT_FONT</code>][GFX_SET_TEXT_FONT].</p>
+<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
 <h3 id="gfx_draw_textln">GFX_DRAW_TEXTLN<a class="headerlink" href="#gfx_draw_textln" title="Permanent link">&para;</a></h3>
+<p>Draws a line of text on the screen.</p>
 <pre><code class="ceu">output string GFX_DRAW_TEXTLN;
 </code></pre>
 
+<p>The drawing position is first specified with
+[<code>GFX_SET_TEXT_CURSOR</code>][GFX_SET_TEXT_CURSOR].
+The cursor advances automatically for the next line after the text, at the same
+initial position.</p>
+<p>The drawing font is specified with [<code>GFX_SET_TEXT_FONT</code>][GFX_SET_TEXT_FONT].</p>
+<p>The drawing color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
 <h2 id="other">Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h2>
+<h3 id="gfx_clear">GFX_CLEAR<a class="headerlink" href="#gfx_clear" title="Permanent link">&para;</a></h3>
+<p>Clears the screen.</p>
+<pre><code class="ceu">output void GFX_CLEAR;
+</code></pre>
+
+<p>The clear color is specified with [<code>GFX_SET_RGB</code>][GFX_SET_RGB].</p>
 <h3 id="gfx_screenshot">GFX_SCREENSHOT<a class="headerlink" href="#gfx_screenshot" title="Permanent link">&para;</a></h3>
+<p>Takes a screen shot.</p>
 <pre><code class="ceu">output string GFX_SCREENSHOT;
 </code></pre>
 
-<h3 id="gfx_clear">GFX_CLEAR<a class="headerlink" href="#gfx_clear" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">output void GFX_CLEAR;
-</code></pre>
+<ul>
+<li>Parameters:<ul>
+<li><code>string</code>: path for the <code>.bmp</code> image filename to generate</li>
+</ul>
+</li>
+</ul>
               
             </div>
           </div>
