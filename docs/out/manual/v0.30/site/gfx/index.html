@@ -220,8 +220,8 @@ screen.</p>
 <ul>
 <li>Parameters:<ul>
 <li><code>text</code>: path for the <code>.bmp</code> image filename</li>
-<li><code>integer</code>: drawing position in the <code>x-axis</code></li>
-<li><code>integer</code>: drawing position in the <code>y-axis</code></li>
+<li><code>integer</code>: position in the <code>x-axis</code></li>
+<li><code>integer</code>: position in the <code>y-axis</code></li>
 </ul>
 </li>
 </ul>
@@ -232,8 +232,23 @@ screen.</p>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>integer</code>: drawing position in the <code>x-axis</code></li>
-<li><code>integer</code>: drawing position in the <code>y-axis</code></li>
+<li><code>integer</code>: position in the <code>x-axis</code></li>
+<li><code>integer</code>: position in the <code>y-axis</code></li>
+</ul>
+</li>
+</ul>
+<p>The drawing color is specified with <a href="#gfx_set_rgb"><code>GFX_SET_RGB</code></a>.</p>
+<h3 id="gfx_draw_line">GFX_DRAW_LINE<a class="headerlink" href="#gfx_draw_line" title="Permanent link">&para;</a></h3>
+<p>Draws a line on the screen.</p>
+<pre><code class="ceu">output (integer,integer,integer,integer) GFX_DRAW_LINE;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>integer</code>: start position in the <code>x-axis</code></li>
+<li><code>integer</code>: start position in the <code>y-axis</code></li>
+<li><code>integer</code>: end position in the <code>x-axis</code></li>
+<li><code>integer</code>: end position in the <code>y-axis</code></li>
 </ul>
 </li>
 </ul>
@@ -245,8 +260,8 @@ screen.</p>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>integer</code>: drawing position in the <code>x-axis</code></li>
-<li><code>integer</code>: drawing position in the <code>y-axis</code></li>
+<li><code>integer</code>: position in the <code>x-axis</code></li>
+<li><code>integer</code>: position in the <code>y-axis</code></li>
 <li><code>integer</code>: rectangle width</li>
 <li><code>integer</code>: rectangle height</li>
 </ul>
