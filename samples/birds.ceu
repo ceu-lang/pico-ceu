@@ -64,9 +64,9 @@ do
         pause/if go_invisible do
             every FRAMES_REDRAW do
                 if ((((sin+PI/2)/PI) as integer) % 2) == 0 then
-                    emit GFX_DRAW_BMP("pico-ceu/samples/clumsy_dn.bmp", rct.x, rct.y);
+                    emit GFX_DRAW_BMP("res/clumsy_dn.bmp", rct.x, rct.y);
                 else
-                    emit GFX_DRAW_BMP("pico-ceu/samples/clumsy_up.bmp", rct.x, rct.y);
+                    emit GFX_DRAW_BMP("res/clumsy_up.bmp", rct.x, rct.y);
                 end
             end
         end
@@ -130,7 +130,7 @@ with
         emit go_pause(true);
         par/or do
             every FRAMES_REDRAW do
-                emit GFX_DRAW_BMP("pico-ceu/samples/pause.bmp", 150,80);
+                emit GFX_DRAW_BMP("res/pause.bmp", 150,80);
             end
         with
             var yesno pressed;

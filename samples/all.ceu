@@ -3,7 +3,7 @@ emit GFX_SET_GRID(yes);
 await 1s;
 emit GFX_CLEAR();
 emit GFX_DRAW_RECT(25,0,25,25);
-emit GFX_DRAW_BMP("pico-ceu/star.bmp", 30,5);
+emit GFX_DRAW_BMP("res/star.bmp", 30,5);
 
 par do
     var integer i;
@@ -48,10 +48,10 @@ with
     emit GFX_SET_TEXT_CURSOR(1,5);
     spawn do
         await 5s;
-        emit GFX_SET_TEXT_FONT("pico-ceu/FreeSans.ttf", 10);
+        emit GFX_SET_TEXT_FONT("res/FreeSans.ttf", 10);
         emit GFX_SET_TEXT_CURSOR(1,5);
         await 2s;
-        emit GFX_SCREENSHOT("pico-ceu/screen.bmp");
+        emit GFX_SCREENSHOT("res/screen.bmp");
     end
     every 1s do
         emit GFX_DRAW_TEXT("|");

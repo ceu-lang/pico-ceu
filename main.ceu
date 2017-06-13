@@ -87,7 +87,7 @@ native/pos do
         SDL_RenderPresent(REN);
     }
 
-    tceu_callback_ret ceu_callback_sdl_edu (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
+    tceu_callback_ret ceu_callback_sdl_pico (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
         tceu_callback_ret ret;
         switch (cmd) {
             case CEU_CALLBACK_OUTPUT:
@@ -260,7 +260,7 @@ native/pos do
                     case CEU_OUTPUT_GFX_DRAW_TEXTLN: {
                         int cursor_x = GFX_TEXT_CURSOR_X;
                         p1.num = CEU_OUTPUT_GFX_DRAW_TEXT;
-                        ceu_callback_sdl_edu(cmd, p1, p2);
+                        ceu_callback_sdl_pico(cmd, p1, p2);
                         GFX_TEXT_CURSOR_X = cursor_x;
                         GFX_TEXT_CURSOR_Y += FNT_H;
                         break;
@@ -272,7 +272,7 @@ native/pos do
         }
         return ret;
     }
-    static tceu_callback CEU_CALLBACK_EDU = { &ceu_callback_sdl_edu, NULL };
+    static tceu_callback CEU_CALLBACK_EDU = { &ceu_callback_sdl_pico, NULL };
 end
 
 {
@@ -291,7 +291,7 @@ watching sdl do
     emit GFX_CLEAR();
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
 
-    emit GFX_SET_TEXT_FONT("pico-ceu/FreeMono.ttf", 10);
+    emit GFX_SET_TEXT_FONT("res/FreeMono.ttf", 10);
     do finalize with
         {TTF_CloseFont(FNT);}
     end
@@ -393,7 +393,7 @@ watching sdl do
     with
         #define _STRINGIFY(X) #X
         #define STRINGIFY(X) _STRINGIFY(X)
-        #include STRINGIFY(APP_SRC)
+        #include STRINGIFY(CEU_SRC)
     end
 end
 
