@@ -1,4 +1,4 @@
-#define WIN_DIM 400
+#define WIN_DIM 500
 
 #include "c.ceu"
 #include "sdl/sdl.ceu"
@@ -128,6 +128,10 @@ native/pos do
                         SDL_SetWindowSize(WIN, ren_w, ren_h);
                         SDL_RenderSetLogicalSize(REN, log_w, log_h);
 
+                        if (!(ren_w/log_w>1 && ren_h/log_h>1)) {
+                            GFX_SET_GRID = 0;
+                        }
+
                         { // clears the window
                             u8 r, g, b;
                             SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
@@ -136,6 +140,7 @@ native/pos do
                             ceu_callback_sdl_pico(cmd, p1, p2);
                             SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
                         }
+
                         break;
                     }
 
@@ -323,11 +328,12 @@ watching sdl do
     {
         WIN = @(&&sdl!.win);
     }
-    emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM,WIN_DIM);
+    emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM/10,WIN_DIM/10);
     emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
     emit GFX_SET_RGB(0x00,0x00,0x00);
     emit GFX_CLEAR();
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
+    emit GFX_SET_GRID(yes);
 
     emit GFX_SET_TEXT_FONT("res/FreeMono.ttf", 10);
     do finalize with
@@ -370,6 +376,7 @@ watching sdl do
                                      {FRAMES_SET_CLEAR_RGB.b});
                     emit GFX_CLEAR();
                     emit GFX_SET_RGB(r,g,b);
+                    {GFX_Show_Grid();}
                 end
             end
         end
