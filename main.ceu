@@ -20,6 +20,24 @@ end
 #define yes     true
 #define no      false
 
+data Color with
+    var integer r;
+    var integer g;
+    var integer b;
+end
+
+data Point with
+    var integer x;
+    var integer y;
+end
+
+data Rect with
+    var integer x;
+    var integer y;
+    var integer w;
+    var integer h;
+end
+
 output (text)            WINDOW_SET_TITLE;
 output (int,int,int,int) WINDOW_SET_SIZE;
 

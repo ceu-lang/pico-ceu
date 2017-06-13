@@ -3,7 +3,7 @@ emit WINDOW_SET_SIZE(640,480,640,480);
 emit FRAMES_SET(yes);
 emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
 
-code/tight Intersects (var& SDL_Rect rct1, var& SDL_Rect rct2) -> yesno
+code/tight Intersects (var& Rect rct1, var& Rect rct2) -> yesno
 do
     escape rct1.x+rct1.w/2 >= rct2.x-rct2.w/2 and
            rct1.x-rct1.w/2 <= rct2.x+rct2.w/2 and
@@ -12,10 +12,10 @@ do
 end
 
 code/await Bird (var integer y, var integer speed)
-                    -> (var SDL_Rect rct, event none go_collided)
+                    -> (var Rect rct, event none go_collided)
                         -> none
 do
-    rct = val SDL_Rect(20,y, 50,45);
+    rct = val Rect(20,y, 50,45);
 
     #define PI 3.14
 
@@ -105,7 +105,7 @@ par do
                 var&? Bird bird = do
                     var&? Bird b;
                     loop b in birds do
-                        var SDL_Point pt = val SDL_Point(x,y);
+                        var Point pt = val Point(x,y);
                         if _SDL_Rect_vs_Point(&&b!.rct as _SDL_Rect&&, &&pt as _SDL_Point&&) == 1 then
                             escape &b;
                         end

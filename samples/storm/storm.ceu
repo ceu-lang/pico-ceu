@@ -10,22 +10,9 @@ end
 
 #define PI 3.14159265
 
-data Color with
-    var integer r;
-    var integer g;
-    var integer b;
-end
-
 data Vector2D with
     var integer x;
     var integer y;
-end
-
-data Rect with
-    var integer x;
-    var integer y;
-    var integer w;
-    var integer h;
 end
 
 emit WINDOW_SET_TITLE("Storm");
