@@ -10,13 +10,13 @@ native/pre do
 end
 #define string _string
 
-output string            WINDOW_SET_TITLE;
+output (string)          WINDOW_SET_TITLE;
 output (u16,u16,u16,u16) WINDOW_SET_SIZE;
 
-output bool              FRAMES_SET;
+output (bool)            FRAMES_SET;
 output (u8,u8,u8)        FRAMES_SET_CLEAR_RGB;
-input  int               FRAMES_UPDATE;
-input  void              FRAMES_REDRAW;
+input  (int)             FRAMES_UPDATE;
+input  (void)            FRAMES_REDRAW;
 
 input (bool,int,u16,u16) MOUSE_CLICK;
 input (u16,u16)          MOUSE_MOVE;
@@ -25,14 +25,14 @@ input (bool,u16)         KEY_PRESS;
 output (u8,u8,u8)        GFX_SET_RGB;
 output (string,u16)      GFX_SET_TEXT_FONT;
 output (u16,u16)         GFX_SET_TEXT_CURSOR;
-output bool              GFX_SET_GRID;
-output string            GFX_SCREENSHOT;
-output void              GFX_CLEAR;
+output (bool)            GFX_SET_GRID;
+output (string)          GFX_SCREENSHOT;
+output (void)            GFX_CLEAR;
 output (u16,u16)         GFX_DRAW_PIXEL;
 output (u16,u16,u16,u16) GFX_DRAW_RECT;
 output (string,u16,u16)  GFX_DRAW_BMP;
-output string            GFX_DRAW_TEXT;
-output string            GFX_DRAW_TEXTLN;
+output (string)          GFX_DRAW_TEXT;
+output (string)          GFX_DRAW_TEXTLN;
 
 native/pos do
     SDL_Window*   WIN;
