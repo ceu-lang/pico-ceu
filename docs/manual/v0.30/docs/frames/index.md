@@ -1,17 +1,18 @@
 # Frame Management
 
-Manages the game frames, such as for updating animation and redrawing the
+Manages the game frames, such as for updating animations and redrawing the
 screen.
 
 ## Configuration
 
 ### FRAMES_SET
 
-Enables or disables the generation of periodic `FRAMES_UPDATE` and
-`FRAMES_REDRAW` inputs to the application.
+Enables or disables the generation of periodic
+[`FRAMES_UPDATE`](#frames_update) and [`FRAMES_REDRAW`](#frames_redraw)
+inputs to the application.
 
 ```ceu
-output bool FRAMES_SET
+output (bool) FRAMES_SET
 ```
 
 - Parameters:
@@ -32,7 +33,8 @@ output (u8,u8,u8) FRAMES_SET_CLEAR_RGB
     - `u8`: new green component
     - `u8`: new blue component
 
-On every frame, the screen is cleared with the background color.
+On every frame before [`FRAMES_REDRAW`](#frames_redraw), the screen is cleared
+with the background color.
 
 The default color is black.
 
@@ -41,10 +43,10 @@ The default color is black.
 ### FRAMES_UPDATE
 
 ```ceu
-input int FRAMES_UPDATE
+input (int) FRAMES_UPDATE
 ```
 
-- Occurrence:
+- Occurrences:
     - on every frame, before [`FRAMES_REDRAW`](#frames_redraw)
 - Payload:
     - `int`: the number of elapsed milliseconds since the previous frame
@@ -54,11 +56,11 @@ input int FRAMES_UPDATE
 ### FRAMES_REDRAW
 
 ```ceu
-input void FRAMES_REDRAW
+input (void) FRAMES_REDRAW
 ```
 
-- Occurrence:
+- Occurrences:
     - on every frame, after [`FRAMES_UPDATE`](#frames_update)
 
-Before the event occurs, the screen is cleared with the color set on
+Before the input occurs, the screen is cleared with the color set with
 [`FRAMES_SET_CLEAR_RGB`](#frames_set_clear_rgb).

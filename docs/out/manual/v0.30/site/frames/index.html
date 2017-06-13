@@ -142,13 +142,14 @@
             <div class="section">
               
                 <h1 id="frame-management">Frame Management<a class="headerlink" href="#frame-management" title="Permanent link">&para;</a></h1>
-<p>Manages the game frames, such as for updating animation and redrawing the
+<p>Manages the game frames, such as for updating animations and redrawing the
 screen.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="frames_set">FRAMES_SET<a class="headerlink" href="#frames_set" title="Permanent link">&para;</a></h3>
-<p>Enables or disables the generation of periodic <code>FRAMES_UPDATE</code> and
-<code>FRAMES_REDRAW</code> inputs to the application.</p>
-<pre><code class="ceu">output bool FRAMES_SET
+<p>Enables or disables the generation of periodic
+<a href="#frames_update"><code>FRAMES_UPDATE</code></a> and <a href="#frames_redraw"><code>FRAMES_REDRAW</code></a>
+inputs to the application.</p>
+<pre><code class="ceu">output (bool) FRAMES_SET
 </code></pre>
 
 <ul>
@@ -174,15 +175,16 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<p>On every frame, the screen is cleared with the background color.</p>
+<p>On every frame before <a href="#frames_redraw"><code>FRAMES_REDRAW</code></a>, the screen is cleared
+with the background color.</p>
 <p>The default color is black.</p>
 <h2 id="update">Update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
 <h3 id="frames_update">FRAMES_UPDATE<a class="headerlink" href="#frames_update" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input int FRAMES_UPDATE
+<pre><code class="ceu">input (int) FRAMES_UPDATE
 </code></pre>
 
 <ul>
-<li>Occurrence:<ul>
+<li>Occurrences:<ul>
 <li>on every frame, before <a href="#frames_redraw"><code>FRAMES_REDRAW</code></a></li>
 </ul>
 </li>
@@ -193,16 +195,16 @@ screen.</p>
 </ul>
 <h2 id="redraw">Redraw<a class="headerlink" href="#redraw" title="Permanent link">&para;</a></h2>
 <h3 id="frames_redraw">FRAMES_REDRAW<a class="headerlink" href="#frames_redraw" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input void FRAMES_REDRAW
+<pre><code class="ceu">input (void) FRAMES_REDRAW
 </code></pre>
 
 <ul>
-<li>Occurrence:<ul>
+<li>Occurrences:<ul>
 <li>on every frame, after <a href="#frames_update"><code>FRAMES_UPDATE</code></a></li>
 </ul>
 </li>
 </ul>
-<p>Before the event occurs, the screen is cleared with the color set on
+<p>Before the input occurs, the screen is cleared with the color set with
 <a href="#frames_set_clear_rgb"><code>FRAMES_SET_CLEAR_RGB</code></a>.</p>
               
             </div>

@@ -18,7 +18,7 @@ screen.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output bool GFX_SET_GRID
+output (bool) GFX_SET_GRID
 ```
 
 - Parameters:
@@ -27,7 +27,7 @@ output bool GFX_SET_GRID
         - `false`: disables the grid
 
 The ratio between the real and logical dimensions set with
-[`WINDOW_SET_SIZE`][../window/#WINDOW_SET_SIZE] must be greater then one.
+[`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
 
 #### GFX_SET_RGB
 
@@ -66,7 +66,17 @@ output (string,u16) GFX_SET_TEXT_FONT
     - `string`: path for the `.ttf` font filename
     - `u16`: height of the new font in pixels
 
-### Drawing
+### Drawing Operations
+
+#### GFX_CLEAR
+
+Clears the screen.
+
+```ceu
+output (void) GFX_CLEAR
+```
+
+The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 #### GFX_DRAW_BMP
 
@@ -116,7 +126,7 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a text on the screen.
 
 ```ceu
-output string GFX_DRAW_TEXT
+output (string) GFX_DRAW_TEXT
 ```
 
 - Parameters:
@@ -125,9 +135,7 @@ output string GFX_DRAW_TEXT
 The drawing position is first specified with
 [`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
 The cursor advances automatically for the position after the text.
-
 The drawing font is specified with [`GFX_SET_TEXT_FONT`](#gfx_set_text_font).
-
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 #### GFX_DRAW_TEXTLN
@@ -135,36 +143,24 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a line of text on the screen.
 
 ```ceu
-output string GFX_DRAW_TEXTLN
+output (string) GFX_DRAW_TEXTLN
 ```
 
 The drawing position is first specified with
 [`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
 The cursor advances automatically for the next line after the text, at the same
 initial position.
-
 The drawing font is specified with [`GFX_SET_TEXT_FONT`](#gfx_set_text_font).
-
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 ### Other
-
-#### GFX_CLEAR
-
-Clears the screen.
-
-```ceu
-output void GFX_CLEAR
-```
-
-The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 #### GFX_SCREENSHOT
 
 Takes a screen shot.
 
 ```ceu
-output string GFX_SCREENSHOT
+output (string) GFX_SCREENSHOT
 ```
 
 - Parameters:
@@ -184,13 +180,13 @@ Provides input handling, such as for keyboard and mouse.
 input (bool,u16) KEY_PRESS
 ```
 
-- Occurrence:
+- Occurrences:
     - whenever a keyboard key is pressed or released
 - Payload:
     - `bool`: new key state
         - `true`: key is now pressed
         - `false`: key is now released
-    - `u16`:  the numeric key code
+    - `u16`: numeric key code
 
 `TODO: key codes`
 
@@ -202,15 +198,15 @@ input (bool,u16) KEY_PRESS
 input (bool,int,u16,u16) MOUSE_CLICK
 ```
 
-- Occurrence:
+- Occurrences:
     - whenever a mouse button is pressed or released
 - Payload:
     - `bool`: new button state
         - `true`: button is now pressed
         - `false`: button is now released
-    - `int`:  the numeric button code (`TODO: left, middle, right?`)
-    - `u16`:  the current mouse position in the `x-axis`
-    - `u16`:  the current mouse position in the `y-axis`
+    - `int`:  numeric button code (`TODO: left, middle, right?`)
+    - `u16`:  current mouse position in the `x-axis`
+    - `u16`:  current mouse position in the `y-axis`
 
 #### MOUSE_MOVE
 
@@ -218,28 +214,29 @@ input (bool,int,u16,u16) MOUSE_CLICK
 input (u16,u16) MOUSE_MOVE
 ```
 
-- Occurrence:
+- Occurrences:
     - whenever the mouse moves
 - Payload:
-    - `u16`:  the current mouse position in the `x-axis`
-    - `u16`:  the current mouse position in the `y-axis`
+    - `u16`:  current mouse position in the `x-axis`
+    - `u16`:  current mouse position in the `y-axis`
 
 # Frame Management
 
 ## Frame Management
 
-Manages the game frames, such as for updating animation and redrawing the
+Manages the game frames, such as for updating animations and redrawing the
 screen.
 
 ### Configuration
 
 #### FRAMES_SET
 
-Enables or disables the generation of periodic `FRAMES_UPDATE` and
-`FRAMES_REDRAW` inputs to the application.
+Enables or disables the generation of periodic
+[`FRAMES_UPDATE`](#frames_update) and [`FRAMES_REDRAW`](#frames_redraw)
+inputs to the application.
 
 ```ceu
-output bool FRAMES_SET
+output (bool) FRAMES_SET
 ```
 
 - Parameters:
@@ -260,7 +257,8 @@ output (u8,u8,u8) FRAMES_SET_CLEAR_RGB
     - `u8`: new green component
     - `u8`: new blue component
 
-On every frame, the screen is cleared with the background color.
+On every frame before [`FRAMES_REDRAW`](#frames_redraw), the screen is cleared
+with the background color.
 
 The default color is black.
 
@@ -269,10 +267,10 @@ The default color is black.
 #### FRAMES_UPDATE
 
 ```ceu
-input int FRAMES_UPDATE
+input (int) FRAMES_UPDATE
 ```
 
-- Occurrence:
+- Occurrences:
     - on every frame, before [`FRAMES_REDRAW`](#frames_redraw)
 - Payload:
     - `int`: the number of elapsed milliseconds since the previous frame
@@ -282,20 +280,20 @@ input int FRAMES_UPDATE
 #### FRAMES_REDRAW
 
 ```ceu
-input void FRAMES_REDRAW
+input (void) FRAMES_REDRAW
 ```
 
-- Occurrence:
+- Occurrences:
     - on every frame, after [`FRAMES_UPDATE`](#frames_update)
 
-Before the event occurs, the screen is cleared with the color set on
+Before the input occurs, the screen is cleared with the color set with
 [`FRAMES_SET_CLEAR_RGB`](#frames_set_clear_rgb).
 
 # Window Management
 
 ## Window Management
 
-Manages the game window.
+Manages the application window.
 
 ### Configuration
 
@@ -308,19 +306,19 @@ output (u16,u16,u16,u16) WINDOW_SET_SIZE
 ```
 
 - Parameters:
-    - `u16`: the new real width
-    - `u16`: the new real height
-    - `u16`: the new logical width
-    - `u16`: the new logical height
+    - `u16`: new real width
+    - `u16`: new real height
+    - `u16`: new logical width
+    - `u16`: new logical height
 
-The division between the real and logical dimensions must be exact.
+The arithmetic division between the real and logical dimensions must be exact.
 
 #### WINDOW_SET_TITLE
 
 Changes the title of the window.
 
 ```ceu
-output string WINDOW_SET_TITLE
+output (string) WINDOW_SET_TITLE
 ```
 
 - Parameters:

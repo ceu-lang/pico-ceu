@@ -138,7 +138,7 @@
             <div class="section">
               
                 <h1 id="window-management">Window Management<a class="headerlink" href="#window-management" title="Permanent link">&para;</a></h1>
-<p>Manages the game window.</p>
+<p>Manages the application window.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="window_set_size">WINDOW_SET_SIZE<a class="headerlink" href="#window_set_size" title="Permanent link">&para;</a></h3>
 <p>Changes the real and logical sizes of the window.</p>
@@ -147,17 +147,17 @@
 
 <ul>
 <li>Parameters:<ul>
-<li><code>u16</code>: the new real width</li>
-<li><code>u16</code>: the new real height</li>
-<li><code>u16</code>: the new logical width</li>
-<li><code>u16</code>: the new logical height</li>
+<li><code>u16</code>: new real width</li>
+<li><code>u16</code>: new real height</li>
+<li><code>u16</code>: new logical width</li>
+<li><code>u16</code>: new logical height</li>
 </ul>
 </li>
 </ul>
-<p>The division between the real and logical dimensions must be exact.</p>
+<p>The arithmetic division between the real and logical dimensions must be exact.</p>
 <h3 id="window_set_title">WINDOW_SET_TITLE<a class="headerlink" href="#window_set_title" title="Permanent link">&para;</a></h3>
 <p>Changes the title of the window.</p>
-<pre><code class="ceu">output string WINDOW_SET_TITLE
+<pre><code class="ceu">output (string) WINDOW_SET_TITLE
 </code></pre>
 
 <ul>

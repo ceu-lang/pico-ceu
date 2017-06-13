@@ -1,6 +1,6 @@
 # Window Management
 
-Manages the game window.
+Manages the application window.
 
 ## Configuration
 
@@ -13,19 +13,19 @@ output (u16,u16,u16,u16) WINDOW_SET_SIZE
 ```
 
 - Parameters:
-    - `u16`: the new real width
-    - `u16`: the new real height
-    - `u16`: the new logical width
-    - `u16`: the new logical height
+    - `u16`: new real width
+    - `u16`: new real height
+    - `u16`: new logical width
+    - `u16`: new logical height
 
-The division between the real and logical dimensions must be exact.
+The arithmetic division between the real and logical dimensions must be exact.
 
 ### WINDOW_SET_TITLE
 
 Changes the title of the window.
 
 ```ceu
-output string WINDOW_SET_TITLE
+output (string) WINDOW_SET_TITLE
 ```
 
 - Parameters:

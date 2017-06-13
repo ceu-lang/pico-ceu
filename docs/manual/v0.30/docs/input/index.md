@@ -10,13 +10,13 @@ Provides input handling, such as for keyboard and mouse.
 input (bool,u16) KEY_PRESS
 ```
 
-- Occurrence:
+- Occurrences:
     - whenever a keyboard key is pressed or released
 - Payload:
     - `bool`: new key state
         - `true`: key is now pressed
         - `false`: key is now released
-    - `u16`:  the numeric key code
+    - `u16`: numeric key code
 
 `TODO: key codes`
 
@@ -28,15 +28,15 @@ input (bool,u16) KEY_PRESS
 input (bool,int,u16,u16) MOUSE_CLICK
 ```
 
-- Occurrence:
+- Occurrences:
     - whenever a mouse button is pressed or released
 - Payload:
     - `bool`: new button state
         - `true`: button is now pressed
         - `false`: button is now released
-    - `int`:  the numeric button code (`TODO: left, middle, right?`)
-    - `u16`:  the current mouse position in the `x-axis`
-    - `u16`:  the current mouse position in the `y-axis`
+    - `int`:  numeric button code (`TODO: left, middle, right?`)
+    - `u16`:  current mouse position in the `x-axis`
+    - `u16`:  current mouse position in the `y-axis`
 
 ### MOUSE_MOVE
 
@@ -44,8 +44,8 @@ input (bool,int,u16,u16) MOUSE_CLICK
 input (u16,u16) MOUSE_MOVE
 ```
 
-- Occurrence:
+- Occurrences:
     - whenever the mouse moves
 - Payload:
-    - `u16`:  the current mouse position in the `x-axis`
-    - `u16`:  the current mouse position in the `y-axis`
+    - `u16`:  current mouse position in the `x-axis`
+    - `u16`:  current mouse position in the `y-axis`

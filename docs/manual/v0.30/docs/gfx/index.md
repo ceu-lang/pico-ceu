@@ -10,7 +10,7 @@ screen.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output bool GFX_SET_GRID
+output (bool) GFX_SET_GRID
 ```
 
 - Parameters:
@@ -19,7 +19,7 @@ output bool GFX_SET_GRID
         - `false`: disables the grid
 
 The ratio between the real and logical dimensions set with
-[`WINDOW_SET_SIZE`][../window/#WINDOW_SET_SIZE] must be greater then one.
+[`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
 
 ### GFX_SET_RGB
 
@@ -58,7 +58,17 @@ output (string,u16) GFX_SET_TEXT_FONT
     - `string`: path for the `.ttf` font filename
     - `u16`: height of the new font in pixels
 
-## Drawing
+## Drawing Operations
+
+### GFX_CLEAR
+
+Clears the screen.
+
+```ceu
+output (void) GFX_CLEAR
+```
+
+The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 ### GFX_DRAW_BMP
 
@@ -108,7 +118,7 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a text on the screen.
 
 ```ceu
-output string GFX_DRAW_TEXT
+output (string) GFX_DRAW_TEXT
 ```
 
 - Parameters:
@@ -117,9 +127,7 @@ output string GFX_DRAW_TEXT
 The drawing position is first specified with
 [`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
 The cursor advances automatically for the position after the text.
-
 The drawing font is specified with [`GFX_SET_TEXT_FONT`](#gfx_set_text_font).
-
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 ### GFX_DRAW_TEXTLN
@@ -127,36 +135,24 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a line of text on the screen.
 
 ```ceu
-output string GFX_DRAW_TEXTLN
+output (string) GFX_DRAW_TEXTLN
 ```
 
 The drawing position is first specified with
 [`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
 The cursor advances automatically for the next line after the text, at the same
 initial position.
-
 The drawing font is specified with [`GFX_SET_TEXT_FONT`](#gfx_set_text_font).
-
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 ## Other
-
-### GFX_CLEAR
-
-Clears the screen.
-
-```ceu
-output void GFX_CLEAR
-```
-
-The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 ### GFX_SCREENSHOT
 
 Takes a screen shot.
 
 ```ceu
-output string GFX_SCREENSHOT
+output (string) GFX_SCREENSHOT
 ```
 
 - Parameters:
