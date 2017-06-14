@@ -46,9 +46,11 @@ output (int,int,int)     FRAMES_SET_CLEAR_RGB;
 input  (int)             FRAMES_UPDATE;
 input  (void)            FRAMES_REDRAW;
 
-input (bool,int,int,int) MOUSE_CLICK;
+input (int,int,int)      MOUSE_CLICK;
+input (int,int,int)      MOUSE_UNCLICK;
 input (int,int)          MOUSE_MOVE;
-input (bool,int)         KEY_PRESS;
+input (int)              KEY_PRESS;
+input (int)              KEY_UNPRESS;
 
 output (int,int,int)     GFX_SET_RGB;
 output (text,int)        GFX_SET_FONT;
@@ -407,7 +409,7 @@ watching sdl do
                 var _SDL_KeyboardEvent&& key = await SDL_KEYDOWN;
                 var _SDL_Keycode sym = key:keysym.sym;
                 await async (sym) do
-                    emit KEY_PRESS(true,sym);
+                    emit KEY_PRESS(sym);
                 end
             end
         with
@@ -416,7 +418,7 @@ watching sdl do
                 var _SDL_KeyboardEvent&& key = await SDL_KEYUP;
                 var _SDL_Keycode sym = key:keysym.sym;
                 await async (sym) do
-                    emit KEY_PRESS(false,sym);
+                    emit KEY_UNPRESS(sym);
                 end
             end
         end
@@ -429,7 +431,7 @@ watching sdl do
                 var int x = {@mse:x};
                 var int y = {@mse:y};
                 await async (x,y) do
-                    emit MOUSE_CLICK(true,0,x,y);
+                    emit MOUSE_CLICK(0,x,y);
                 end
             end
         with
@@ -439,7 +441,7 @@ watching sdl do
                 var int x = {@mse:x};
                 var int y = {@mse:y};
                 await async (x,y) do
-                    emit MOUSE_CLICK(false,0,x,y);
+                    emit MOUSE_UNCLICK(0,x,y);
                 end
             end
         with

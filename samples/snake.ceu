@@ -34,7 +34,7 @@ code/await Snake (none) -> (vector[] Point body) -> FOREVER do
 
     par do
         var integer key;
-        every (_,key) in KEY_PRESS do
+        every key in KEY_PRESS do
             if      key==KEY_LEFT  and not (dir is Direction.Right) then
                 nxt = val Direction.Left();
             else/if key==KEY_RIGHT and not (dir is Direction.Left)  then

@@ -24,21 +24,18 @@ with
     emit GFX_CLEAR();
 with
     loop do
-        var yesno pressed;
-        var integer key;
-        (pressed,key) = await KEY_PRESS until pressed;
+        var integer key = await KEY_PRESS;
         {printf(">>> press %c\n", @key);}
-        (pressed,key) = await KEY_PRESS until not pressed;
+        key = await KEY_UNPRESS;
         {printf(">>> unpress %c\n", @key);}
     end
 with
     loop do
-        var yesno click;
         var integer x;
         var integer y;
-        (click,_,x,y) = await MOUSE_CLICK until click;
+        (_,x,y) = await MOUSE_CLICK;
         {printf(">>> click %d %d\n", @x,@y);}
-        (click,_,x,y) = await MOUSE_CLICK until not click;
+        (_,x,y) = await MOUSE_UNCLICK;
         {printf(">>> unclick %d %d\n", @x,@y);}
     end
 with

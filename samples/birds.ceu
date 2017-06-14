@@ -101,7 +101,7 @@ par do
             loop do
                 var integer x;
                 var integer y;
-                (_,_,x,y) = await MOUSE_CLICK;
+                (_,x,y) = await MOUSE_CLICK;
                 var&? Bird bird = do
                     var&? Bird b;
                     loop b in birds do
@@ -123,9 +123,7 @@ par do
 with
     loop do
         do
-            var yesno pressed;
-            var integer key;
-            (pressed,key) = await KEY_PRESS until pressed and key==KEY_o;
+            var integer key = await KEY_PRESS until key==KEY_o;
         end
         emit go_pause(yes);
         par/or do
@@ -133,9 +131,7 @@ with
                 emit GFX_DRAW_BMP(150,80, "res/pause.bmp");
             end
         with
-            var yesno pressed;
-            var integer key;
-            (pressed,key) = await KEY_PRESS until pressed and key==KEY_o;
+            var integer key = await KEY_PRESS until key==KEY_o;
         end
         emit go_pause(no);
     end
