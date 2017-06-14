@@ -13,12 +13,12 @@ screen.
 
 ### Configuration
 
-#### GFX_SET_GRID
+#### GRAPHICS_SET_GRID
 
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output (yesno) GFX_SET_GRID
+output (yesno) GRAPHICS_SET_GRID
 ```
 
 - Parameters:
@@ -29,24 +29,24 @@ output (yesno) GFX_SET_GRID
 The ratio between the real and logical dimensions set with
 [`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
 
-#### GFX_SET_FONT
+#### GRAPHICS_SET_FONT
 
 Changes the font for drawing and writing text.
 
 ```ceu
-output (text,integer) GFX_SET_FONT
+output (text,integer) GRAPHICS_SET_FONT
 ```
 
 - Parameters:
     - `text`: path for the `.ttf` font filename
     - `integer`: height of the new font in pixels
 
-#### GFX_SET_RGB
+#### GRAPHICS_SET_RGB
 
 Changes the color of all subsequent drawing operations.
 
 ```ceu
-output (integer,integer,integer) GFX_SET_RGB
+output (integer,integer,integer) GRAPHICS_SET_RGB
 ```
 
 - Parameters:
@@ -54,13 +54,13 @@ output (integer,integer,integer) GFX_SET_RGB
     - `integer`: new green component
     - `integer`: new blue component
 
-#### GFX_SET_WRITE_CURSOR
+#### GRAPHICS_SET_WRITE_CURSOR
 
-Changes the cursor position for writing text with [`GFX_WRITE`](#gfx_write) and
-[`GFX_WRITELN`](#gfx_writeln).
+Changes the cursor position for writing text with [`GRAPHICS_WRITE`](#graphics_write) and
+[`GRAPHICS_WRITELN`](#graphics_writeln).
 
 ```ceu
-output (integer,integer) GFX_SET_WRITE_CURSOR
+output (integer,integer) GRAPHICS_SET_WRITE_CURSOR
 ```
 
 - Parameters:
@@ -69,25 +69,25 @@ output (integer,integer) GFX_SET_WRITE_CURSOR
 
 ### Drawing
 
-#### GFX_CLEAR
+#### GRAPHICS_CLEAR
 
 Clears the screen.
 
 ```ceu
-output (none) GFX_CLEAR
+output (none) GRAPHICS_CLEAR
 ```
 
 - Parameters:
     - `none`: no parameters
 
-The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+The clear color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
 
-#### GFX_DRAW_BMP
+#### GRAPHICS_DRAW_BMP
 
 Draws a bitmap image on the screen.
 
 ```ceu
-output (integer,integer,text) GFX_DRAW_BMP
+output (integer,integer,text) GRAPHICS_DRAW_BMP
 ```
 
 - Parameters:
@@ -95,26 +95,26 @@ output (integer,integer,text) GFX_DRAW_BMP
     - `integer`: position in the `y-axis`
     - `text`: path for the `.bmp` image filename
 
-#### GFX_DRAW_PIXEL
+#### GRAPHICS_DRAW_PIXEL
 
 Draws a pixel on the screen.
 
 ```ceu
-output (integer,integer) GFX_DRAW_PIXEL
+output (integer,integer) GRAPHICS_DRAW_PIXEL
 ```
 
 - Parameters:
     - `integer`: position in the `x-axis`
     - `integer`: position in the `y-axis`
 
-The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
 
-#### GFX_DRAW_LINE
+#### GRAPHICS_DRAW_LINE
 
 Draws a line on the screen.
 
 ```ceu
-output (integer,integer,integer,integer) GFX_DRAW_LINE;
+output (integer,integer,integer,integer) GRAPHICS_DRAW_LINE;
 ```
 
 - Parameters:
@@ -123,14 +123,14 @@ output (integer,integer,integer,integer) GFX_DRAW_LINE;
     - `integer`: end position in the `x-axis`
     - `integer`: end position in the `y-axis`
 
-The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
 
-#### GFX_DRAW_RECT
+#### GRAPHICS_DRAW_RECT
 
 Draws a rectangle on the screen.
 
 ```ceu
-output (integer,integer,integer,integer) GFX_DRAW_RECT
+output (integer,integer,integer,integer) GRAPHICS_DRAW_RECT
 ```
 
 - Parameters:
@@ -139,14 +139,14 @@ output (integer,integer,integer,integer) GFX_DRAW_RECT
     - `integer`: rectangle width
     - `integer`: rectangle height
 
-The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
 
-#### GFX_DRAW_TEXT
+#### GRAPHICS_DRAW_TEXT
 
 Draws a text on the screen.
 
 ```ceu
-output (int,int,text) GFX_DRAW_TEXT;
+output (int,int,text) GRAPHICS_DRAW_TEXT;
 ```
 
 - Parameters:
@@ -154,51 +154,51 @@ output (int,int,text) GFX_DRAW_TEXT;
     - `integer`: position in the `y-axis`
     - `text`: text to draw
 
-The drawing font is specified with [`GFX_SET_FONT`](#gfx_set_font).
-The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+The drawing font is specified with [`GRAPHICS_SET_FONT`](#graphics_set_font).
+The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
 
 ### Writing
 
-#### GFX_WRITE
+#### GRAPHICS_WRITE
 
 Writes a text on the screen.
 
 ```ceu
-output (text) GFX_WRITE;
+output (text) GRAPHICS_WRITE;
 ```
 
 - Parameters:
     - `text`: text to draw
 
 The drawing position is first specified with
-[`GFX_SET_WRITE_CURSOR`](#gfx_set_text_cursor).
+[`GRAPHICS_SET_WRITE_CURSOR`](#graphics_set_text_cursor).
 The cursor advances automatically for the position after the text.
-The drawing font is specified with [`GFX_SET_FONT`](#gfx_set_font).
-The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+The drawing font is specified with [`GRAPHICS_SET_FONT`](#graphics_set_font).
+The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
 
-#### GFX_WRITELN
+#### GRAPHICS_WRITELN
 
 Writes a line of text on the screen.
 
 ```ceu
-output (text) GFX_WRITELN;
+output (text) GRAPHICS_WRITELN;
 ```
 
 The drawing position is first specified with
-[`GFX_SET_WRITE_CURSOR`](#gfx_set_text_cursor).
+[`GRAPHICS_SET_WRITE_CURSOR`](#graphics_set_text_cursor).
 The cursor advances automatically for the next line after the text, at the same
 initial position.
-The drawing font is specified with [`GFX_SET_FONT`](#gfx_set_font).
-The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+The drawing font is specified with [`GRAPHICS_SET_FONT`](#graphics_set_font).
+The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
 
 ### Other
 
-#### GFX_SCREENSHOT
+#### GRAPHICS_SCREENSHOT
 
 Takes a screen shot.
 
 ```ceu
-output (text) GFX_SCREENSHOT
+output (text) GRAPHICS_SCREENSHOT
 ```
 
 - Parameters:
