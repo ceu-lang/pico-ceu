@@ -152,7 +152,7 @@
         }, 
         {
             "location": "/sound/", 
-            "text": "Sound\n\n\nProvides sound playback.\n\n\nConfiguration\n\n\nSOUND_SET_VOLUME\n\n\nChanges the volume of all subsequent sound playback.\n\n\noutput (integer) SOUND_SET_VOUME\n\n\n\n\n\n\nParameters:\n\n\ninteger\n: new sound volume in percentage (\n0 -\n 100\n)\n\n\n\n\n\n\n\n\nPlayback\n\n\nSOUND_PLAY\n\n\nPlays a sound.\n\n\noutput (text) SOUND_PLAY;\n\n\n\n\n\n\nParameters:\n\n\ntext\n: path for the sound filename\n\n\n\n\n\n\n\n\nThe playback volume is specified with \nSOUND_SET_VOLUME\n.", 
+            "text": "Sound\n\n\nProvides sound playback.\n\n\nConfiguration\n\n\nSOUND_SET_VOLUME\n\n\nChanges the volume of all subsequent sound playbacks.\n\n\noutput (integer) SOUND_SET_VOUME\n\n\n\n\n\n\nParameters:\n\n\ninteger\n: new sound volume in percentage (from \n0\n to \n100\n)\n\n\n\n\n\n\n\n\nPlayback\n\n\nSOUND_PLAY\n\n\nPlays a sound file.\n\n\noutput (text) SOUND_PLAY\n\n\n\n\n\n\nParameters:\n\n\ntext\n: path for the sound filename\n\n\n\n\n\n\n\n\nThe playback volume is specified with \nSOUND_SET_VOLUME\n.", 
             "title": "Sound"
         }, 
         {
@@ -167,7 +167,7 @@
         }, 
         {
             "location": "/sound/#sound_set_volume", 
-            "text": "Changes the volume of all subsequent sound playback.  output (integer) SOUND_SET_VOUME   Parameters:  integer : new sound volume in percentage ( 0 -  100 )", 
+            "text": "Changes the volume of all subsequent sound playbacks.  output (integer) SOUND_SET_VOUME   Parameters:  integer : new sound volume in percentage (from  0  to  100 )", 
             "title": "SOUND_SET_VOLUME"
         }, 
         {
@@ -177,7 +177,7 @@
         }, 
         {
             "location": "/sound/#sound_play", 
-            "text": "Plays a sound.  output (text) SOUND_PLAY;   Parameters:  text : path for the sound filename     The playback volume is specified with  SOUND_SET_VOLUME .", 
+            "text": "Plays a sound file.  output (text) SOUND_PLAY   Parameters:  text : path for the sound filename     The playback volume is specified with  SOUND_SET_VOLUME .", 
             "title": "SOUND_PLAY"
         }, 
         {

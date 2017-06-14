@@ -288,24 +288,24 @@ Provides sound playback.
 
 #### SOUND_SET_VOLUME
 
-Changes the volume of all subsequent sound playback.
+Changes the volume of all subsequent sound playbacks.
 
 ```ceu
 output (integer) SOUND_SET_VOUME
 ```
 
 - Parameters:
-    - `integer`: new sound volume in percentage (`0 -> 100`)
+    - `integer`: new sound volume in percentage (from `0` to `100`)
 
 
 ### Playback
 
 #### SOUND_PLAY
 
-Plays a sound.
+Plays a sound file.
 
 ```ceu
-output (text) SOUND_PLAY;
+output (text) SOUND_PLAY
 ```
 
 - Parameters:
