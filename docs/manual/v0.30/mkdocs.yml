@@ -11,7 +11,7 @@ markdown_extensions:
 
 pages:
     - Introduction:         'index.md'
-    - Graphics:             'gfx/index.md'
+    - Graphics:             'graphics/index.md'
     - Input Devices:        'input/index.md'
     - Sound:                'sound/index.md'
     - Frame Management:     'frames/index.md'

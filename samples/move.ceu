@@ -3,14 +3,14 @@ emit WINDOW_SET_SIZE(300,300,30,30);
 
 var integer x = 14;
 var integer y = 14;
-emit GFX_DRAW_PIXEL(x,y);                   // draw a pixel in the initial position
+emit GRAPHICS_DRAW_PIXEL(x,y);                  // draw a pixel in the initial position
 
 var integer key;
-every key in KEY_PRESS do                   // execute on every key press
-    //emit GFX_SET_RGB(0x00,0x00,0x00);     // uncomment these two lines
-    //emit GFX_DRAW_PIXEL(x,y);             // clear the old position
+every key in KEY_PRESS do                       // execute on every key press
+    //emit GRAPHICS_SET_RGB(0x00,0x00,0x00);    // uncomment these two lines
+    //emit GRAPHICS_DRAW_PIXEL(x,y);            // clear the old position
 
-    if key == KEY_LEFT then                 // move in the four directions
+    if key == KEY_LEFT then                     // move in the four directions
         x = x - 1;
     else/if key == KEY_RIGHT then
         x = x + 1;
@@ -20,6 +20,6 @@ every key in KEY_PRESS do                   // execute on every key press
         y = y + 1;
     end
 
-    emit GFX_SET_RGB(0xFF,0xFF,0xFF);
-    emit GFX_DRAW_PIXEL(x,y);               // draw in the new position
+    emit GRAPHICS_SET_RGB(0xFF,0xFF,0xFF);
+    emit GRAPHICS_DRAW_PIXEL(x,y);              // draw in the new position
 end

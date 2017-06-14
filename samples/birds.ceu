@@ -64,9 +64,9 @@ do
         pause/if go_invisible do
             every FRAMES_REDRAW do
                 if ((((sin+PI/2)/PI) as integer) % 2) == 0 then
-                    emit GFX_DRAW_BMP(rct.x,rct.y, "res/clumsy_dn.bmp");
+                    emit GRAPHICS_DRAW_BMP(rct.x,rct.y, "res/clumsy_dn.bmp");
                 else
-                    emit GFX_DRAW_BMP(rct.x,rct.y, "res/clumsy_up.bmp");
+                    emit GRAPHICS_DRAW_BMP(rct.x,rct.y, "res/clumsy_up.bmp");
                 end
             end
         end
@@ -113,8 +113,8 @@ par do
                 end;
                 watching bird do
                     every FRAMES_REDRAW do
-                        emit GFX_SET_RGB(0xFF,0xFF,0xFF);
-                        emit GFX_DRAW_LINE(320,480, bird!.rct.x+20,bird!.rct.y+20);
+                        emit GRAPHICS_SET_RGB(0xFF,0xFF,0xFF);
+                        emit GRAPHICS_DRAW_LINE(320,480, bird!.rct.x+20,bird!.rct.y+20);
                     end
                 end
             end
@@ -128,7 +128,7 @@ with
         emit go_pause(yes);
         par/or do
             every FRAMES_REDRAW do
-                emit GFX_DRAW_BMP(150,80, "res/pause.bmp");
+                emit GRAPHICS_DRAW_BMP(150,80, "res/pause.bmp");
             end
         with
             var integer key = await KEY_PRESS until key==KEY_o;

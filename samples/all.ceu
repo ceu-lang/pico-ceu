@@ -1,12 +1,12 @@
 emit WINDOW_SET_SIZE(500,500,50,50);
-emit GFX_SET_GRID(yes);
+emit GRAPHICS_SET_GRID(yes);
 await 1s;
-emit GFX_CLEAR();
-emit GFX_SET_RGB(0,0,0xFF);
-emit GFX_DRAW_LINE(0,0,50,50);
-emit GFX_DRAW_TEXT(25,25,"alo");
-emit GFX_DRAW_RECT(25,0,25,25);
-emit GFX_DRAW_BMP(30,5, "res/star.bmp");
+emit GRAPHICS_CLEAR();
+emit GRAPHICS_SET_RGB(0,0,0xFF);
+emit GRAPHICS_DRAW_LINE(0,0,50,50);
+emit GRAPHICS_DRAW_TEXT(25,25,"alo");
+emit GRAPHICS_DRAW_RECT(25,0,25,25);
+emit GRAPHICS_DRAW_BMP(30,5, "res/star.bmp");
 
 var int vol;
 loop vol in [0 -> 100], 10 do
@@ -19,16 +19,16 @@ par do
     var integer i;
     loop i in [1->_[, 2 do
         await 1s;
-        emit GFX_SET_RGB(0xFF,0,0);
-        emit GFX_DRAW_PIXEL(i,i);
+        emit GRAPHICS_SET_RGB(0xFF,0,0);
+        emit GRAPHICS_DRAW_PIXEL(i,i);
         await 1s;
-        emit GFX_SET_RGB(0,0xFF,0);
-        emit GFX_DRAW_PIXEL(i+1,i+1);
+        emit GRAPHICS_SET_RGB(0,0xFF,0);
+        emit GRAPHICS_DRAW_PIXEL(i+1,i+1);
     end
 with
     await 5s;
-    emit GFX_SET_RGB(0xFF,0xFF,0xFF);
-    emit GFX_CLEAR();
+    emit GRAPHICS_SET_RGB(0xFF,0xFF,0xFF);
+    emit GRAPHICS_CLEAR();
 with
     loop do
         var integer key = await KEY_PRESS;
@@ -52,16 +52,16 @@ with
         {printf(">>> move: %d %d\n", @x,@y);}
     end
 with
-    emit GFX_SET_WRITE_CURSOR(1,5);
+    emit GRAPHICS_SET_WRITE_CURSOR(1,5);
     spawn do
         await 5s;
-        emit GFX_SET_FONT("res/FreeSans.ttf", 10);
-        emit GFX_SET_WRITE_CURSOR(1,5);
+        emit GRAPHICS_SET_FONT("res/FreeSans.ttf", 10);
+        emit GRAPHICS_SET_WRITE_CURSOR(1,5);
         await 2s;
-        emit GFX_SCREENSHOT("res/screen.bmp");
+        emit GRAPHICS_SCREENSHOT("res/screen.bmp");
     end
     every 1s do
-        emit GFX_WRITE("|");
-        emit GFX_WRITELN(" Ola Mundo");
+        emit GRAPHICS_WRITE("|");
+        emit GRAPHICS_WRITELN(" Ola Mundo");
     end
 end

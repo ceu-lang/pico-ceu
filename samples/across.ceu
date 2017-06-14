@@ -1,0 +1,11 @@
+emit WINDOW_SET_TITLE("Drawing Across");
+emit SOUND_PLAY("res/click1.wav");
+
+var integer i;
+loop i in [0 -> 50[ do
+    emit GRAPHICS_DRAW_PIXEL(i,i);  // draw a pixel in (i,i)
+    await 100ms;                    // wait for 1 second
+end
+
+emit SOUND_PLAY("res/click1.wav");
+await 1s;
