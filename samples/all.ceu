@@ -8,6 +8,13 @@ emit GFX_DRAW_TEXT(25,25,"alo");
 emit GFX_DRAW_RECT(25,0,25,25);
 emit GFX_DRAW_BMP(30,5, "res/star.bmp");
 
+var int vol;
+loop vol in [0 -> 100], 10 do
+    emit SOUND_SET_VOLUME(vol);
+    emit SOUND_PLAY("res/click1.wav");
+    await 500ms;
+end
+
 par do
     var integer i;
     loop i in [1->_[, 2 do

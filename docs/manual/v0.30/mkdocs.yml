@@ -13,6 +13,7 @@ pages:
     - Introduction:         'index.md'
     - Graphics:             'gfx/index.md'
     - Input Devices:        'input/index.md'
+    - Sound:                'sound/index.md'
     - Frame Management:     'frames/index.md'
     - Window Management:    'window/index.md'
     - License:              'license.md'

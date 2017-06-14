@@ -66,6 +66,9 @@ output (int,int,text)    GFX_DRAW_TEXT;
 output (text)            GFX_WRITE;
 output (text)            GFX_WRITELN;
 
+output (int)             SOUND_SET_VOLUME;
+output (text)            SOUND_PLAY;
+
 native/pos do
     SDL_Window*   WIN;
     #define REN (SDL_GetRenderer(WIN))
@@ -79,6 +82,9 @@ native/pos do
     bool GFX_SET_GRID = 0;
     int  GFX_WRITE_CURSOR_X = 0;
     int  GFX_WRITE_CURSOR_Y = 0;
+
+    Mix_Chunk* SOUND_VEC[5] = { NULL, NULL, NULL, NULL, NULL };
+    int SOUND_SET_VOLUME = 50;
 
     void GFX_Show_Grid (void) {
         if (!GFX_SET_GRID) return;
@@ -107,6 +113,11 @@ native/pos do
         if (FRAMES_SET) return;
         GFX_Show_Grid();
         SDL_RenderPresent(REN);
+    }
+
+
+    void SOUND_Wav_Done (int channel) {
+        Mix_FreeChunk(SOUND_VEC[channel]);
     }
 
     tceu_callback_ret ceu_callback_sdl_pico (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
@@ -265,7 +276,7 @@ native/pos do
                         GFX_Present();
                         break;
                     }
-                    case CEU_OUTPUT_GFX_DRAW_BMP: {     // TODO: chache
+                    case CEU_OUTPUT_GFX_DRAW_BMP: {     // TODO: cache
                         tceu_output_GFX_DRAW_BMP* ps = (tceu_output_GFX_DRAW_BMP*) p2.ptr;
                         SDL_Surface* sfc = SDL_LoadBMP(ps->_3);
                         ceu_dbg_assert(sfc != NULL);
@@ -280,7 +291,7 @@ native/pos do
                         SDL_FreeSurface(sfc);
                         break;
                     }
-                    case CEU_OUTPUT_GFX_DRAW_TEXT: {     // TODO: chache
+                    case CEU_OUTPUT_GFX_DRAW_TEXT: {     // TODO: cache
                         tceu_output_GFX_DRAW_TEXT* ps = (tceu_output_GFX_DRAW_TEXT*) p2.ptr;
 
                         u8 r, g, b;
@@ -330,6 +341,21 @@ native/pos do
                         GFX_WRITE_CURSOR_Y += FNT_H;
                         break;
                     }
+
+                    case CEU_OUTPUT_SOUND_SET_VOLUME: {
+                        int* vol = (int*) p2.ptr;
+                        SOUND_SET_VOLUME = *vol;
+                        break;
+                    }
+                    case CEU_OUTPUT_SOUND_PLAY: {     // TODO: cache
+                        char** path = (char**) p2.ptr;
+                        Mix_Chunk* snd = Mix_LoadWAV(*path);
+                        Mix_VolumeChunk(snd, MIX_MAX_VOLUME*SOUND_SET_VOLUME/100);
+                        int channel = Mix_PlayChannel(-1, snd, 0);
+                        ceu_dbg_assert(channel>=0 && channel<5);
+                        SOUND_VEC[channel] = snd;
+                        break;
+                    }
                 }
                 break;
             default:
@@ -348,6 +374,7 @@ var&? SDL_Init sdl = spawn SDL_Init("pico-Ceu", WIN_DIM,WIN_DIM, _);
 watching sdl do
     {
         WIN = @(&&sdl!.win);
+        Mix_ChannelFinished(SOUND_Wav_Done);
     }
     emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM/10,WIN_DIM/10);
     emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
