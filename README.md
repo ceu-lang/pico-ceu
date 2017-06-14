@@ -1,4 +1,4 @@
-*pico-Céu* is a tiny programming environment for visual and interactive
+`pico-Céu` is a tiny programming environment for visual and interactive
 applications such as video games.
 It is composed of the programming language [Céu](www.ceu-lang.org/) and
 minimalist libraries for input, graphics, and sound.
@@ -51,23 +51,22 @@ emit SOUND_PLAY("res/click1.wav");
 await KEY_PRESS;
 ```
 
-*pico-Céu* design goals:
+`pico-Céu` design goals:
 
 - Explicit I/O operations:
     - `await` for input
     - `emit` for output
 - Straightforward graphics:
     - immediate feedback
-    - pixel-level operations
-    - pixelated logical screen
+    - pixel manipulation and visualization
 - Structured programming model:
     - sequential execution, no callbacks
-    - logical parallelism with deterministic concurrency
+    - logical parallelism, deterministic concurrency
 - Simple development cycle:
     - minimalist API
     - easy installation and execution
 
-*pico-Céu* insiprations:
+`pico-Céu` insiprations:
 
 - [pico-8](https://www.lexaloffle.com/pico-8.php)
     - minimalist and focused programming environment
