@@ -431,60 +431,74 @@ watching sdl do
     with
         /* KEY */
         par do
-            // PRESS -> PRESS(true)
-            loop do
-                var _SDL_KeyboardEvent&& key = await SDL_KEYDOWN;
-                var _SDL_Keycode sym = key:keysym.sym;
-                await async (sym) do
-                    emit KEY_PRESS(sym);
+            // PRESS -> PRESS
+            code/await SDL_KeyDown (var int key) -> void do
+                await async (key) do
+                    emit KEY_PRESS(key);
                 end
             end
+            pool[] SDL_KeyDown keys;
+            var _SDL_KeyboardEvent&& key;
+            every key in SDL_KEYDOWN do
+                spawn SDL_KeyDown(key:keysym.sym) in keys;
+            end
         with
-            // RELEASE -> PRESS(false)
-            loop do
-                var _SDL_KeyboardEvent&& key = await SDL_KEYUP;
-                var _SDL_Keycode sym = key:keysym.sym;
-                await async (sym) do
-                    emit KEY_UNPRESS(sym);
+            // RELEASE -> UNPRESS
+            code/await SDL_KeyUp (var int key) -> void do
+                await async (key) do
+                    emit KEY_UNPRESS(key);
                 end
+            end
+            pool[] SDL_KeyUp keys;
+            var _SDL_KeyboardEvent&& key;
+            every key in SDL_KEYUP do
+                spawn SDL_KeyUp(key:keysym.sym) in keys;
             end
         end
     with
         /* MOUSE */
         par do
-            // DOWN -> CLICK(true)
-            loop do
-                var _SDL_MouseButtonEvent&& mse = await SDL_MOUSEBUTTONDOWN;
-                var int x = {@mse:x};
-                var int y = {@mse:y};
+            // DOWN -> CLICK
+            code/await SDL_MouseDown (var int x, var int y) -> void do
                 await async (x,y) do
                     emit MOUSE_CLICK(0,x,y);
                 end
             end
+            pool[] SDL_MouseDown mses;
+            var _SDL_MouseButtonEvent&& mse;
+            every mse in SDL_MOUSEBUTTONDOWN do
+                spawn SDL_MouseDown(mse:x,mse:y) in mses;
+            end
         with
-            // UP -> CLICK(false)
-            loop do
-                var _SDL_MouseButtonEvent&& mse = await SDL_MOUSEBUTTONUP;
-                var int x = {@mse:x};
-                var int y = {@mse:y};
+            // UP -> UNCLICK
+            code/await SDL_MouseUp (var int x, var int y) -> void do
                 await async (x,y) do
                     emit MOUSE_UNCLICK(0,x,y);
                 end
             end
+            pool[] SDL_MouseUp mses;
+            var _SDL_MouseButtonEvent&& mse;
+            every mse in SDL_MOUSEBUTTONUP do
+                spawn SDL_MouseUp(mse:x,mse:y) in mses;
+            end
         with
             // MOTION -> MOVE
+            code/await SDL_MouseMotion (var int x, var int y) -> void do
+                await async (x,y) do
+                    emit MOUSE_MOVE(x,y);
+                end
+            end
             var int x = {U16_MAX};
             var int y = {U16_MAX};
-            loop do
-                var _SDL_MouseMotionEvent&& mse = await SDL_MOUSEMOTION;
-                var int x_ = {@mse:x};
-                var int y_ = {@mse:y};
+            pool[] SDL_MouseMotion mses;
+            var _SDL_MouseButtonEvent&& mse;
+            every mse in SDL_MOUSEMOTION do
+                var int x_ = mse:x;
+                var int y_ = mse:y;
                 if x_!=x or y_!=y then
                     x = x_;
                     y = y_;
-                    await async (x,y) do
-                        emit MOUSE_MOVE(x,y);
-                    end
+                    spawn SDL_MouseMotion(x,y) in mses;
                 end
             end
         end
