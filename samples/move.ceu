@@ -1,0 +1,29 @@
+emit WINDOW_SET_TITLE("Moving Around");
+emit WINDOW_SET_SIZE(300,300,30,30);
+
+// draw a pixel in the initial position
+var integer x = 14;
+var integer y = 14;
+emit GFX_DRAW_PIXEL(x,y);
+
+// execute on every key press
+var integer key;
+every key in KEY_PRESS do
+    // uncomment the two lines below:
+    //emit GFX_SET_RGB(0x00,0x00,0x00);
+    //emit GFX_DRAW_PIXEL(x,y);           // clear the old position
+
+    // move in the four directions
+    if key == KEY_LEFT then
+        x = x - 1;
+    else/if key == KEY_RIGHT then
+        x = x + 1;
+    else/if key == KEY_UP then
+        y = y - 1;
+    else/if key == KEY_DOWN then
+        y = y + 1;
+    end
+
+    emit GFX_SET_RGB(0xFF,0xFF,0xFF);
+    emit GFX_DRAW_PIXEL(x,y);           // draw in the new position
+end
