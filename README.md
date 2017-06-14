@@ -5,11 +5,11 @@ minimalist libraries for input, graphics, and sound.
 
 <!-- TODO: network -->
 
-<img src="across.gif" align="right"/>
-
 The example that follows draws a line from the top-left towards the
 bottom-right of the screen, one pixel every *100ms*.
 It also plays sound effects at the beginning and at the end of the process:
+
+<img src="across.gif" width="200" align="right"/>
 
 ```ceu
 emit WINDOW_SET_TITLE("pico-Ceu");  // sets the window title
@@ -27,10 +27,10 @@ emit SOUND_PLAY("click.wav");       // plays a terminating sound
 await KEY_PRESS;                    // waits for a key press (any key)
 ```
 
-<img src="across-par.gif" align="right"/>
-
 The next example also draws another line from the top-right towards the
 bottom-left of the screen at the same time:
+
+<img src="across-par.gif" width="200" align="right"/>
 
 ```ceu
 emit WINDOW_SET_TITLE("pico-Ceu");
