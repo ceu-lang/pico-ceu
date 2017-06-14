@@ -72,10 +72,10 @@ await KEY_PRESS;
 
 `pico-Céu` inspirations:
 
-- [pico-8](https://www.lexaloffle.com/pico-8.php)
+- [pico-8](https://www.lexaloffle.com/pico-8.php):
     - minimalist and focused programming environment
-- Basic:
+- [Basic](http://www.hoist-point.com/applesoft_basic_tutorial.htm):
     - graphics with immediate feedback
     - text and cursor facilities
-- Pascal
+- [Pascal](https://en.wikipedia.org/wiki/Pascal_%28programming_language%29):
     - verbose and comprehensible syntax
