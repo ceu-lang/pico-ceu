@@ -27,6 +27,14 @@
 
     
     <url>
+     <loc>None/sound/</loc>
+     <lastmod>2017-06-13</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
      <loc>None/frames/</loc>
      <lastmod>2017-06-13</lastmod>
      <changefreq>daily</changefreq>

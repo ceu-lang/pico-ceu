@@ -88,6 +88,13 @@
           
             <li>
     <li class="toctree-l1 ">
+        <a class="" href="../sound/">Sound</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
         <a class="" href="../frames/">Frame Management</a>
         
     </li>
@@ -143,20 +150,30 @@
 <p>Provides input handling, such as for keyboard and mouse.</p>
 <h2 id="keyboard">Keyboard<a class="headerlink" href="#keyboard" title="Permanent link">&para;</a></h2>
 <h3 id="key_press">KEY_PRESS<a class="headerlink" href="#key_press" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input (yesno,integer) KEY_PRESS
+<pre><code class="ceu">input (integer) KEY_PRESS
 </code></pre>
 
 <ul>
 <li>Occurrences:<ul>
-<li>whenever a keyboard key is pressed or released</li>
+<li>whenever a keyboard key is pressed</li>
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>yesno</code>: new key state<ul>
-<li><code>yes</code>: key is now pressed</li>
-<li><code>no</code>: key is now released</li>
+<li><code>integer</code>: numeric key code</li>
 </ul>
 </li>
+</ul>
+<p><code>TODO: key codes</code></p>
+<h3 id="key_unpress">KEY_UNPRESS<a class="headerlink" href="#key_unpress" title="Permanent link">&para;</a></h3>
+<pre><code class="ceu">input (integer) KEY_UNPRESS
+</code></pre>
+
+<ul>
+<li>Occurrences:<ul>
+<li>whenever a keyboard key is released</li>
+</ul>
+</li>
+<li>Payload:<ul>
 <li><code>integer</code>: numeric key code</li>
 </ul>
 </li>
@@ -164,20 +181,31 @@
 <p><code>TODO: key codes</code></p>
 <h2 id="mouse">Mouse<a class="headerlink" href="#mouse" title="Permanent link">&para;</a></h2>
 <h3 id="mouse_click">MOUSE_CLICK<a class="headerlink" href="#mouse_click" title="Permanent link">&para;</a></h3>
-<pre><code class="ceu">input (yesno,integer,integer,integer) MOUSE_CLICK
+<pre><code class="ceu">input (integer,integer,integer) MOUSE_CLICK
 </code></pre>
 
 <ul>
 <li>Occurrences:<ul>
-<li>whenever a mouse button is pressed or released</li>
+<li>whenever a mouse button is pressed</li>
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>yesno</code>: new button state<ul>
-<li><code>yes</code>: button is now pressed</li>
-<li><code>no</code>: button is now released</li>
+<li><code>integer</code>:  numeric button code (<code>TODO: left, middle, right?</code>)</li>
+<li><code>integer</code>:  current mouse position in the <code>x-axis</code></li>
+<li><code>integer</code>:  current mouse position in the <code>y-axis</code></li>
 </ul>
 </li>
+</ul>
+<h3 id="mouse_unclick">MOUSE_UNCLICK<a class="headerlink" href="#mouse_unclick" title="Permanent link">&para;</a></h3>
+<pre><code class="ceu">input (integer,integer,integer) MOUSE_UNCLICK
+</code></pre>
+
+<ul>
+<li>Occurrences:<ul>
+<li>whenever a mouse button is released</li>
+</ul>
+</li>
+<li>Payload:<ul>
 <li><code>integer</code>:  numeric button code (<code>TODO: left, middle, right?</code>)</li>
 <li><code>integer</code>:  current mouse position in the <code>x-axis</code></li>
 <li><code>integer</code>:  current mouse position in the <code>y-axis</code></li>
@@ -206,7 +234,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../frames/" class="btn btn-neutral float-right" title="Frame Management">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../sound/" class="btn btn-neutral float-right" title="Sound">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../gfx/" class="btn btn-neutral" title="Graphics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -238,7 +266,7 @@
         <span><a href="../gfx/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../frames/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../sound/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

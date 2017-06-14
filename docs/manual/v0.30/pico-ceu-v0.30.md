@@ -215,15 +215,25 @@ Provides input handling, such as for keyboard and mouse.
 #### KEY_PRESS
 
 ```ceu
-input (yesno,integer) KEY_PRESS
+input (integer) KEY_PRESS
 ```
 
 - Occurrences:
-    - whenever a keyboard key is pressed or released
+    - whenever a keyboard key is pressed
 - Payload:
-    - `yesno`: new key state
-        - `yes`: key is now pressed
-        - `no`: key is now released
+    - `integer`: numeric key code
+
+`TODO: key codes`
+
+#### KEY_UNPRESS
+
+```ceu
+input (integer) KEY_UNPRESS
+```
+
+- Occurrences:
+    - whenever a keyboard key is released
+- Payload:
     - `integer`: numeric key code
 
 `TODO: key codes`
@@ -233,15 +243,25 @@ input (yesno,integer) KEY_PRESS
 #### MOUSE_CLICK
 
 ```ceu
-input (yesno,integer,integer,integer) MOUSE_CLICK
+input (integer,integer,integer) MOUSE_CLICK
 ```
 
 - Occurrences:
-    - whenever a mouse button is pressed or released
+    - whenever a mouse button is pressed
 - Payload:
-    - `yesno`: new button state
-        - `yes`: button is now pressed
-        - `no`: button is now released
+    - `integer`:  numeric button code (`TODO: left, middle, right?`)
+    - `integer`:  current mouse position in the `x-axis`
+    - `integer`:  current mouse position in the `y-axis`
+
+#### MOUSE_UNCLICK
+
+```ceu
+input (integer,integer,integer) MOUSE_UNCLICK
+```
+
+- Occurrences:
+    - whenever a mouse button is released
+- Payload:
     - `integer`:  numeric button code (`TODO: left, middle, right?`)
     - `integer`:  current mouse position in the `x-axis`
     - `integer`:  current mouse position in the `y-axis`
@@ -257,6 +277,41 @@ input (integer,integer) MOUSE_MOVE
 - Payload:
     - `integer`:  current mouse position in the `x-axis`
     - `integer`:  current mouse position in the `y-axis`
+
+# Sound
+
+## Sound
+
+Provides sound playback.
+
+### Configuration
+
+#### SOUND_SET_VOLUME
+
+Changes the volume of all subsequent sound playback.
+
+```ceu
+output (integer) SOUND_SET_VOUME
+```
+
+- Parameters:
+    - `integer`: new sound volume in percentage (`0 -> 100`)
+
+
+### Playback
+
+#### SOUND_PLAY
+
+Plays a sound.
+
+```ceu
+output (text) SOUND_PLAY;
+```
+
+- Parameters:
+    - `text`: path for the sound filename
+
+The playback volume is specified with [`SOUND_SET_VOLUME`](#sound_set_volume).
 
 # Frame Management
 

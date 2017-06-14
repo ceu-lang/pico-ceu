@@ -107,7 +107,7 @@
         }, 
         {
             "location": "/input/", 
-            "text": "Input Devices\n\n\nProvides input handling, such as for keyboard and mouse.\n\n\nKeyboard\n\n\nKEY_PRESS\n\n\ninput (yesno,integer) KEY_PRESS\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a keyboard key is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nyesno\n: new key state\n\n\nyes\n: key is now pressed\n\n\nno\n: key is now released\n\n\n\n\n\n\ninteger\n: numeric key code\n\n\n\n\n\n\n\n\nTODO: key codes\n\n\nMouse\n\n\nMOUSE_CLICK\n\n\ninput (yesno,integer,integer,integer) MOUSE_CLICK\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a mouse button is pressed or released\n\n\n\n\n\n\nPayload:\n\n\nyesno\n: new button state\n\n\nyes\n: button is now pressed\n\n\nno\n: button is now released\n\n\n\n\n\n\ninteger\n:  numeric button code (\nTODO: left, middle, right?\n)\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis\n\n\n\n\n\n\n\n\nMOUSE_MOVE\n\n\ninput (integer,integer) MOUSE_MOVE\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever the mouse moves\n\n\n\n\n\n\nPayload:\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis", 
+            "text": "Input Devices\n\n\nProvides input handling, such as for keyboard and mouse.\n\n\nKeyboard\n\n\nKEY_PRESS\n\n\ninput (integer) KEY_PRESS\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a keyboard key is pressed\n\n\n\n\n\n\nPayload:\n\n\ninteger\n: numeric key code\n\n\n\n\n\n\n\n\nTODO: key codes\n\n\nKEY_UNPRESS\n\n\ninput (integer) KEY_UNPRESS\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a keyboard key is released\n\n\n\n\n\n\nPayload:\n\n\ninteger\n: numeric key code\n\n\n\n\n\n\n\n\nTODO: key codes\n\n\nMouse\n\n\nMOUSE_CLICK\n\n\ninput (integer,integer,integer) MOUSE_CLICK\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a mouse button is pressed\n\n\n\n\n\n\nPayload:\n\n\ninteger\n:  numeric button code (\nTODO: left, middle, right?\n)\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis\n\n\n\n\n\n\n\n\nMOUSE_UNCLICK\n\n\ninput (integer,integer,integer) MOUSE_UNCLICK\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever a mouse button is released\n\n\n\n\n\n\nPayload:\n\n\ninteger\n:  numeric button code (\nTODO: left, middle, right?\n)\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis\n\n\n\n\n\n\n\n\nMOUSE_MOVE\n\n\ninput (integer,integer) MOUSE_MOVE\n\n\n\n\n\n\nOccurrences:\n\n\nwhenever the mouse moves\n\n\n\n\n\n\nPayload:\n\n\ninteger\n:  current mouse position in the \nx-axis\n\n\ninteger\n:  current mouse position in the \ny-axis", 
             "title": "Input Devices"
         }, 
         {
@@ -122,8 +122,13 @@
         }, 
         {
             "location": "/input/#key_press", 
-            "text": "input (yesno,integer) KEY_PRESS   Occurrences:  whenever a keyboard key is pressed or released    Payload:  yesno : new key state  yes : key is now pressed  no : key is now released    integer : numeric key code     TODO: key codes", 
+            "text": "input (integer) KEY_PRESS   Occurrences:  whenever a keyboard key is pressed    Payload:  integer : numeric key code     TODO: key codes", 
             "title": "KEY_PRESS"
+        }, 
+        {
+            "location": "/input/#key_unpress", 
+            "text": "input (integer) KEY_UNPRESS   Occurrences:  whenever a keyboard key is released    Payload:  integer : numeric key code     TODO: key codes", 
+            "title": "KEY_UNPRESS"
         }, 
         {
             "location": "/input/#mouse", 
@@ -132,13 +137,48 @@
         }, 
         {
             "location": "/input/#mouse_click", 
-            "text": "input (yesno,integer,integer,integer) MOUSE_CLICK   Occurrences:  whenever a mouse button is pressed or released    Payload:  yesno : new button state  yes : button is now pressed  no : button is now released    integer :  numeric button code ( TODO: left, middle, right? )  integer :  current mouse position in the  x-axis  integer :  current mouse position in the  y-axis", 
+            "text": "input (integer,integer,integer) MOUSE_CLICK   Occurrences:  whenever a mouse button is pressed    Payload:  integer :  numeric button code ( TODO: left, middle, right? )  integer :  current mouse position in the  x-axis  integer :  current mouse position in the  y-axis", 
             "title": "MOUSE_CLICK"
+        }, 
+        {
+            "location": "/input/#mouse_unclick", 
+            "text": "input (integer,integer,integer) MOUSE_UNCLICK   Occurrences:  whenever a mouse button is released    Payload:  integer :  numeric button code ( TODO: left, middle, right? )  integer :  current mouse position in the  x-axis  integer :  current mouse position in the  y-axis", 
+            "title": "MOUSE_UNCLICK"
         }, 
         {
             "location": "/input/#mouse_move", 
             "text": "input (integer,integer) MOUSE_MOVE   Occurrences:  whenever the mouse moves    Payload:  integer :  current mouse position in the  x-axis  integer :  current mouse position in the  y-axis", 
             "title": "MOUSE_MOVE"
+        }, 
+        {
+            "location": "/sound/", 
+            "text": "Sound\n\n\nProvides sound playback.\n\n\nConfiguration\n\n\nSOUND_SET_VOLUME\n\n\nChanges the volume of all subsequent sound playback.\n\n\noutput (integer) SOUND_SET_VOUME\n\n\n\n\n\n\nParameters:\n\n\ninteger\n: new sound volume in percentage (\n0 -\n 100\n)\n\n\n\n\n\n\n\n\nPlayback\n\n\nSOUND_PLAY\n\n\nPlays a sound.\n\n\noutput (text) SOUND_PLAY;\n\n\n\n\n\n\nParameters:\n\n\ntext\n: path for the sound filename\n\n\n\n\n\n\n\n\nThe playback volume is specified with \nSOUND_SET_VOLUME\n.", 
+            "title": "Sound"
+        }, 
+        {
+            "location": "/sound/#sound", 
+            "text": "Provides sound playback.", 
+            "title": "Sound"
+        }, 
+        {
+            "location": "/sound/#configuration", 
+            "text": "", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/sound/#sound_set_volume", 
+            "text": "Changes the volume of all subsequent sound playback.  output (integer) SOUND_SET_VOUME   Parameters:  integer : new sound volume in percentage ( 0 -  100 )", 
+            "title": "SOUND_SET_VOLUME"
+        }, 
+        {
+            "location": "/sound/#playback", 
+            "text": "", 
+            "title": "Playback"
+        }, 
+        {
+            "location": "/sound/#sound_play", 
+            "text": "Plays a sound.  output (text) SOUND_PLAY;   Parameters:  text : path for the sound filename     The playback volume is specified with  SOUND_SET_VOLUME .", 
+            "title": "SOUND_PLAY"
         }, 
         {
             "location": "/frames/", 
