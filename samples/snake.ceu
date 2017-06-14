@@ -1,5 +1,7 @@
+#define DIM 30
+
 emit WINDOW_SET_TITLE("Snake");
-emit WINDOW_SET_SIZE(300,300,30,30);
+emit WINDOW_SET_SIZE(DIM*10,DIM*10,DIM,DIM);
 
 data Direction;
 data Direction.Left;
@@ -7,30 +9,43 @@ data Direction.Right;
 data Direction.Up;
 data Direction.Down;
 
-code/await Snake (none) -> (vector[] Point body) -> FOREVER do
-    var Point pt = val Point(14,14);
-    body = [ pt ];
+code/await Snake (none) -> (event void grow) -> void do
+    vector[DIM*DIM] Point body;
 
-    code/tight Grow (none) -> none do
-        outer.body = outer.body..[outer.body[$outer.body-1]];
-        var usize i;
-        loop i in [1 <- $outer.body[ do
-            var Point pt = outer.body[i-1];
-            outer.body[i] = pt;
-        end
+    var Point pt_ = val Point(-1,-1);
+    var integer i;
+    loop i in [0 -> ($$body as integer)[ do
+        body = body .. [pt_];
     end
 
-    code/tight Walk (none) -> none do
-        var usize i;
-        loop i in [0 -> $outer.body-1[ do
-            var Point pt = outer.body[i+1];
-            outer.body[i] = pt;
+    var Point pt = val Point(DIM/2,DIM/2);
+    body[0] = pt;
+
+    var integer len  = 1;
+    var integer head = 0;
+    var integer tail = 0;
+
+    code/tight Is_Free (var& Point pt1) -> yesno do
+        var integer i;
+        loop i in [0 -> outer.len[ do
+            var integer ii = (outer.tail+i) % ($outer.body as integer);
+            var Point pt2 = outer.body[ii];
+            if pt2.x==pt1.x and pt2.y==pt1.y then
+                escape no;
+            end
         end
-        $outer.body = $outer.body - 1;
+        escape yes;
     end
 
     var Direction dir = val Direction.Right();
     var Direction nxt = val Direction.Right();
+
+    var bool to_grow = false;
+    spawn do
+        every grow do
+            to_grow = true;
+        end
+    end
 
     par do
         var integer key;
@@ -48,7 +63,7 @@ code/await Snake (none) -> (vector[] Point body) -> FOREVER do
     with
         every 250ms do
             dir = nxt;
-            var Point pt = body[$body-1];
+            var Point pt = body[head];
             if dir is Direction.Left then
                 pt.x = pt.x - 1;
             else/if dir is Direction.Right then
@@ -58,16 +73,41 @@ code/await Snake (none) -> (vector[] Point body) -> FOREVER do
             else/if dir is Direction.Down then
                 pt.y = pt.y + 1;
             end
-            body = body..[pt];
-            call Walk();
+
+            head = (head + 1) % ($body as integer);
+            body[head] = pt;
+            if to_grow then
+                to_grow = false;
+                len = len + 1;
+            else
+                tail = (tail + 1) % ($body as integer);
+            end
+            _ceu_dbg_assert(len <= DIM*DIM);
         end
     with
         every FRAMES_REDRAW do
-            var usize i;
-            loop i in [0 -> $body[ do
-                var Point pt = body[i];
+            var integer i;
+            loop i in [0 -> len[ do
+                var integer ii = (tail+i) % ($body as integer);
+                var Point pt = body[ii];
                 emit GFX_SET_RGB(0xFF,0xFF,0xFF);
                 emit GFX_DRAW_PIXEL(pt.x,pt.y);
+            end
+        end
+    with
+        loop do
+            await FRAMES_UPDATE;
+            var Point hd = body[head];
+            if hd.x<0 or hd.x>=DIM or hd.y<0 or hd.y>=DIM then
+                escape;
+            end
+            var integer i;
+            loop i in [0 -> len-2] do
+                var integer ii = (tail+i) % ($body as integer);
+                var Point pt = body[ii];
+                if pt.x==hd.x and pt.y==hd.y then
+                    escape;
+                end
             end
         end
     end
@@ -75,18 +115,8 @@ end
 
 code/await Food (var&? Snake snake) -> (var Point pt) -> FOREVER do
     loop do
-        pt = val Point(_rand()%30, _rand()%30);
-        var yesno is_over = do
-            var usize i;
-            loop i in [0 -> $snake!.body[ do
-                var Point pt_ = snake!.body[i];
-                if pt_.x==pt.x and pt_.y==pt.y then
-                    escape yes;
-                end
-            end
-            escape no;
-        end;
-        if not is_over then
+        pt = val Point(_rand()%DIM, _rand()%DIM);
+        if call snake!.Is_Free(&pt) then
             break;
         end
     end
@@ -115,41 +145,20 @@ loop do
     var&? Snake snake = spawn Snake();
 
     pool[] Food foods;
-    spawn do
+    par/or do
+        await snake;
+    with
         every 5s do
             spawn Food(&snake) in foods;
         end
-    end
-
-    par/or do
+    with
         every FRAMES_UPDATE do
             var&? Food food;
             loop food in foods do
-                var usize i;
-                loop i in [0 -> $snake!.body[ do
-                    var Point pt = snake!.body[i];
-                    if pt.x==food!.pt.x and pt.y==food!.pt.y then
-                        call snake!.Grow();
-                        kill food;
-                        break;
-                    end
-                end
-            end
-        end
-    with
-        do
-            loop do
-                await FRAMES_UPDATE;
-                var Point head = snake!.body[$snake!.body-1];
-                if head.x<0 or head.x>=30 or head.y<0 or head.y>=30 then
-                    escape;
-                end
-                var ssize i;
-                loop i in [0 -> $snake!.body-2[ do
-                    var Point pt = snake!.body[i];
-                    if pt.x==head.x and pt.y==head.y then
-                        escape;
-                    end
+                if not call snake!.Is_Free(&food!.pt) then
+                    emit snake!.grow;
+                    kill food;
+                    break;
                 end
             end
         end
