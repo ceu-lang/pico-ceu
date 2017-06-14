@@ -4,13 +4,13 @@ emit SOUND_PLAY("res/click1.wav");
 
 par/and do  // executes the next five indented lines in parallel...
     var integer i;
-    loop i in [0 -> 50[ do
+    loop i in [0 -> 49] do
         emit GRAPHICS_DRAW_PIXEL(i,i);      // draws from (0,0) to (49,49)
         await 100ms;
     end
 with        // ...with the next five indented lines...
     var integer i;
-    loop i in [0 -> 50[ do
+    loop i in [0 -> 49] do
         emit GRAPHICS_DRAW_PIXEL(49-i,i);   // draws from (49,0) to (0,49)
         await 100ms;
     end
