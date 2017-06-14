@@ -1,11 +1,13 @@
-emit WINDOW_SET_TITLE("Drawing Across");
-emit SOUND_PLAY("res/click1.wav");
+emit WINDOW_SET_TITLE("Drawing Across");    // sets the window title
+
+await KEY_PRESS;                            // waits for a key press (any key)
+emit SOUND_PLAY("res/click1.wav");          // plays a starting sound
 
 var integer i;
-loop i in [0 -> 50[ do
-    emit GRAPHICS_DRAW_PIXEL(i,i);  // draw a pixel in (i,i)
-    await 100ms;                    // wait for 1 second
+loop i in [0 -> 50[ do                      // executes 50 times, varying i from 0 to 49
+    emit GRAPHICS_DRAW_PIXEL(i,i);          //   draws a pixel in (i,i)
+    await 100ms;                            //   waits for 100 milliseconds
 end
 
-emit SOUND_PLAY("res/click1.wav");
-await 1s;
+emit SOUND_PLAY("res/click1.wav");          // plays a terminating sound
+await KEY_PRESS;                            // waits for a key press (any key)
