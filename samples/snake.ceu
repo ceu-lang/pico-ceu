@@ -50,13 +50,21 @@ code/await Snake (none) -> (event void grow) -> void do
     par do
         var integer key;
         every key in KEY_PRESS do
-            if      key==KEY_LEFT  and not (dir is Direction.Right) then
+            if      key==KEY_LEFT  and
+                    not ((dir is Direction.Left)  or (dir is Direction.Right))
+            then
                 nxt = val Direction.Left();
-            else/if key==KEY_RIGHT and not (dir is Direction.Left)  then
+            else/if key==KEY_RIGHT and
+                    not ((dir is Direction.Right) or (dir is Direction.Left))
+            then
                 nxt = val Direction.Right();
-            else/if key==KEY_UP    and not (dir is Direction.Down)  then
+            else/if key==KEY_UP    and
+                    not ((dir is Direction.Up)    or (dir is Direction.Down))
+            then
                 nxt = val Direction.Up();
-            else/if key==KEY_DOWN  and not (dir is Direction.Up)    then
+            else/if key==KEY_DOWN  and
+                    not ((dir is Direction.Down)  or (dir is Direction.Up))
+            then
                 nxt = val Direction.Down();
             end
         end
