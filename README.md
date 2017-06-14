@@ -66,7 +66,7 @@ await KEY_PRESS;
     - minimalist API
     - easy installation and execution
 
-`pico-Céu` insiprations:
+`pico-Céu` inspirations:
 
 - [pico-8](https://www.lexaloffle.com/pico-8.php)
     - minimalist and focused programming environment

@@ -5,7 +5,7 @@ emit SOUND_PLAY("res/click1.wav");  // plays a starting sound
 
 var integer i;
 loop i in [0 -> 49] do              // executes 50 times, varying i from 0 to 49
-    emit GRAPHICS_DRAW_PIXEL(i,i);  //   draws a pixel in (i,i)
+    emit GRAPHICS_DRAW_PIXEL(i,i);  //   draws a pixel at (i,i)
     await 100ms;                    //   waits for 100 milliseconds
 end
 
