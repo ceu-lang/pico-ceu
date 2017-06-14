@@ -335,7 +335,7 @@ watching sdl do
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
     emit GFX_SET_GRID(yes);
 
-    emit GFX_SET_TEXT_FONT("res/FreeMono.ttf", 10);
+    emit GFX_SET_TEXT_FONT("res/FreeMono.ttf", WIN_DIM/50);
     do finalize with
         {TTF_CloseFont(FNT);}
     end
