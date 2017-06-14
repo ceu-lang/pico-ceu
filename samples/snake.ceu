@@ -97,11 +97,11 @@ end
 
 loop do
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
-    emit GFX_SET_TEXT_FONT("res/tiny.ttf", 10);
-    emit GFX_SET_TEXT_CURSOR(1, 0);
-    emit GFX_DRAW_TEXTLN("PRESS");
-    emit GFX_DRAW_TEXTLN(" ANY ");
-    emit GFX_DRAW_TEXTLN(" KEY ");
+    emit GFX_SET_FONT("res/tiny.ttf", 10);
+    emit GFX_SET_WRITE_CURSOR(1, 0);
+    emit GFX_WRITELN("PRESS");
+    emit GFX_WRITELN(" ANY ");
+    emit GFX_WRITELN(" KEY ");
     await KEY_PRESS;
 
     emit FRAMES_SET(yes);

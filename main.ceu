@@ -51,17 +51,18 @@ input (int,int)          MOUSE_MOVE;
 input (bool,int)         KEY_PRESS;
 
 output (int,int,int)     GFX_SET_RGB;
-output (text,int)        GFX_SET_TEXT_FONT;
-output (int,int)         GFX_SET_TEXT_CURSOR;
+output (text,int)        GFX_SET_FONT;
+output (int,int)         GFX_SET_WRITE_CURSOR;
 output (bool)            GFX_SET_GRID;
 output (text)            GFX_SCREENSHOT;
 output (void)            GFX_CLEAR;
 output (int,int)         GFX_DRAW_PIXEL;
 output (int,int,int,int) GFX_DRAW_LINE;
 output (int,int,int,int) GFX_DRAW_RECT;
-output (text,int,int)    GFX_DRAW_BMP;
-output (text)            GFX_DRAW_TEXT;
-output (text)            GFX_DRAW_TEXTLN;
+output (int,int,text)    GFX_DRAW_BMP;
+output (int,int,text)    GFX_DRAW_TEXT;
+output (text)            GFX_WRITE;
+output (text)            GFX_WRITELN;
 
 native/pos do
     SDL_Window*   WIN;
@@ -74,8 +75,8 @@ native/pos do
     SDL_Color FRAMES_SET_CLEAR_RGB;
 
     bool GFX_SET_GRID = 0;
-    int  GFX_TEXT_CURSOR_X = 0;
-    int  GFX_TEXT_CURSOR_Y = 0;
+    int  GFX_WRITE_CURSOR_X = 0;
+    int  GFX_WRITE_CURSOR_Y = 0;
 
     void GFX_Show_Grid (void) {
         if (!GFX_SET_GRID) return;
@@ -163,8 +164,8 @@ native/pos do
                         SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
                         break;
                     }
-                    case CEU_OUTPUT_GFX_SET_TEXT_FONT: {
-                        tceu_output_GFX_SET_TEXT_FONT* fnt = (tceu_output_GFX_SET_TEXT_FONT*) p2.ptr;
+                    case CEU_OUTPUT_GFX_SET_FONT: {
+                        tceu_output_GFX_SET_FONT* fnt = (tceu_output_GFX_SET_FONT*) p2.ptr;
                         FNT_H = fnt->_2;
                         if (FNT != NULL) {
                             TTF_CloseFont(FNT);
@@ -173,10 +174,10 @@ native/pos do
                         ceu_dbg_assert(FNT != NULL);
                         break;
                     }
-                    case CEU_OUTPUT_GFX_SET_TEXT_CURSOR: {
-                        tceu_output_GFX_SET_TEXT_CURSOR* pt = (tceu_output_GFX_SET_TEXT_CURSOR*) p2.ptr;
-                        GFX_TEXT_CURSOR_X = pt->_1;
-                        GFX_TEXT_CURSOR_Y = pt->_2;
+                    case CEU_OUTPUT_GFX_SET_WRITE_CURSOR: {
+                        tceu_output_GFX_SET_WRITE_CURSOR* pt = (tceu_output_GFX_SET_WRITE_CURSOR*) p2.ptr;
+                        GFX_WRITE_CURSOR_X = pt->_1;
+                        GFX_WRITE_CURSOR_Y = pt->_2;
                         break;
                     }
 
@@ -264,12 +265,12 @@ native/pos do
                     }
                     case CEU_OUTPUT_GFX_DRAW_BMP: {     // TODO: chache
                         tceu_output_GFX_DRAW_BMP* ps = (tceu_output_GFX_DRAW_BMP*) p2.ptr;
-                        SDL_Surface* sfc = SDL_LoadBMP(ps->_1);
+                        SDL_Surface* sfc = SDL_LoadBMP(ps->_3);
                         ceu_dbg_assert(sfc != NULL);
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
                         ceu_dbg_assert(tex != NULL);
 
-                        SDL_Rect rct = { ps->_2,ps->_3, sfc->w,sfc->h };
+                        SDL_Rect rct = { ps->_1,ps->_2, sfc->w,sfc->h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GFX_Present();
 
@@ -277,8 +278,26 @@ native/pos do
                         SDL_FreeSurface(sfc);
                         break;
                     }
+                    case CEU_OUTPUT_GFX_DRAW_TEXT: {     // TODO: chache
+                        tceu_output_GFX_DRAW_TEXT* ps = (tceu_output_GFX_DRAW_TEXT*) p2.ptr;
 
-                    case CEU_OUTPUT_GFX_DRAW_TEXT: {        // TODO: cache
+                        u8 r, g, b;
+                        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+                        SDL_Surface* sfc = TTF_RenderText_Blended(FNT, ps->_3, (SDL_Color){r,g,b,0xFF});
+                        ceu_dbg_assert(sfc != NULL);
+                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+                        ceu_dbg_assert(tex != NULL);
+
+                        int w, h;
+                        TTF_SizeText(FNT, ps->_3, &w,&h);
+                        SDL_Rect rct = { ps->_1,ps->_2, w,h };
+                        SDL_RenderCopy(REN, tex, NULL, &rct);
+                        GFX_Present();
+
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GFX_WRITE: {        // TODO: cache
                         char** str = (char**) p2.ptr;
                         ceu_dbg_assert(FNT != NULL);
 
@@ -291,22 +310,22 @@ native/pos do
 
                         int w, h;
                         TTF_SizeText(FNT, *str, &w,&h);
-                        SDL_Rect rct = { GFX_TEXT_CURSOR_X,GFX_TEXT_CURSOR_Y, w,h };
+                        SDL_Rect rct = { GFX_WRITE_CURSOR_X,GFX_WRITE_CURSOR_Y, w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GFX_Present();
 
-                        GFX_TEXT_CURSOR_X += w;
+                        GFX_WRITE_CURSOR_X += w;
 
                         SDL_DestroyTexture(tex);
                         SDL_FreeSurface(sfc);
                         break;
                     }
-                    case CEU_OUTPUT_GFX_DRAW_TEXTLN: {
-                        int cursor_x = GFX_TEXT_CURSOR_X;
-                        p1.num = CEU_OUTPUT_GFX_DRAW_TEXT;
+                    case CEU_OUTPUT_GFX_WRITELN: {
+                        int cursor_x = GFX_WRITE_CURSOR_X;
+                        p1.num = CEU_OUTPUT_GFX_WRITE;
                         ceu_callback_sdl_pico(cmd, p1, p2);
-                        GFX_TEXT_CURSOR_X = cursor_x;
-                        GFX_TEXT_CURSOR_Y += FNT_H;
+                        GFX_WRITE_CURSOR_X = cursor_x;
+                        GFX_WRITE_CURSOR_Y += FNT_H;
                         break;
                     }
                 }
@@ -335,7 +354,7 @@ watching sdl do
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
     emit GFX_SET_GRID(yes);
 
-    emit GFX_SET_TEXT_FONT("res/FreeMono.ttf", WIN_DIM/50);
+    emit GFX_SET_FONT("res/tiny.ttf", WIN_DIM/50);
     do finalize with
         {TTF_CloseFont(FNT);}
     end

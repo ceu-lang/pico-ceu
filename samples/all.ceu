@@ -4,8 +4,9 @@ await 1s;
 emit GFX_CLEAR();
 emit GFX_SET_RGB(0,0,0xFF);
 emit GFX_DRAW_LINE(0,0,50,50);
+emit GFX_DRAW_TEXT(25,25,"alo");
 emit GFX_DRAW_RECT(25,0,25,25);
-emit GFX_DRAW_BMP("res/star.bmp", 30,5);
+emit GFX_DRAW_BMP(30,5, "res/star.bmp");
 
 par do
     var integer i;
@@ -47,16 +48,16 @@ with
         {printf(">>> move: %d %d\n", @x,@y);}
     end
 with
-    emit GFX_SET_TEXT_CURSOR(1,5);
+    emit GFX_SET_WRITE_CURSOR(1,5);
     spawn do
         await 5s;
-        emit GFX_SET_TEXT_FONT("res/FreeSans.ttf", 10);
-        emit GFX_SET_TEXT_CURSOR(1,5);
+        emit GFX_SET_FONT("res/FreeSans.ttf", 10);
+        emit GFX_SET_WRITE_CURSOR(1,5);
         await 2s;
         emit GFX_SCREENSHOT("res/screen.bmp");
     end
     every 1s do
-        emit GFX_DRAW_TEXT("|");
-        emit GFX_DRAW_TEXTLN(" Ola Mundo");
+        emit GFX_WRITE("|");
+        emit GFX_WRITELN(" Ola Mundo");
     end
 end
