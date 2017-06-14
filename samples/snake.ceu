@@ -30,22 +30,24 @@ code/await Snake (none) -> (vector[] Point body) -> FOREVER do
     end
 
     var Direction dir = val Direction.Right();
+    var Direction nxt = val Direction.Right();
 
     par do
         var integer key;
         every (_,key) in KEY_PRESS do
             if      key==KEY_LEFT  and not (dir is Direction.Right) then
-                dir = val Direction.Left();
+                nxt = val Direction.Left();
             else/if key==KEY_RIGHT and not (dir is Direction.Left)  then
-                dir = val Direction.Right();
+                nxt = val Direction.Right();
             else/if key==KEY_UP    and not (dir is Direction.Down)  then
-                dir = val Direction.Up();
+                nxt = val Direction.Up();
             else/if key==KEY_DOWN  and not (dir is Direction.Up)    then
-                dir = val Direction.Down();
+                nxt = val Direction.Down();
             end
         end
     with
         every 250ms do
+            dir = nxt;
             var Point pt = body[$body-1];
             if dir is Direction.Left then
                 pt.x = pt.x - 1;
@@ -96,6 +98,9 @@ code/await Food (var&? Snake snake) -> (var Point pt) -> FOREVER do
 end
 
 loop do
+    emit FRAMES_SET(no);
+    emit GFX_SET_RGB(0x00,0x00,0x00);
+    emit GFX_CLEAR();
     emit GFX_SET_RGB(0xFF,0xFF,0xFF);
     emit GFX_SET_FONT("res/tiny.ttf", 10);
     emit GFX_SET_WRITE_CURSOR(1, 0);
@@ -116,16 +121,35 @@ loop do
         end
     end
 
-    every FRAMES_UPDATE do
-        var&? Food food;
-        loop food in foods do
-            var usize i;
-            loop i in [0 -> $snake!.body[ do
-                var Point pt = snake!.body[i];
-                if pt.x==food!.pt.x and pt.y==food!.pt.y then
-                    call snake!.Grow();
-                    kill food;
-                    break;
+    par/or do
+        every FRAMES_UPDATE do
+            var&? Food food;
+            loop food in foods do
+                var usize i;
+                loop i in [0 -> $snake!.body[ do
+                    var Point pt = snake!.body[i];
+                    if pt.x==food!.pt.x and pt.y==food!.pt.y then
+                        call snake!.Grow();
+                        kill food;
+                        break;
+                    end
+                end
+            end
+        end
+    with
+        do
+            loop do
+                await FRAMES_UPDATE;
+                var Point head = snake!.body[$snake!.body-1];
+                if head.x<0 or head.x>=30 or head.y<0 or head.y>=30 then
+                    escape;
+                end
+                var ssize i;
+                loop i in [0 -> $snake!.body-2[ do
+                    var Point pt = snake!.body[i];
+                    if pt.x==head.x and pt.y==head.y then
+                        escape;
+                    end
                 end
             end
         end
