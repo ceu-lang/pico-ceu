@@ -1,19 +1,19 @@
-*pico-Céu* is a tiny environment for programming visual and interactive
+*pico-Céu* is a tiny programming environment for visual and interactive
 applications such as video games.
-It is composed of the programming language Céu and minimalist libraries for
-input, graphics, and sound.
+It is composed of the programming language [Céu](www.ceu-lang.org/) and
+minimalist libraries for input, graphics, and sound.
 
 <!-- TODO: network -->
 
 The example that follows draws a line from the top-left towards the bottom-left
 of the screen, pixel by pixel, one every 100ms.
-It also plays a sound effect at the beginning and at the end of the process:
+It also plays sound effects at the beginning and at the end of the process:
 
 ```ceu
 emit WINDOW_SET_TITLE("Drawing Across");    // sets the window title
 
 await KEY_PRESS;                            // waits for a key press (any key)
-emit SOUND_PLAY("res/click1.wav");          // plays a starting sound
+emit SOUND_PLAY("click.wav");               // plays a starting sound
 
 var integer i;
 loop i in [0 -> 50[ do                      // executes 50 times, varying i from 0 to 49
@@ -21,7 +21,7 @@ loop i in [0 -> 50[ do                      // executes 50 times, varying i from
     await 100ms;                            //   waits for 100 milliseconds
 end
 
-emit SOUND_PLAY("res/click1.wav");          // plays a terminating sound
+emit SOUND_PLAY("click.wav");               // plays a terminating sound
 await KEY_PRESS;                            // waits for a key press (any key)
 ```
 
