@@ -57,15 +57,15 @@ await KEY_PRESS;
 
 `pico-Céu` design goals:
 
+- Structured programming model:
+    - sequential execution, no callbacks
+    - logical parallelism, deterministic concurrency
 - Explicit I/O operations:
     - `await` for input
     - `emit` for output
 - Straightforward graphics:
     - immediate feedback
     - pixel-level manipulation and visualization
-- Structured programming model:
-    - sequential execution, no callbacks
-    - logical parallelism, deterministic concurrency
 - Simple development cycle:
     - minimalist API
     - easy installation and execution
