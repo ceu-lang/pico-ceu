@@ -71,7 +71,9 @@
                 
                     <li><a class="toctree-l4" href="#configuration">Configuration</a></li>
                 
-                    <li><a class="toctree-l4" href="#drawing-operations">Drawing Operations</a></li>
+                    <li><a class="toctree-l4" href="#drawing">Drawing</a></li>
+                
+                    <li><a class="toctree-l4" href="#writing">Writing</a></li>
                 
                     <li><a class="toctree-l4" href="#other">Other</a></li>
                 
@@ -162,6 +164,18 @@ screen.</p>
 </ul>
 <p>The ratio between the real and logical dimensions set with
 <a href="./../window/#window_set_size"><code>WINDOW_SET_SIZE</code></a> must be greater then one.</p>
+<h3 id="gfx_set_font">GFX_SET_FONT<a class="headerlink" href="#gfx_set_font" title="Permanent link">&para;</a></h3>
+<p>Changes the font for drawing and writing text.</p>
+<pre><code class="ceu">output (text,integer) GFX_SET_FONT
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>text</code>: path for the <code>.ttf</code> font filename</li>
+<li><code>integer</code>: height of the new font in pixels</li>
+</ul>
+</li>
+</ul>
 <h3 id="gfx_set_rgb">GFX_SET_RGB<a class="headerlink" href="#gfx_set_rgb" title="Permanent link">&para;</a></h3>
 <p>Changes the color of all subsequent drawing operations.</p>
 <pre><code class="ceu">output (integer,integer,integer) GFX_SET_RGB
@@ -175,9 +189,10 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<h3 id="gfx_set_text_cursor">GFX_SET_TEXT_CURSOR<a class="headerlink" href="#gfx_set_text_cursor" title="Permanent link">&para;</a></h3>
-<p>Changes the cursor position for drawing text.</p>
-<pre><code class="ceu">output (integer,integer) GFX_SET_TEXT_CURSOR
+<h3 id="gfx_set_write_cursor">GFX_SET_WRITE_CURSOR<a class="headerlink" href="#gfx_set_write_cursor" title="Permanent link">&para;</a></h3>
+<p>Changes the cursor position for writing text with <a href="#gfx_write"><code>GFX_WRITE</code></a> and
+<a href="#gfx_writeln"><code>GFX_WRITELN</code></a>.</p>
+<pre><code class="ceu">output (integer,integer) GFX_SET_WRITE_CURSOR
 </code></pre>
 
 <ul>
@@ -187,19 +202,7 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<h3 id="gfx_set_text_font">GFX_SET_TEXT_FONT<a class="headerlink" href="#gfx_set_text_font" title="Permanent link">&para;</a></h3>
-<p>Changes the font for drawing text.</p>
-<pre><code class="ceu">output (text,integer) GFX_SET_TEXT_FONT
-</code></pre>
-
-<ul>
-<li>Parameters:<ul>
-<li><code>text</code>: path for the <code>.ttf</code> font filename</li>
-<li><code>integer</code>: height of the new font in pixels</li>
-</ul>
-</li>
-</ul>
-<h2 id="drawing-operations">Drawing Operations<a class="headerlink" href="#drawing-operations" title="Permanent link">&para;</a></h2>
+<h2 id="drawing">Drawing<a class="headerlink" href="#drawing" title="Permanent link">&para;</a></h2>
 <h3 id="gfx_clear">GFX_CLEAR<a class="headerlink" href="#gfx_clear" title="Permanent link">&para;</a></h3>
 <p>Clears the screen.</p>
 <pre><code class="ceu">output (none) GFX_CLEAR
@@ -214,14 +217,14 @@ screen.</p>
 <p>The clear color is specified with <a href="#gfx_set_rgb"><code>GFX_SET_RGB</code></a>.</p>
 <h3 id="gfx_draw_bmp">GFX_DRAW_BMP<a class="headerlink" href="#gfx_draw_bmp" title="Permanent link">&para;</a></h3>
 <p>Draws a bitmap image on the screen.</p>
-<pre><code class="ceu">output (text,integer,integer) GFX_DRAW_BMP
+<pre><code class="ceu">output (integer,integer,text) GFX_DRAW_BMP
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>text</code>: path for the <code>.bmp</code> image filename</li>
 <li><code>integer</code>: position in the <code>x-axis</code></li>
 <li><code>integer</code>: position in the <code>y-axis</code></li>
+<li><code>text</code>: path for the <code>.bmp</code> image filename</li>
 </ul>
 </li>
 </ul>
@@ -270,7 +273,23 @@ screen.</p>
 <p>The drawing color is specified with <a href="#gfx_set_rgb"><code>GFX_SET_RGB</code></a>.</p>
 <h3 id="gfx_draw_text">GFX_DRAW_TEXT<a class="headerlink" href="#gfx_draw_text" title="Permanent link">&para;</a></h3>
 <p>Draws a text on the screen.</p>
-<pre><code class="ceu">output (text) GFX_DRAW_TEXT
+<pre><code class="ceu">output (int,int,text) GFX_DRAW_TEXT;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>integer</code>: position in the <code>x-axis</code></li>
+<li><code>integer</code>: position in the <code>y-axis</code></li>
+<li><code>text</code>: text to draw</li>
+</ul>
+</li>
+</ul>
+<p>The drawing font is specified with <a href="#gfx_set_font"><code>GFX_SET_FONT</code></a>.
+The drawing color is specified with <a href="#gfx_set_rgb"><code>GFX_SET_RGB</code></a>.</p>
+<h2 id="writing">Writing<a class="headerlink" href="#writing" title="Permanent link">&para;</a></h2>
+<h3 id="gfx_write">GFX_WRITE<a class="headerlink" href="#gfx_write" title="Permanent link">&para;</a></h3>
+<p>Writes a text on the screen.</p>
+<pre><code class="ceu">output (text) GFX_WRITE;
 </code></pre>
 
 <ul>
@@ -280,20 +299,20 @@ screen.</p>
 </li>
 </ul>
 <p>The drawing position is first specified with
-<a href="#gfx_set_text_cursor"><code>GFX_SET_TEXT_CURSOR</code></a>.
+<a href="#gfx_set_text_cursor"><code>GFX_SET_WRITE_CURSOR</code></a>.
 The cursor advances automatically for the position after the text.
-The drawing font is specified with <a href="#gfx_set_text_font"><code>GFX_SET_TEXT_FONT</code></a>.
+The drawing font is specified with <a href="#gfx_set_font"><code>GFX_SET_FONT</code></a>.
 The drawing color is specified with <a href="#gfx_set_rgb"><code>GFX_SET_RGB</code></a>.</p>
-<h3 id="gfx_draw_textln">GFX_DRAW_TEXTLN<a class="headerlink" href="#gfx_draw_textln" title="Permanent link">&para;</a></h3>
-<p>Draws a line of text on the screen.</p>
-<pre><code class="ceu">output (text) GFX_DRAW_TEXTLN
+<h3 id="gfx_writeln">GFX_WRITELN<a class="headerlink" href="#gfx_writeln" title="Permanent link">&para;</a></h3>
+<p>Writes a line of text on the screen.</p>
+<pre><code class="ceu">output (text) GFX_WRITELN;
 </code></pre>
 
 <p>The drawing position is first specified with
-<a href="#gfx_set_text_cursor"><code>GFX_SET_TEXT_CURSOR</code></a>.
+<a href="#gfx_set_text_cursor"><code>GFX_SET_WRITE_CURSOR</code></a>.
 The cursor advances automatically for the next line after the text, at the same
 initial position.
-The drawing font is specified with <a href="#gfx_set_text_font"><code>GFX_SET_TEXT_FONT</code></a>.
+The drawing font is specified with <a href="#gfx_set_font"><code>GFX_SET_FONT</code></a>.
 The drawing color is specified with <a href="#gfx_set_rgb"><code>GFX_SET_RGB</code></a>.</p>
 <h2 id="other">Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h2>
 <h3 id="gfx_screenshot">GFX_SCREENSHOT<a class="headerlink" href="#gfx_screenshot" title="Permanent link">&para;</a></h3>

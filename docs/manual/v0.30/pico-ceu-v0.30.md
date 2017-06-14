@@ -29,6 +29,18 @@ output (yesno) GFX_SET_GRID
 The ratio between the real and logical dimensions set with
 [`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
 
+#### GFX_SET_FONT
+
+Changes the font for drawing and writing text.
+
+```ceu
+output (text,integer) GFX_SET_FONT
+```
+
+- Parameters:
+    - `text`: path for the `.ttf` font filename
+    - `integer`: height of the new font in pixels
+
 #### GFX_SET_RGB
 
 Changes the color of all subsequent drawing operations.
@@ -42,31 +54,20 @@ output (integer,integer,integer) GFX_SET_RGB
     - `integer`: new green component
     - `integer`: new blue component
 
-#### GFX_SET_TEXT_CURSOR
+#### GFX_SET_WRITE_CURSOR
 
-Changes the cursor position for drawing text.
+Changes the cursor position for writing text with [`GFX_WRITE`](#gfx_write) and
+[`GFX_WRITELN`](#gfx_writeln).
 
 ```ceu
-output (integer,integer) GFX_SET_TEXT_CURSOR
+output (integer,integer) GFX_SET_WRITE_CURSOR
 ```
 
 - Parameters:
     - `integer`: new position in the `x-axis`
     - `integer`: new position in the `y-axis`
 
-#### GFX_SET_TEXT_FONT
-
-Changes the font for drawing text.
-
-```ceu
-output (text,integer) GFX_SET_TEXT_FONT
-```
-
-- Parameters:
-    - `text`: path for the `.ttf` font filename
-    - `integer`: height of the new font in pixels
-
-### Drawing Operations
+### Drawing
 
 #### GFX_CLEAR
 
@@ -86,13 +87,13 @@ The clear color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a bitmap image on the screen.
 
 ```ceu
-output (text,integer,integer) GFX_DRAW_BMP
+output (integer,integer,text) GFX_DRAW_BMP
 ```
 
 - Parameters:
-    - `text`: path for the `.bmp` image filename
     - `integer`: position in the `x-axis`
     - `integer`: position in the `y-axis`
+    - `text`: path for the `.bmp` image filename
 
 #### GFX_DRAW_PIXEL
 
@@ -145,31 +146,49 @@ The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 Draws a text on the screen.
 
 ```ceu
-output (text) GFX_DRAW_TEXT
+output (int,int,text) GFX_DRAW_TEXT;
+```
+
+- Parameters:
+    - `integer`: position in the `x-axis`
+    - `integer`: position in the `y-axis`
+    - `text`: text to draw
+
+The drawing font is specified with [`GFX_SET_FONT`](#gfx_set_font).
+The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
+
+### Writing
+
+#### GFX_WRITE
+
+Writes a text on the screen.
+
+```ceu
+output (text) GFX_WRITE;
 ```
 
 - Parameters:
     - `text`: text to draw
 
 The drawing position is first specified with
-[`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
+[`GFX_SET_WRITE_CURSOR`](#gfx_set_text_cursor).
 The cursor advances automatically for the position after the text.
-The drawing font is specified with [`GFX_SET_TEXT_FONT`](#gfx_set_text_font).
+The drawing font is specified with [`GFX_SET_FONT`](#gfx_set_font).
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
-#### GFX_DRAW_TEXTLN
+#### GFX_WRITELN
 
-Draws a line of text on the screen.
+Writes a line of text on the screen.
 
 ```ceu
-output (text) GFX_DRAW_TEXTLN
+output (text) GFX_WRITELN;
 ```
 
 The drawing position is first specified with
-[`GFX_SET_TEXT_CURSOR`](#gfx_set_text_cursor).
+[`GFX_SET_WRITE_CURSOR`](#gfx_set_text_cursor).
 The cursor advances automatically for the next line after the text, at the same
 initial position.
-The drawing font is specified with [`GFX_SET_TEXT_FONT`](#gfx_set_text_font).
+The drawing font is specified with [`GFX_SET_FONT`](#gfx_set_font).
 The drawing color is specified with [`GFX_SET_RGB`](#gfx_set_rgb).
 
 ### Other
@@ -331,6 +350,8 @@ output (integer,integer,integer,integer) WINDOW_SET_SIZE
     - `integer`: new real height
     - `integer`: new logical width
     - `integer`: new logical height
+
+The window is automatically cleared with black.
 
 The arithmetic division between the real and logical dimensions must be exact.
 
