@@ -93,7 +93,7 @@ do
             await FOREVER;
         with
             every FRAMES_REDRAW do
-                emit GFX_SET_RGB(0xEA, 0xD7, 0xFF);
+                emit GRAPHICS_SET_RGB(0xEA, 0xD7, 0xFF);
                 _SDL_RenderDrawLine(&&outer.sdl!.ren,
                                     pos_ini.x, pos_ini.y,
                                     pos_end.x, pos_end.y);
@@ -106,9 +106,7 @@ pool[] Light lights;
 // DEBUG
 spawn do
     loop do
-        var yesno pressed;
-        var integer key;
-        (pressed,key) = await KEY_PRESS until pressed and key==KEY_DOWN;
+        var integer key = await KEY_PRESS until key==KEY_DOWN;
         spawn Light(&lights,Vector2D(300,0),_,_,_) in lights;
     end
 end

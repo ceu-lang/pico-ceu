@@ -36,11 +36,11 @@ do
             if not physics.clr? then
                 continue;
             end
-            emit GFX_SET_RGB(physics.clr!.r, physics.clr!.g, physics.clr!.b);
-            emit GFX_DRAW_RECT(physics.x.pst as integer,
-                               physics.y.pst as integer,
-                               physics.x.len as integer,
-                               physics.y.len as integer);
+            emit GRAPHICS_SET_RGB(physics.clr!.r, physics.clr!.g, physics.clr!.b);
+            emit GRAPHICS_DRAW_RECT(physics.x.pst as integer,
+                                    physics.y.pst as integer,
+                                    physics.x.len as integer,
+                                    physics.y.len as integer);
         end
     end
 end
