@@ -181,6 +181,36 @@
             "title": "SOUND_PLAY"
         }, 
         {
+            "location": "/net/", 
+            "text": "Network\n\n\nProvides unreliable broadcast communication between peers.\n\n\nSend\n\n\nNET_SEND\n\n\nBroadcasts a message to all peers.\n\n\noutput (integer,text) NET_SEND;\n\n\n\n\n\n\nParameters:\n\n\ninteger\n: number of bytes to transmit\n\n\nbyte\n: stream of bytes\n\n\n\n\n\n\n\n\nReceive\n\n\nNET_RECEIVE\n\n\nReceives all messages from all peers, including itself.\n\n\ninput (integer,byte\n) NET_RECEIVE;\n\n\n\n\n\n\nOccurrences:\n\n\non every received message\n\n\n\n\n\n\nPayload:\n\n\ninteger\n: number of received bytes\n\n\nbyte\n: stream of bytes", 
+            "title": "Network"
+        }, 
+        {
+            "location": "/net/#network", 
+            "text": "Provides unreliable broadcast communication between peers.", 
+            "title": "Network"
+        }, 
+        {
+            "location": "/net/#send", 
+            "text": "", 
+            "title": "Send"
+        }, 
+        {
+            "location": "/net/#net_send", 
+            "text": "Broadcasts a message to all peers.  output (integer,text) NET_SEND;   Parameters:  integer : number of bytes to transmit  byte : stream of bytes", 
+            "title": "NET_SEND"
+        }, 
+        {
+            "location": "/net/#receive", 
+            "text": "", 
+            "title": "Receive"
+        }, 
+        {
+            "location": "/net/#net_receive", 
+            "text": "Receives all messages from all peers, including itself.  input (integer,byte ) NET_RECEIVE;   Occurrences:  on every received message    Payload:  integer : number of received bytes  byte : stream of bytes", 
+            "title": "NET_RECEIVE"
+        }, 
+        {
             "location": "/frames/", 
             "text": "Frame Management\n\n\nManages the game frames, such as for updating animations and redrawing the\nscreen.\n\n\nConfiguration\n\n\nFRAMES_SET\n\n\nEnables or disables the generation of periodic\n\nFRAMES_UPDATE\n and \nFRAMES_REDRAW\n\ninputs to the application.\n\n\noutput (yesno) FRAMES_SET\n\n\n\n\n\n\nParameters:\n\n\nyesno\n: new state\n\n\nyes\n: enables the generation of frames\n\n\nno\n: disables the generation of frames\n\n\n\n\n\n\n\n\n\n\n\n\nFRAMES_SET_CLEAR_RGB\n\n\nChanges the redrawing background color.\n\n\noutput (integer,integer,integer) FRAMES_SET_CLEAR_RGB\n\n\n\n\n\n\nParameters:\n\n\ninteger\n: new red component\n\n\ninteger\n: new green component\n\n\ninteger\n: new blue component\n\n\n\n\n\n\n\n\nOn every frame before \nFRAMES_REDRAW\n, the screen is cleared\nwith the background color.\n\n\nThe default color is black.\n\n\nUpdate\n\n\nFRAMES_UPDATE\n\n\ninput (integer) FRAMES_UPDATE\n\n\n\n\n\n\nOccurrences:\n\n\non every frame, before \nFRAMES_REDRAW\n\n\n\n\n\n\nPayload:\n\n\ninteger\n: the number of elapsed milliseconds since the previous frame\n\n\n\n\n\n\n\n\nRedraw\n\n\nFRAMES_REDRAW\n\n\ninput (none) FRAMES_REDRAW\n\n\n\n\n\n\nOccurrences:\n\n\non every frame, after \nFRAMES_UPDATE\n\n\n\n\n\n\nPayload:\n\n\nnone\n: no payload\n\n\n\n\n\n\n\n\nBefore the input occurs, the screen is cleared with the color set with\n\nFRAMES_SET_CLEAR_RGB\n.", 
             "title": "Frame Management"

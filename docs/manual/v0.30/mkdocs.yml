@@ -14,6 +14,7 @@ pages:
     - Graphics:             'graphics/index.md'
     - Input Devices:        'input/index.md'
     - Sound:                'sound/index.md'
+    - Network:              'net/index.md'
     - Frame Management:     'frames/index.md'
     - Window Management:    'window/index.md'
     - License:              'license.md'
