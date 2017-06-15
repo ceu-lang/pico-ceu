@@ -1,0 +1,176 @@
+#define DROPS_PERSEC_MIN  10
+#define DROPS_PERSEC_MAX 100
+#define DROPS_DECAY_MS 2000
+#define DROPS_LEN 2
+
+code/await Drop (var IPhysics&& cloud)
+                    -> (var& IPhysics physics, var& yesno has_collided)
+                        -> none
+do
+    var yesno has_collided_ = no;
+    has_collided = &has_collided_;
+
+    var Rect rct = val Rect((_rand()%cloud:x.len + cloud:x.pst) as integer,
+                            (cloud:y.pst + cloud:y.len) as integer,
+                            DROPS_LEN,
+                            5);
+    var float vx = cloud:x.vel;
+
+    var& Physics drop = spawn Physics(rct, Color(0x98,0xC1,0xE4));
+
+    physics = &drop.physics;
+    physics.x.vel  = vx;
+    physics.x.drag = 0.98;
+    physics.y.drag = 0.98;
+    physics.y.acc  = 500;
+
+    event none decay;
+    par/or do
+        var integer dt;
+        every dt in FRAMES_UPDATE do
+            if physics.y.pst > WIN_H-DROPS_LEN then
+                physics.y.pst = WIN_H-DROPS_LEN;
+                physics.y.vel = -(physics.y.vel*2/3);
+                has_collided_ = yes;
+                emit decay;
+            end
+            if (physics.x.pst > WIN_W) or (physics.x.pst < 0) or (physics.y.pst < 0) then
+                break;
+            end
+
+            var integer abs_vx = _abs(physics.x.vel);
+            var integer abs_vy = _abs(physics.y.vel);
+            if abs_vx > abs_vy then
+                physics.x.len = DROPS_LEN * (1 + (abs_vx-abs_vy)/100);
+                physics.y.len = DROPS_LEN;
+            else
+                physics.x.len = DROPS_LEN;
+                physics.y.len = DROPS_LEN * (1 + (abs_vy-abs_vx)/100);
+            end
+
+            var integer tmax = DROPS_LEN * 4;
+            if physics.x.len > tmax then
+                physics.x.len = tmax;
+            end
+            if physics.y.len > tmax then
+                physics.y.len = tmax;
+            end
+        end
+    with
+        await decay;
+        await (DROPS_DECAY_MS)ms;
+    end
+end
+pool[] Drop  drops;
+
+code/await Cloud (var integer dps_)
+                    -> (var& IPhysics physics, var& integer dps, event none go_blink)
+                        -> FOREVER
+do
+    dps = &dps_;
+
+    var integer maxy = 2 * 1000 / DROPS_PERSEC_MIN;
+
+    var integer freq_ini = 1000 / dps;
+    var integer freq_cur = freq_ini;
+    var integer ty = maxy - freq_cur*2;
+    if ty < 1 then
+        ty = 1;
+    end
+
+    var integer w = 100 + _rand()%100;
+    var Rect rct = val Rect(-w, ty, 100+_rand()%100, 20+_rand()%50);
+
+    var integer v = 200 - (200*ty / maxy);
+    var Color clr = val Color(v, (v*0.95) as integer, v);
+
+    var integer vx = 10 + _rand()%50;
+
+    var& Physics cloud = spawn Physics(rct, clr);
+    physics = &cloud.physics;
+    physics.x.vel = vx;
+
+    par do
+        var integer dt;
+        every dt in FRAMES_UPDATE do
+            if physics.x.pst > WIN_W then
+                physics.x.pst = -physics.x.len;
+            end
+        end
+    with
+        every (freq_cur)ms do
+            spawn Drop(&&physics) in outer.drops;
+        end
+    with
+        loop do
+            await go_blink;
+            var Color old = physics.clr!;
+            physics.clr = val Color(0xFF,0xFF,0xFF);
+            await 100ms;
+            physics.clr = old;
+        end
+    with
+        every 50ms do
+            freq_ini = 1000 / dps;
+            if freq_ini == freq_cur then
+                continue;
+            end
+
+            if _abs(freq_ini - freq_cur) < 1 then
+                freq_cur = freq_ini;
+            else/if (freq_ini - freq_cur) > 0 then
+                freq_cur = freq_cur + 1;
+            else
+                freq_cur = freq_cur - 1;
+            end
+
+            ty = maxy - freq_cur*2;
+            if ty < 1 then
+                ty = 1;
+            end
+            physics.y.pst = ty;
+            physics.clr = val Color(200-(200*ty/maxy),
+                                    ((physics.clr!.r as integer)*0.95) as integer,
+                                    physics.clr!.r);
+        end
+    end
+end
+pool[] Cloud clouds;
+
+code/await Clouds (none) -> none
+do
+    var integer dps_cur = 0;
+
+    var integer i;
+    loop i in [0 -> 3[ do
+        var integer dps = (_rand() % (DROPS_PERSEC_MAX+1-dps_cur)) + DROPS_PERSEC_MIN;
+        dps_cur = dps_cur + dps;
+        if dps_cur > DROPS_PERSEC_MAX then
+            dps_cur = DROPS_PERSEC_MAX;
+        end
+        spawn Cloud(dps) in outer.clouds;
+    end
+
+    every (_rand()%10 + 1)s do
+        var& Cloud cloud;
+        loop cloud in outer.clouds do
+            if _rand()%3 == 0 then
+                continue;
+            end
+
+            dps_cur = dps_cur - cloud.dps;
+            if dps_cur < DROPS_PERSEC_MIN then
+                dps_cur = DROPS_PERSEC_MIN;
+            end
+
+            var integer dps = _rand()%(DROPS_PERSEC_MAX+1-dps_cur) + DROPS_PERSEC_MIN;
+            dps_cur = dps_cur + dps;
+            if dps_cur > DROPS_PERSEC_MAX then
+                dps_cur = DROPS_PERSEC_MAX;
+            end
+
+            cloud.dps = dps;
+        end
+        //_printf("\nGotas por Segundo atual: %d/%d\n",dps_cur,DROPS_PERSEC_MAX);
+    end
+end

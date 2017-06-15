@@ -1,0 +1,562 @@
+#define WIN_DIM 500
+
+#include "c.ceu"
+#include "sdl/sdl.ceu"
+#include "keys.ceu"
+
+native/plain _none, _yesno, _integer, _real, _text;
+native/pre do
+    typedef void  none;
+    typedef bool  yesno;
+    typedef int   integer;
+    typedef float real;
+    typedef char* text;
+end
+#define none    void
+#define yesno   bool
+#define integer int
+#define real    float
+#define text    _text
+#define yes     true
+#define no      false
+
+data Color with
+    var integer r;
+    var integer g;
+    var integer b;
+end
+
+data Point with
+    var integer x;
+    var integer y;
+end
+
+data Rect with
+    var integer x;
+    var integer y;
+    var integer w;
+    var integer h;
+end
+
+output (text)            WINDOW_SET_TITLE;
+output (int,int,int,int) WINDOW_SET_SIZE;
+
+output (bool)            FRAMES_SET;
+output (int,int,int)     FRAMES_SET_CLEAR_RGB;
+input  (int)             FRAMES_UPDATE;
+input  (void)            FRAMES_REDRAW;
+
+input (int,int,int)      MOUSE_CLICK;
+input (int,int,int)      MOUSE_UNCLICK;
+input (int,int)          MOUSE_MOVE;
+input (int)              KEY_PRESS;
+input (int)              KEY_UNPRESS;
+
+output (int,int,int)     GRAPHICS_SET_RGB;
+output (text,int)        GRAPHICS_SET_FONT;
+output (int,int)         GRAPHICS_SET_WRITE_CURSOR;
+output (bool)            GRAPHICS_SET_GRID;
+output (text)            GRAPHICS_SCREENSHOT;
+output (void)            GRAPHICS_CLEAR;
+output (int,int)         GRAPHICS_DRAW_PIXEL;
+output (int,int,int,int) GRAPHICS_DRAW_LINE;
+output (int,int,int,int) GRAPHICS_DRAW_RECT;
+output (int,int,text)    GRAPHICS_DRAW_BMP;
+output (int,int,text)    GRAPHICS_DRAW_TEXT;
+output (text)            GRAPHICS_WRITE;
+output (text)            GRAPHICS_WRITELN;
+
+output (int)             SOUND_SET_VOLUME;
+output (text)            SOUND_PLAY;
+
+input  (int,byte&&)      NET_RECEIVE;
+output (int,byte&&)      NET_SEND;
+
+#ifndef NET_SET_UDP_PORT_RECV
+#define NET_SET_UDP_PORT_RECV 2000
+#endif
+
+native/pos do
+    SDL_Window*   WIN;
+    #define REN (SDL_GetRenderer(WIN))
+
+    TTF_Font* FNT = NULL;
+    int       FNT_H;
+
+    bool      FRAMES_SET = 0;
+    SDL_Color FRAMES_SET_CLEAR_RGB;
+
+    bool GRAPHICS_SET_GRID = 0;
+    int  GRAPHICS_WRITE_CURSOR_X = 0;
+    int  GRAPHICS_WRITE_CURSOR_Y = 0;
+
+    Mix_Chunk* SOUND_VEC[5] = { NULL, NULL, NULL, NULL, NULL };
+    int SOUND_SET_VOLUME = 50;
+
+    UDPsocket NET_recv, NET_send;
+    UDPpacket *NET_recv_pkt, *NET_send_pkt;
+
+    void GRAPHICS_Show_Grid (void) {
+        if (!GRAPHICS_SET_GRID) return;
+
+        int ren_w,ren_h, log_w,log_h;
+        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+        SDL_RenderSetLogicalSize(REN, ren_w, ren_h);
+
+        u8 r, g, b;
+        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+
+        SDL_SetRenderDrawColor(REN, 0x77,0x77,0x77, 0x00);
+        for (int i=0; i<=ren_w; i+=(ren_w/log_w)) {
+            SDL_RenderDrawLine(REN, i, 0, i, ren_h);
+        }
+        for (int j=0; j<=ren_h; j+=(ren_h/log_h)) {
+            SDL_RenderDrawLine(REN, 0, j, ren_w, j);
+        }
+
+        SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
+        SDL_RenderSetLogicalSize(REN, log_w, log_w);
+    }
+
+    void GRAPHICS_Present (void) {
+        if (FRAMES_SET) return;
+        GRAPHICS_Show_Grid();
+        SDL_RenderPresent(REN);
+    }
+
+
+    void SOUND_Wav_Done (int channel) {
+        Mix_FreeChunk(SOUND_VEC[channel]);
+    }
+
+    tceu_callback_ret ceu_callback_sdl_pico (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
+        tceu_callback_ret ret;
+        switch (cmd) {
+            case CEU_CALLBACK_OUTPUT:
+                switch (p1.num) {
+                    case CEU_OUTPUT_WINDOW_SET_TITLE: {
+                        char** title = (char**) p2.ptr;
+                        SDL_SetWindowTitle(WIN, *title);
+                        break;
+                    }
+                    case CEU_OUTPUT_WINDOW_SET_SIZE: {
+                        tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) p2.ptr;
+                        int ren_w = ps->_1;
+                        int ren_h = ps->_2;
+                        int log_w = ps->_3;
+                        int log_h = ps->_4;
+                        ceu_dbg_assert(ren_w%log_w == 0);
+                        ceu_dbg_assert(ren_h%log_h == 0);
+
+                        SDL_SetWindowSize(WIN, ren_w, ren_h);
+                        SDL_RenderSetLogicalSize(REN, log_w, log_h);
+
+                        if (!(ren_w/log_w>1 && ren_h/log_h>1)) {
+                            GRAPHICS_SET_GRID = 0;
+                        }
+
+                        { // clears the window
+                            u8 r, g, b;
+                            SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+                            SDL_SetRenderDrawColor(REN, 0,0,0, 0xFF);
+                            p1.num = CEU_OUTPUT_GRAPHICS_CLEAR;
+                            ceu_callback_sdl_pico(cmd, p1, p2);
+                            SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
+                        }
+
+                        break;
+                    }
+
+                    case CEU_OUTPUT_FRAMES_SET: {
+                        bool* on = (bool*) p2.ptr;
+                        FRAMES_SET = *on;
+                        break;
+                    }
+                    case CEU_OUTPUT_FRAMES_SET_CLEAR_RGB: {
+                        tceu_output_FRAMES_SET_CLEAR_RGB* clr = (tceu_output_FRAMES_SET_CLEAR_RGB*) p2.ptr;
+                        FRAMES_SET_CLEAR_RGB.r = clr->_1;
+                        FRAMES_SET_CLEAR_RGB.g = clr->_2;
+                        FRAMES_SET_CLEAR_RGB.b = clr->_3;
+                        FRAMES_SET_CLEAR_RGB.a = 0xFF;
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GRAPHICS_SET_RGB: {
+                        tceu_output_GRAPHICS_SET_RGB* clr = (tceu_output_GRAPHICS_SET_RGB*) p2.ptr;
+                        SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_SET_FONT: {
+                        tceu_output_GRAPHICS_SET_FONT* fnt = (tceu_output_GRAPHICS_SET_FONT*) p2.ptr;
+                        FNT_H = fnt->_2;
+                        if (FNT != NULL) {
+                            TTF_CloseFont(FNT);
+                        }
+                        FNT = TTF_OpenFont(fnt->_1, FNT_H);
+                        ceu_dbg_assert(FNT != NULL);
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_SET_WRITE_CURSOR: {
+                        tceu_output_GRAPHICS_SET_WRITE_CURSOR* pt = (tceu_output_GRAPHICS_SET_WRITE_CURSOR*) p2.ptr;
+                        GRAPHICS_WRITE_CURSOR_X = pt->_1;
+                        GRAPHICS_WRITE_CURSOR_Y = pt->_2;
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GRAPHICS_SET_GRID: {
+                        bool* on = (bool*) p2.ptr;
+                        GRAPHICS_SET_GRID = *on;
+
+                        int ren_w,ren_h, log_w,log_h;
+                        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+                        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+                        ceu_dbg_assert(ren_w/log_w>1 && ren_h/log_h>1);
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GRAPHICS_SCREENSHOT: {
+                        char** path = (char**) p2.ptr;
+                        int ren_w,ren_h, log_w,log_h;
+                        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+                        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+
+
+                        SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, ren_w, ren_h, 32,
+                                                0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+                        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, src_sfc->pixels, src_sfc->pitch);
+                        SDL_Texture* src_tex = SDL_CreateTextureFromSurface(REN, src_sfc);
+                        SDL_FreeSurface(src_sfc);
+
+                        SDL_Texture* dst_tex = SDL_CreateTexture(REN, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, log_w, log_h);
+                        SDL_SetRenderTarget(REN, dst_tex);
+
+                        // TODO: why flipping?
+                        //SDL_RenderCopy(REN, src_tex, NULL, NULL);
+                        SDL_RenderCopyEx(REN, src_tex, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
+
+                        SDL_DestroyTexture(src_tex);
+
+                        SDL_Surface* sav_sfc = SDL_CreateRGBSurface(0, log_w, log_h, 32,
+                                                0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+                        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, sav_sfc->pixels, sav_sfc->pitch);
+                        ceu_dbg_assert(0 == SDL_SaveBMP(sav_sfc,*path));
+                        SDL_FreeSurface(sav_sfc);
+
+                        SDL_SetRenderTarget(REN, NULL);
+                        SDL_DestroyTexture(dst_tex);
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GRAPHICS_CLEAR: {
+// TODO: w/o double Fill/Present, a "SET_WINDOW();CLEAR()" doesn't work
+#if 1
+                        SDL_RenderFillRect(REN, NULL);
+                        if (!FRAMES_SET) {
+                            SDL_RenderPresent(REN);
+                        }
+#endif
+                        SDL_RenderFillRect(REN, NULL);
+                        GRAPHICS_Present();
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GRAPHICS_DRAW_PIXEL: {
+                        tceu_output_GRAPHICS_DRAW_PIXEL* pt = (tceu_output_GRAPHICS_DRAW_PIXEL*) p2.ptr;
+                        SDL_Rect rct = { pt->_1, pt->_2, 1, 1 };
+                        SDL_RenderFillRect(REN, &rct);
+                        GRAPHICS_Present();
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_DRAW_LINE: {
+                        tceu_output_GRAPHICS_DRAW_LINE* ps = (tceu_output_GRAPHICS_DRAW_LINE*) p2.ptr;
+//int ren_w,ren_h, log_w,log_h;
+//SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+//SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+//SDL_RenderSetScale(REN, 10,10);
+                        SDL_RenderDrawLine(REN, ps->_1, ps->_2, ps->_3, ps->_4);
+//SDL_RenderSetScale(REN, 1, 1);
+                        GRAPHICS_Present();
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_DRAW_RECT: {
+                        tceu_output_GRAPHICS_DRAW_RECT* ps = (tceu_output_GRAPHICS_DRAW_RECT*) p2.ptr;
+                        SDL_Rect rct = { ps->_1, ps->_2, ps->_3, ps->_4 };
+                        SDL_RenderFillRect(REN, &rct);
+                        GRAPHICS_Present();
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_DRAW_BMP: {     // TODO: cache
+                        tceu_output_GRAPHICS_DRAW_BMP* ps = (tceu_output_GRAPHICS_DRAW_BMP*) p2.ptr;
+                        SDL_Surface* sfc = SDL_LoadBMP(ps->_3);
+                        ceu_dbg_assert(sfc != NULL);
+                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+                        ceu_dbg_assert(tex != NULL);
+
+                        SDL_Rect rct = { ps->_1,ps->_2, sfc->w,sfc->h };
+                        SDL_RenderCopy(REN, tex, NULL, &rct);
+                        GRAPHICS_Present();
+
+                        SDL_DestroyTexture(tex);
+                        SDL_FreeSurface(sfc);
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_DRAW_TEXT: {     // TODO: cache
+                        tceu_output_GRAPHICS_DRAW_TEXT* ps = (tceu_output_GRAPHICS_DRAW_TEXT*) p2.ptr;
+
+                        u8 r, g, b;
+                        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+                        SDL_Surface* sfc = TTF_RenderText_Blended(FNT, ps->_3, (SDL_Color){r,g,b,0xFF});
+                        ceu_dbg_assert(sfc != NULL);
+                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+                        ceu_dbg_assert(tex != NULL);
+
+                        int w, h;
+                        TTF_SizeText(FNT, ps->_3, &w,&h);
+                        SDL_Rect rct = { ps->_1,ps->_2, w,h };
+                        SDL_RenderCopy(REN, tex, NULL, &rct);
+                        GRAPHICS_Present();
+
+                        break;
+                    }
+
+                    case CEU_OUTPUT_GRAPHICS_WRITE: {        // TODO: cache
+                        char** str = (char**) p2.ptr;
+                        ceu_dbg_assert(FNT != NULL);
+
+                        u8 r, g, b;
+                        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+                        SDL_Surface* sfc = TTF_RenderText_Blended(FNT, *str, (SDL_Color){r,g,b,0xFF});
+                        ceu_dbg_assert(sfc != NULL);
+                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+                        ceu_dbg_assert(tex != NULL);
+
+                        int w, h;
+                        TTF_SizeText(FNT, *str, &w,&h);
+                        SDL_Rect rct = { GRAPHICS_WRITE_CURSOR_X,GRAPHICS_WRITE_CURSOR_Y, w,h };
+                        SDL_RenderCopy(REN, tex, NULL, &rct);
+                        GRAPHICS_Present();
+
+                        GRAPHICS_WRITE_CURSOR_X += w;
+
+                        SDL_DestroyTexture(tex);
+                        SDL_FreeSurface(sfc);
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_WRITELN: {
+                        int cursor_x = GRAPHICS_WRITE_CURSOR_X;
+                        p1.num = CEU_OUTPUT_GRAPHICS_WRITE;
+                        ceu_callback_sdl_pico(cmd, p1, p2);
+                        GRAPHICS_WRITE_CURSOR_X = cursor_x;
+                        GRAPHICS_WRITE_CURSOR_Y += FNT_H;
+                        break;
+                    }
+
+                    case CEU_OUTPUT_SOUND_SET_VOLUME: {
+                        int* vol = (int*) p2.ptr;
+                        SOUND_SET_VOLUME = *vol;
+                        break;
+                    }
+                    case CEU_OUTPUT_SOUND_PLAY: {     // TODO: cache
+                        char** path = (char**) p2.ptr;
+                        Mix_Chunk* snd = Mix_LoadWAV(*path);
+                        Mix_VolumeChunk(snd, MIX_MAX_VOLUME*SOUND_SET_VOLUME/100);
+                        int channel = Mix_PlayChannel(-1, snd, 0);
+                        ceu_dbg_assert(channel>=0 && channel<5);
+                        SOUND_VEC[channel] = snd;
+                        break;
+                    }
+
+                    case CEU_OUTPUT_NET_SEND: {
+                        tceu_output_NET_SEND* ps = (tceu_output_NET_SEND*) p2.ptr;
+                        NET_send_pkt->len  = ps->_1;
+                        NET_send_pkt->data = ps->_2;
+                        for (int i=0; i<10; i++) {
+                            IPaddress addr;
+                            u16 port = (NET_SET_UDP_PORT_RECV/1000)*1000 + i;
+                            SDLNet_ResolveHost(&addr, "255.255.255.255", port);
+                            NET_send_pkt->address.host = addr.host;
+                            NET_send_pkt->address.port = addr.port;
+                            SDLNet_UDP_Send(NET_send, -1, NET_send_pkt);
+                        }
+                    }
+                }
+                break;
+            default:
+                ret.is_handled = 0;
+        }
+        return ret;
+    }
+    static tceu_callback CEU_CALLBACK_EDU = { &ceu_callback_sdl_pico, NULL };
+end
+
+{
+    ceu_callback_register(&CEU_CALLBACK_EDU);
+}
+
+var&? SDL_Init sdl = spawn SDL_Init("pico-Ceu", WIN_DIM,WIN_DIM, _);
+watching sdl do
+    {
+        WIN = @(&&sdl!.win);
+        Mix_ChannelFinished(SOUND_Wav_Done);
+
+        ceu_dbg_assert(SDLNet_Init() >= 0);
+
+        NET_recv = SDLNet_UDP_Open(NET_SET_UDP_PORT_RECV);
+        NET_recv_pkt = SDLNet_AllocPacket(512);
+        ceu_dbg_assert(NET_recv != 0);
+        ceu_dbg_assert(NET_recv_pkt != NULL);
+
+        NET_send = SDLNet_UDP_Open(0);
+        NET_send_pkt = SDLNet_AllocPacket(512);
+        ceu_dbg_assert(NET_send != 0);
+        ceu_dbg_assert(NET_send_pkt != NULL);
+    }
+    do finalize with
+        {SDLNet_FreePacket(NET_recv_pkt);}
+        {SDLNet_FreePacket(NET_send_pkt);}
+    end
+
+    emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM/10,WIN_DIM/10);
+    emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
+    emit GRAPHICS_SET_GRID(yes);
+    emit GRAPHICS_SET_RGB(0x00,0x00,0x00);
+    emit GRAPHICS_CLEAR();
+    emit GRAPHICS_SET_RGB(0xFF,0xFF,0xFF);
+
+    emit GRAPHICS_SET_FONT("res/tiny.ttf", WIN_DIM/50);
+    do finalize with
+        {TTF_CloseFont(FNT);}
+    end
+
+    _srand(_time(null));
+
+    par/or do
+        /* FRAMES */
+        par do
+            // DT -> UPDATE
+            var u32 old = _SDL_GetTicks();
+            loop do
+                await SDL_DT;
+                await async (old) do
+                    var u32 now = _SDL_GetTicks();
+                    emit FRAMES_UPDATE((now-old) as int);
+                    old = now;
+                end
+            end
+        with
+            // REDRAW -> FRAMES_REDRAW
+            loop do
+                await SDL_REDRAW;
+                await async do
+                    emit FRAMES_REDRAW;
+                end
+            end
+        with
+            // BACKGROUND
+            every FRAMES_REDRAW do
+                if {FRAMES_SET} as bool then
+                    var int r = _;
+                    var int g = _;
+                    var int b = _;
+                    _SDL_GetRenderDrawColor({REN}, &&r as u8&&, &&g as u8&&, &&b as u8&&, null);
+                    emit GRAPHICS_SET_RGB({FRAMES_SET_CLEAR_RGB.r},
+                                     {FRAMES_SET_CLEAR_RGB.g},
+                                     {FRAMES_SET_CLEAR_RGB.b});
+                    emit GRAPHICS_CLEAR();
+                    emit GRAPHICS_SET_RGB(r,g,b);
+                    {GRAPHICS_Show_Grid();}
+                end
+            end
+        end
+    with
+        /* KEY */
+        par do
+            // PRESS -> PRESS
+            code/await SDL_KeyDown (var int key) -> void do
+                await async (key) do
+                    emit KEY_PRESS(key);
+                end
+            end
+            pool[] SDL_KeyDown keys;
+            var _SDL_KeyboardEvent&& key;
+            every key in SDL_KEYDOWN do
+                spawn SDL_KeyDown(key:keysym.sym) in keys;
+            end
+        with
+            // RELEASE -> UNPRESS
+            code/await SDL_KeyUp (var int key) -> void do
+                await async (key) do
+                    emit KEY_UNPRESS(key);
+                end
+            end
+            pool[] SDL_KeyUp keys;
+            var _SDL_KeyboardEvent&& key;
+            every key in SDL_KEYUP do
+                spawn SDL_KeyUp(key:keysym.sym) in keys;
+            end
+        end
+    with
+        /* MOUSE */
+        par do
+            // DOWN -> CLICK
+            code/await SDL_MouseDown (var int x, var int y) -> void do
+                await async (x,y) do
+                    emit MOUSE_CLICK(0,x,y);
+                end
+            end
+            pool[] SDL_MouseDown mses;
+            var _SDL_MouseButtonEvent&& mse;
+            every mse in SDL_MOUSEBUTTONDOWN do
+                spawn SDL_MouseDown(mse:x,mse:y) in mses;
+            end
+        with
+            // UP -> UNCLICK
+            code/await SDL_MouseUp (var int x, var int y) -> void do
+                await async (x,y) do
+                    emit MOUSE_UNCLICK(0,x,y);
+                end
+            end
+            pool[] SDL_MouseUp mses;
+            var _SDL_MouseButtonEvent&& mse;
+            every mse in SDL_MOUSEBUTTONUP do
+                spawn SDL_MouseUp(mse:x,mse:y) in mses;
+            end
+        with
+            // MOTION -> MOVE
+            code/await SDL_MouseMotion (var int x, var int y) -> void do
+                await async (x,y) do
+                    emit MOUSE_MOVE(x,y);
+                end
+            end
+            var int x = {U16_MAX};
+            var int y = {U16_MAX};
+            pool[] SDL_MouseMotion mses;
+            var _SDL_MouseMotionEvent&& mse;
+            every mse in SDL_MOUSEMOTION do
+                var int x_ = mse:x;
+                var int y_ = mse:y;
+                if x_!=x or y_!=y then
+                    x = x_;
+                    y = y_;
+                    spawn SDL_MouseMotion(x,y) in mses;
+                end
+            end
+        end
+    with
+        loop do
+            await 100ms;
+            await async do
+                if {SDLNet_UDP_Recv(NET_recv,NET_recv_pkt)} as bool then
+                    emit NET_RECEIVE({NET_recv_pkt->len}, {(char*)NET_recv_pkt->data});
+                end
+            end
+        end
+    with
+        #define _STRINGIFY(X) #X
+        #define STRINGIFY(X) _STRINGIFY(X)
+        #include STRINGIFY(CEU_SRC)
+    end
+end
+
+escape 0;
