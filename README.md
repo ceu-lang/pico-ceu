@@ -3,35 +3,35 @@ applications such as video games.
 It is composed of the programming language [Céu](www.ceu-lang.org/) and
 minimalist libraries for input, graphics, network, and sound.
 
-The example that follows draws a line from the top-left towards the
-bottom-right of the screen, one pixel every *100ms*.
+Follows an example that draws a line pixel by pixel from the top-left towards
+the bottom-right of the screen, one pixel every *100ms*:
+
+<!--
 It also plays sound effects at the beginning and at the end of the process:
+
+await KEY_PRESS;                    // waits for a key press (any key)
+emit SOUND_PLAY("click.wav");       // plays a starting sound
+
+emit SOUND_PLAY("click.wav");       // plays a terminating sound
+await KEY_PRESS;                    // waits for a key press (any key)
+-->
 
 <img src="across.gif" width="200" align="right"/>
 
 ```ceu
-await KEY_PRESS;                    // waits for a key press (any key)
-emit SOUND_PLAY("click.wav");       // plays a starting sound
-
 var integer i;
 loop i in [0 -> 49] do              // executes 50 times, varying i from 0 to 49
     emit GRAPHICS_DRAW_PIXEL(i,i);  //   draws a pixel at (i,i)
     await 100ms;                    //   waits for 100 milliseconds
 end
-
-emit SOUND_PLAY("click.wav");       // plays a terminating sound
-await KEY_PRESS;                    // waits for a key press (any key)
 ```
 
-The next example also draws another line from the top-right towards the
-bottom-left of the screen at the same time:
+The next example draws, at the same time, an additional line from the top-right
+towards the bottom-left of the screen:
 
 <img src="across-par.gif" width="200" align="right"/>
 
 ```ceu
-await KEY_PRESS;
-emit SOUND_PLAY("click.wav");
-
 par/and do  // executes the next five indented lines in parallel...
     var integer i;
     loop i in [0 -> 49] do
@@ -45,9 +45,6 @@ with        // ...with the next five indented lines...
         await 100ms;
     end
 end         // ...and terminates when they both terminate (par/and)
-
-emit SOUND_PLAY("click.wav");
-await KEY_PRESS;
 ```
 
 `pico-Céu` design goals:
@@ -74,3 +71,15 @@ await KEY_PRESS;
     - text and cursor facilities
 - [Pascal](https://en.wikipedia.org/wiki/Pascal_%28programming_language%29):
     - verbose and comprehensible syntax
+
+# Installation
+
+## Windows
+
+<https://github.com/fsantanna/pico-ceu/tree/master/windows>
+
+# Documentation
+
+## API documentation:
+
+<https://fsantanna.github.io/pico-ceu/out/manual/v0.30/>
