@@ -70,13 +70,10 @@ output (int)             SOUND_SET_VOLUME;
 output (text)            SOUND_PLAY;
 
 input  (int,byte&&)      NET_RECEIVE;
-output (int,text)        NET_SEND;
+output (int,byte&&)      NET_SEND;
 
 #ifndef NET_SET_UDP_PORT_RECV
 #define NET_SET_UDP_PORT_RECV 2000
-#endif
-#ifndef NET_SET_UDP_PORT_SEND
-#define NET_SET_UDP_PORT_SEND 2000
 #endif
 
 native/pos do
@@ -374,11 +371,14 @@ native/pos do
                         tceu_output_NET_SEND* ps = (tceu_output_NET_SEND*) p2.ptr;
                         NET_send_pkt->len  = ps->_1;
                         NET_send_pkt->data = ps->_2;
-                        IPaddress addr;
-                        SDLNet_ResolveHost(&addr, "255.255.255.255", NET_SET_UDP_PORT_SEND);
-                        NET_send_pkt->address.host = addr.host;
-                        NET_send_pkt->address.port = addr.port;
-                        SDLNet_UDP_Send(NET_send, -1, NET_send_pkt);
+                        for (int i=0; i<10; i++) {
+                            IPaddress addr;
+                            u16 port = (NET_SET_UDP_PORT_RECV/1000)*1000 + i;
+                            SDLNet_ResolveHost(&addr, "255.255.255.255", port);
+                            NET_send_pkt->address.host = addr.host;
+                            NET_send_pkt->address.port = addr.port;
+                            SDLNet_UDP_Send(NET_send, -1, NET_send_pkt);
+                        }
                     }
                 }
                 break;
