@@ -69,6 +69,9 @@ output (text)            GRAPHICS_WRITELN;
 output (int)             SOUND_SET_VOLUME;
 output (text)            SOUND_PLAY;
 
+input  (int,byte&&)      NET_RECEIVE;
+output (int,text)        NET_SEND;
+
 native/pos do
     SDL_Window*   WIN;
     #define REN (SDL_GetRenderer(WIN))
@@ -85,6 +88,9 @@ native/pos do
 
     Mix_Chunk* SOUND_VEC[5] = { NULL, NULL, NULL, NULL, NULL };
     int SOUND_SET_VOLUME = 50;
+
+    UDPsocket NET_recv, NET_send;
+    UDPpacket *NET_recv_pkt, *NET_send_pkt;
 
     void GRAPHICS_Show_Grid (void) {
         if (!GRAPHICS_SET_GRID) return;
@@ -356,6 +362,17 @@ native/pos do
                         SOUND_VEC[channel] = snd;
                         break;
                     }
+
+                    case CEU_OUTPUT_NET_SEND: {
+                        tceu_output_NET_SEND* ps = (tceu_output_NET_SEND*) p2.ptr;
+                        NET_send_pkt->len  = ps->_1;
+                        NET_send_pkt->data = ps->_2;
+                        IPaddress addr;
+                        SDLNet_ResolveHost(&addr, "255.255.255.255", 2000);
+                        NET_send_pkt->address.host = addr.host;
+                        NET_send_pkt->address.port = addr.port;
+                        SDLNet_UDP_Send(NET_send, -1, NET_send_pkt);
+                    }
                 }
                 break;
             default:
@@ -375,7 +392,24 @@ watching sdl do
     {
         WIN = @(&&sdl!.win);
         Mix_ChannelFinished(SOUND_Wav_Done);
+
+        ceu_dbg_assert(SDLNet_Init() >= 0);
+
+        NET_recv = SDLNet_UDP_Open(2000);
+        NET_recv_pkt = SDLNet_AllocPacket(512);
+        ceu_dbg_assert(NET_recv != 0);
+        ceu_dbg_assert(NET_recv_pkt != NULL);
+
+        NET_send = SDLNet_UDP_Open(0);
+        NET_send_pkt = SDLNet_AllocPacket(512);
+        ceu_dbg_assert(NET_send != 0);
+        ceu_dbg_assert(NET_send_pkt != NULL);
     }
+    do finalize with
+        {SDLNet_FreePacket(NET_recv_pkt);}
+        {SDLNet_FreePacket(NET_send_pkt);}
+    end
+
     emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM/10,WIN_DIM/10);
     emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
     emit GRAPHICS_SET_GRID(yes);
@@ -499,6 +533,14 @@ watching sdl do
                     x = x_;
                     y = y_;
                     spawn SDL_MouseMotion(x,y) in mses;
+                end
+            end
+        end
+    with
+        loop do
+            await async do
+                if {SDLNet_UDP_Recv(NET_recv,NET_recv_pkt)} as bool then
+                    emit NET_RECEIVE({NET_recv_pkt->len}, {(char*)NET_recv_pkt->data});
                 end
             end
         end

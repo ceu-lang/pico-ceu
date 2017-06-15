@@ -1,0 +1,12 @@
+par do
+    var integer n;
+    var byte&&  buf;
+    every (n,buf) in NET_RECEIVE do
+        _printf("recv: %s\n", buf);
+    end
+with
+    loop do
+        await 1s;
+        emit NET_SEND(3, "oi");
+    end
+end
