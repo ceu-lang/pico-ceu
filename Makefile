@@ -3,7 +3,7 @@ CEU_SDL_DIR = $(error set absolute path to "<ceu-sdl>" repository)
 
 all:
 	ceu --pre --pre-args="-I$(CEU_DIR)/include -I$(CEU_SDL_DIR)/include -DCEU_SRC=$(CEU_SRC)"    \
-	          --pre-input=main.ceu                                          \
+	          --pre-input=pico.ceu                                          \
 	    --ceu --ceu-err-unused=pass --ceu-err-uninitialized=pass            \
 	    --env --env-types=$(CEU_DIR)/env/types.h                            \
 	          --env-threads=$(CEU_DIR)/env/threads.h                        \
