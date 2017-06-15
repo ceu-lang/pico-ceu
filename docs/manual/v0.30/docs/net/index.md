@@ -9,7 +9,7 @@ Provides unreliable broadcast communication between peers.
 Broadcasts a message to all peers.
 
 ```ceu
-output (integer,text) NET_SEND;
+output (integer,byte&&) NET_SEND;
 ```
 
 - Parameters:

@@ -182,7 +182,7 @@
         }, 
         {
             "location": "/net/", 
-            "text": "Network\n\n\nProvides unreliable broadcast communication between peers.\n\n\nSend\n\n\nNET_SEND\n\n\nBroadcasts a message to all peers.\n\n\noutput (integer,text) NET_SEND;\n\n\n\n\n\n\nParameters:\n\n\ninteger\n: number of bytes to transmit\n\n\nbyte\n: stream of bytes\n\n\n\n\n\n\n\n\nReceive\n\n\nNET_RECEIVE\n\n\nReceives all messages from all peers, including itself.\n\n\ninput (integer,byte\n) NET_RECEIVE;\n\n\n\n\n\n\nOccurrences:\n\n\non every received message\n\n\n\n\n\n\nPayload:\n\n\ninteger\n: number of received bytes\n\n\nbyte\n: stream of bytes", 
+            "text": "Network\n\n\nProvides unreliable broadcast communication between peers.\n\n\nSend\n\n\nNET_SEND\n\n\nBroadcasts a message to all peers.\n\n\noutput (integer,byte\n) NET_SEND;\n\n\n\n\n\n\nParameters:\n\n\ninteger\n: number of bytes to transmit\n\n\nbyte\n: stream of bytes\n\n\n\n\n\n\n\n\nReceive\n\n\nNET_RECEIVE\n\n\nReceives all messages from all peers, including itself.\n\n\ninput (integer,byte\n) NET_RECEIVE;\n\n\n\n\n\n\nOccurrences:\n\n\non every received message\n\n\n\n\n\n\nPayload:\n\n\ninteger\n: number of received bytes\n\n\nbyte\n: stream of bytes", 
             "title": "Network"
         }, 
         {
@@ -197,7 +197,7 @@
         }, 
         {
             "location": "/net/#net_send", 
-            "text": "Broadcasts a message to all peers.  output (integer,text) NET_SEND;   Parameters:  integer : number of bytes to transmit  byte : stream of bytes", 
+            "text": "Broadcasts a message to all peers.  output (integer,byte ) NET_SEND;   Parameters:  integer : number of bytes to transmit  byte : stream of bytes", 
             "title": "NET_SEND"
         }, 
         {
