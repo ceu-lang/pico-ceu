@@ -6,7 +6,7 @@
 
 native/plain _none, _yesno, _integer, _real, _text;
 native/pre do
-    ##include <ctime.h>
+    //##include <ctime.h>
     typedef void  none;
     typedef bool  yesno;
     typedef int   integer;
@@ -41,6 +41,7 @@ end
 
 output (text)            WINDOW_SET_TITLE;
 output (int,int,int,int) WINDOW_SET_SIZE;
+//output (yesno)           WINDOW_SET_FULLSCREEN;
 
 output (bool)            FRAMES_SET;
 output (int,int,int)     FRAMES_SET_CLEAR_RGB;
@@ -100,20 +101,21 @@ native/pos do
     void GRAPHICS_Show_Grid (void) {
         if (!GRAPHICS_SET_GRID) return;
 
-        int ren_w,ren_h, log_w,log_h;
-        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+        int win_w,win_h, log_w,log_h;
+        SDL_GetWindowSize(WIN, &win_w, &win_h);
+
         SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
-        SDL_RenderSetLogicalSize(REN, ren_w, ren_h);
+        SDL_RenderSetLogicalSize(REN, win_w, win_h);
 
         u8 r, g, b;
         SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
 
         SDL_SetRenderDrawColor(REN, 0x77,0x77,0x77, 0x00);
-        for (int i=0; i<=ren_w; i+=(ren_w/log_w)) {
-            SDL_RenderDrawLine(REN, i, 0, i, ren_h);
+        for (int i=0; i<=win_w; i+=(win_w/log_w)) {
+            SDL_RenderDrawLine(REN, i, 0, i, win_h);
         }
-        for (int j=0; j<=ren_h; j+=(ren_h/log_h)) {
-            SDL_RenderDrawLine(REN, 0, j, ren_w, j);
+        for (int j=0; j<=win_h; j+=(win_h/log_h)) {
+            SDL_RenderDrawLine(REN, 0, j, win_w, j);
         }
 
         SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
@@ -143,17 +145,17 @@ native/pos do
                     }
                     case CEU_OUTPUT_WINDOW_SET_SIZE: {
                         tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) p2.ptr;
-                        int ren_w = ps->_1;
-                        int ren_h = ps->_2;
+                        int win_w = ps->_1;
+                        int win_h = ps->_2;
                         int log_w = ps->_3;
                         int log_h = ps->_4;
-                        ceu_dbg_assert(ren_w%log_w == 0);
-                        ceu_dbg_assert(ren_h%log_h == 0);
+                        ceu_dbg_assert(win_w%log_w == 0);
+                        ceu_dbg_assert(win_h%log_h == 0);
 
-                        SDL_SetWindowSize(WIN, ren_w, ren_h);
+                        SDL_SetWindowSize(WIN, win_w, win_h);
                         SDL_RenderSetLogicalSize(REN, log_w, log_h);
 
-                        if (!(ren_w/log_w>1 && ren_h/log_h>1)) {
+                        if (!(win_w/log_w>1 && win_h/log_h>1)) {
                             GRAPHICS_SET_GRID = 0;
                         }
 
@@ -162,12 +164,32 @@ native/pos do
                             SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
                             SDL_SetRenderDrawColor(REN, 0,0,0, 0xFF);
                             p1.num = CEU_OUTPUT_GRAPHICS_CLEAR;
-                            ceu_callback_sdl_pico(cmd, p1, p2);
+                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2);
                             SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
                         }
 
                         break;
                     }
+#if 0
+                    case CEU_OUTPUT_WINDOW_SET_FULLSCREEN: {
+                        yesno* full = (yesno*) p2.ptr;
+                        SDL_SetWindowFullscreen(WIN, (full ? SDL_WINDOW_FULLSCREEN : 0));
+                        {
+                            int win_w, win_h;
+                            int log_w, log_h;
+                            tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) p2.ptr;
+                            SDL_GetWindowSize(WIN, &win_w, &win_h);
+                            SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+                            p1.num = CEU_OUTPUT_WINDOW_SET_SIZE;
+                            ps->_1 = win_w;
+                            ps->_2 = win_h;
+                            ps->_3 = log_w;
+                            ps->_4 = log_h;
+                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2);
+                        }
+                        break;
+                    }
+#endif
 
                     case CEU_OUTPUT_FRAMES_SET: {
                         bool* on = (bool*) p2.ptr;
@@ -209,21 +231,21 @@ native/pos do
                         bool* on = (bool*) p2.ptr;
                         GRAPHICS_SET_GRID = *on;
 
-                        int ren_w,ren_h, log_w,log_h;
-                        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+                        int win_w,win_h, log_w,log_h;
+                        SDL_GetWindowSize(WIN, &win_w, &win_h);
                         SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
-                        ceu_dbg_assert(ren_w/log_w>1 && ren_h/log_h>1);
+                        ceu_dbg_assert(win_w/log_w>1 && win_h/log_h>1);
                         break;
                     }
 
                     case CEU_OUTPUT_GRAPHICS_SCREENSHOT: {
                         char** path = (char**) p2.ptr;
-                        int ren_w,ren_h, log_w,log_h;
-                        SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+                        int win_w,win_h, log_w,log_h;
+                        SDL_GetWindowSize(WIN, &win_w, &win_h);
                         SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
 
 
-                        SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, ren_w, ren_h, 32,
+                        SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, win_w, win_h, 32,
                                                 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
                         SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, src_sfc->pixels, src_sfc->pitch);
                         SDL_Texture* src_tex = SDL_CreateTextureFromSurface(REN, src_sfc);
@@ -271,8 +293,8 @@ native/pos do
                     }
                     case CEU_OUTPUT_GRAPHICS_DRAW_LINE: {
                         tceu_output_GRAPHICS_DRAW_LINE* ps = (tceu_output_GRAPHICS_DRAW_LINE*) p2.ptr;
-//int ren_w,ren_h, log_w,log_h;
-//SDL_GetRendererOutputSize(REN, &ren_w, &ren_h);
+//int win_w,win_h, log_w,log_h;
+//SDL_GetWindowSize(REN, &win_w, &win_h);
 //SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
 //SDL_RenderSetScale(REN, 10,10);
                         SDL_RenderDrawLine(REN, ps->_1, ps->_2, ps->_3, ps->_4);
@@ -347,7 +369,7 @@ native/pos do
                     case CEU_OUTPUT_GRAPHICS_WRITELN: {
                         int cursor_x = GRAPHICS_WRITE_CURSOR_X;
                         p1.num = CEU_OUTPUT_GRAPHICS_WRITE;
-                        ceu_callback_sdl_pico(cmd, p1, p2);
+                        ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2);
                         GRAPHICS_WRITE_CURSOR_X = cursor_x;
                         GRAPHICS_WRITE_CURSOR_Y += FNT_H;
                         break;
@@ -419,6 +441,8 @@ watching sdl do
     end
 
     emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM/10,WIN_DIM/10);
+    //{SDL_SetWindowResizable(WIN, SDL_FALSE);}
+
     emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
     emit GRAPHICS_SET_GRID(yes);
     emit GRAPHICS_SET_RGB(0x00,0x00,0x00);
