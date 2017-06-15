@@ -33,9 +33,95 @@ SOFTWARE.
 PAK = {
     lua_exe = 'lua5.3',
     ceu_ver = '0.30-alpha',
-    ceu_git = 'bcf55436f9a78db2a80b0341ee0bd396d8872786',
+    ceu_git = '1b0d3c60fb778001d05f6b83db9fd28725a43c62',
     files = {
         ceu_c =
+            [====[
+typedef union tceu_callback_arg {
+    void* ptr;
+    s32   num;
+    usize size;
+} tceu_callback_arg;
+
+typedef struct tceu_callback_ret {
+    bool is_handled;
+    tceu_callback_arg value;
+} tceu_callback_ret;
+
+typedef tceu_callback_ret (*tceu_callback_f) (int, tceu_callback_arg, tceu_callback_arg);
+typedef struct tceu_callback {
+    tceu_callback_f       f;
+    struct tceu_callback* nxt;
+} tceu_callback;
+
+static tceu_callback_ret ceu_callback (int cmd, tceu_callback_arg p1, tceu_callback_arg p2);
+
+#define ceu_callback_void_void(cmd)                     \
+        ceu_callback(cmd, (tceu_callback_arg){},        \
+                          (tceu_callback_arg){})
+#define ceu_callback_num_void(cmd,p1)                   \
+        ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
+                          (tceu_callback_arg){})
+#define ceu_callback_num_ptr(cmd,p1,p2)                 \
+        ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
+                          (tceu_callback_arg){.ptr=p2})
+#define ceu_callback_num_num(cmd,p1,p2)                 \
+        ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
+                          (tceu_callback_arg){.num=p2})
+#define ceu_callback_ptr_num(cmd,p1,p2)                 \
+        ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
+                          (tceu_callback_arg){.num=p2})
+#define ceu_callback_ptr_ptr(cmd,p1,p2)                 \
+        ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
+                          (tceu_callback_arg){.ptr=p2})
+#define ceu_callback_ptr_size(cmd,p1,p2)                \
+        ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
+                          (tceu_callback_arg){.size=p2})
+
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+
+#ifndef ceu_callback_assert_msg_ex
+#define ceu_callback_assert_msg_ex(v,msg,file,line)                              \
+    if (!(v)) {                                                                  \
+        if ((msg)!=NULL) {                                                       \
+            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"[");               \
+            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)(file));            \
+            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)":");               \
+            ceu_callback_num_num(CEU_CALLBACK_LOG, 2, line);                     \
+            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"] ");              \
+            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"runtime error: "); \
+            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)(msg));             \
+            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"\n");              \
+        }                                                                        \
+        ceu_callback_num_ptr(CEU_CALLBACK_ABORT, 0, NULL);                       \
+    }
+#endif
+
+#define ceu_callback_assert_msg(v,msg) ceu_callback_assert_msg_ex((v),(msg),__FILE__,__LINE__)
+
+#define ceu_dbg_assert(v) ceu_callback_assert_msg(v,"bug found")
+#define ceu_dbg_log(msg)  { ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)(msg)); \
+                            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"\n"); }
+
+enum {
+    CEU_CALLBACK_START,
+    CEU_CALLBACK_STOP,
+    CEU_CALLBACK_STEP,
+    CEU_CALLBACK_ABORT,
+    CEU_CALLBACK_LOG,
+    CEU_CALLBACK_TERMINATING,
+    CEU_CALLBACK_ASYNC_PENDING,
+    CEU_CALLBACK_THREAD_TERMINATING,
+    CEU_CALLBACK_ISR_ENABLE,
+    CEU_CALLBACK_ISR_ATTACH,
+    CEU_CALLBACK_ISR_DETACH,
+    CEU_CALLBACK_ISR_EMIT,
+    CEU_CALLBACK_WCLOCK_MIN,
+    CEU_CALLBACK_WCLOCK_DT,
+    CEU_CALLBACK_OUTPUT,
+    CEU_CALLBACK_REALLOC,
+};
+]====]..
             [====[
 #include <stdlib.h>     /* NULL */
 #include <string.h>     /* memcpy */
@@ -294,10 +380,11 @@ typedef === TCEU_NTRL === tceu_ntrl;
 typedef === TCEU_NLBL === tceu_nlbl;
 
 #define CEU_API
-CEU_API void ceu_start (int argc, char* argv[]);
+CEU_API void ceu_start (tceu_callback* cb, int argc, char* argv[]);
 CEU_API void ceu_stop  (void);
 CEU_API void ceu_input (tceu_nevt evt_id, void* evt_params);
-CEU_API int  ceu_loop  (int argc, char* argv[]);
+CEU_API int  ceu_loop  (tceu_callback* cb, int argc, char* argv[]);
+CEU_API void ceu_callback_register (struct tceu_callback* cb);
 
 struct tceu_stk;
 struct tceu_code_mem;
@@ -503,6 +590,8 @@ typedef struct tceu_jmp {
     tceu_ntrl      trl;
 } tceu_jmp;
 
+/*****************************************************************************/
+
 typedef struct tceu_app {
     int    argc;
     char** argv;
@@ -518,6 +607,9 @@ typedef struct tceu_app {
     /* SEQ */
     tceu_nseq seq;
     tceu_nseq seq_base;
+
+    /* CALLBACKS */
+    tceu_callback* cbs;
 
     /* ASYNC */
     bool async_pending;
@@ -536,7 +628,7 @@ typedef struct tceu_app {
     tceu_code_mem_ROOT root;
 } tceu_app;
 
-static tceu_app CEU_APP;
+CEU_API static tceu_app CEU_APP;
 
 #ifdef CEU_FEATURES_LONGJMP
 #define CEU_LONGJMP_SET(me,_lbl)                            \
@@ -740,6 +832,26 @@ static void ceu_lua_createargtable (lua_State* lua, char** argv, int argc, int s
 }
 
 #endif
+
+/*****************************************************************************/
+
+CEU_API void ceu_callback_register (tceu_callback* cb) {
+    cb->nxt = CEU_APP.cbs;
+    CEU_APP.cbs = cb;
+}
+
+static tceu_callback_ret ceu_callback (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
+    tceu_callback* cur = CEU_APP.cbs;
+    while (cur) {
+        tceu_callback_ret ret = cur->f(cmd,p1,p2);
+        if (ret.is_handled) {
+            return ret;
+        }
+        cur = cur->nxt;
+    }
+    tceu_callback_ret ret = { .is_handled=0 };
+    return ret;
+}
 
 /*****************************************************************************/
 
@@ -1064,12 +1176,17 @@ void ceu_input_one (tceu_nevt evt_id, void* evt_params, tceu_stk* stk)
 {
     CEU_APP.seq_base = CEU_APP.seq;
 
-    if (evt_id == CEU_INPUT__WCLOCK) {
-        CEU_APP.wclk_min_cmp = CEU_APP.wclk_min_set;    /* swap "cmp" to last "set" */
-        CEU_APP.wclk_min_set = CEU_WCLOCK_INACTIVE;     /* new "set" resets to inactive */
-        if (CEU_APP.wclk_min_cmp <= *((s32*)evt_params)) {
-            CEU_APP.wclk_late = *((s32*)evt_params) - CEU_APP.wclk_min_cmp;
-        }
+    switch (evt_id) {
+        case CEU_INPUT__WCLOCK:
+            CEU_APP.wclk_min_cmp = CEU_APP.wclk_min_set;    /* swap "cmp" to last "set" */
+            CEU_APP.wclk_min_set = CEU_WCLOCK_INACTIVE;     /* new "set" resets to inactive */
+            if (CEU_APP.wclk_min_cmp <= *((s32*)evt_params)) {
+                CEU_APP.wclk_late = *((s32*)evt_params) - CEU_APP.wclk_min_cmp;
+            }
+            break;
+        case CEU_INPUT__ASYNC:
+            CEU_APP.async_pending = 0;
+            break;
     }
 
 /* TODO: remove this extra bcast to reset seqs */
@@ -1107,7 +1224,7 @@ CEU_API void ceu_input (tceu_nevt evt_id, void* evt_params)
     }
 }
 
-CEU_API void ceu_start (int argc, char* argv[]) {
+CEU_API void ceu_start (tceu_callback* cb, int argc, char* argv[]) {
     ceu_callback_void_void(CEU_CALLBACK_START);
 
     CEU_APP.argc     = argc;
@@ -1121,6 +1238,8 @@ CEU_API void ceu_start (int argc, char* argv[]) {
 
     CEU_APP.seq      = 0;
     CEU_APP.seq_base = 0;
+
+    CEU_APP.cbs = cb;
 
     CEU_APP.async_pending = 0;
 
@@ -1156,9 +1275,9 @@ CEU_API void ceu_stop (void) {
 
 /*****************************************************************************/
 
-CEU_API int ceu_loop (int argc, char* argv[])
+CEU_API int ceu_loop (tceu_callback* cb, int argc, char* argv[])
 {
-    ceu_start(argc, argv);
+    ceu_start(cb, argc, argv);
 
     while (!CEU_APP.end_ok) {
         ceu_callback_void_void(CEU_CALLBACK_STEP);
@@ -10853,6 +10972,19 @@ function SET (me, to, fr, fr_ok, fr_ctx, to_ctx)
     local to_is_opt = TYPES.check(to.info.tp,'?')
     if to_is_opt then
         to_val = '('..to_val..'.value)'
+
+        if fr_is_opt then
+            LINE(me, [[
+]]..V(to)..[[.is_set = ]]..fr_val..[[.is_set;
+]])
+        else
+            LINE(me, [[
+]]..V(to)..[[.is_set = 1;
+]])
+        end
+    end
+    if fr_is_opt then
+        fr_val = '('..fr_val..'.value)'
     end
 
 -- TODO: unify-01
@@ -10870,13 +11002,14 @@ function SET (me, to, fr, fr_ok, fr_ctx, to_ctx)
             --  x = y;
             -- to
             --  x = Base(y)
-            local name = 'CEU_'..TYPES.toc(fr.info.tp)..'__TO__'..TYPES.toc(to_tp)
+            local fr_tp = TYPES.toc(TYPES.pop(fr.info.tp,'?'))
+            local name = 'CEU_'..fr_tp..'__TO__'..TYPES.toc(to_tp)
             fr_val = name..'('..fr_val..')'
 
             if not MEMS.datas.casts[name] then
                 MEMS.datas.casts[name] = true
                 MEMS.datas.casts[#MEMS.datas.casts+1] = [[
-]]..TYPES.toc(to_tp)..' '..name..[[ (]]..TYPES.toc(fr.info.tp)..[[ x)
+]]..TYPES.toc(to_tp)..' '..name..[[ (]]..fr_tp..[[ x)
 {
     return (*(]]..TYPES.toc(to_tp)..[[*)&x);
 }
@@ -10885,20 +11018,6 @@ function SET (me, to, fr, fr_ok, fr_ctx, to_ctx)
         end
     end
 
-    if to_is_opt then
-        if fr_is_opt then
-            LINE(me, [[
-]]..V(to)..[[.is_set = ]]..fr_val..[[.is_set;
-]])
-        else
-            LINE(me, [[
-]]..V(to)..[[.is_set = 1;
-]])
-        end
-    end
-    if fr_is_opt then
-        fr_val = '('..fr_val..'.value)'
-    end
     LINE(me, [[
 ]]..to_val..' = '..fr_val..[[;
 ]])
@@ -12704,90 +12823,6 @@ do
         c = c..'\n\n/* ENV_THREADS */\n\n'..f:read'*a'
         f:close()
     end
-end
-
--- callbacks
-do
-    c = c..[[
-typedef union tceu_callback_arg {
-    void* ptr;
-    s32   num;
-    usize size;
-} tceu_callback_arg;
-
-typedef struct tceu_callback_ret {
-    bool is_handled;
-    tceu_callback_arg value;
-} tceu_callback_ret;
-
-tceu_callback_ret ceu_callback (int cmd, tceu_callback_arg p1, tceu_callback_arg p2);
-
-#define ceu_callback_void_void(cmd)                     \
-        ceu_callback(cmd, (tceu_callback_arg){},        \
-                          (tceu_callback_arg){})
-#define ceu_callback_num_void(cmd,p1)                   \
-        ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
-                          (tceu_callback_arg){})
-#define ceu_callback_num_ptr(cmd,p1,p2)                 \
-        ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
-                          (tceu_callback_arg){.ptr=p2})
-#define ceu_callback_num_num(cmd,p1,p2)                 \
-        ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
-                          (tceu_callback_arg){.num=p2})
-#define ceu_callback_ptr_num(cmd,p1,p2)                 \
-        ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
-                          (tceu_callback_arg){.num=p2})
-#define ceu_callback_ptr_ptr(cmd,p1,p2)                 \
-        ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
-                          (tceu_callback_arg){.ptr=p2})
-#define ceu_callback_ptr_size(cmd,p1,p2)                \
-        ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
-                          (tceu_callback_arg){.size=p2})
-
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-
-#ifndef ceu_callback_assert_msg_ex
-#define ceu_callback_assert_msg_ex(v,msg,file,line)                              \
-    if (!(v)) {                                                                  \
-        if ((msg)!=NULL) {                                                       \
-            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"[");               \
-            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)(file));            \
-            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)":");               \
-            ceu_callback_num_num(CEU_CALLBACK_LOG, 2, line);                     \
-            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"] ");              \
-            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"runtime error: "); \
-            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)(msg));             \
-            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"\n");              \
-        }                                                                        \
-        ceu_callback_num_ptr(CEU_CALLBACK_ABORT, 0, NULL);                       \
-    }
-#endif
-
-#define ceu_callback_assert_msg(v,msg) ceu_callback_assert_msg_ex((v),(msg),__FILE__,__LINE__)
-
-#define ceu_dbg_assert(v) ceu_callback_assert_msg(v,"bug found")
-#define ceu_dbg_log(msg)  { ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)(msg)); \
-                            ceu_callback_num_ptr(CEU_CALLBACK_LOG, 0, (void*)"\n"); }
-
-enum {
-    CEU_CALLBACK_START,
-    CEU_CALLBACK_STOP,
-    CEU_CALLBACK_STEP,
-    CEU_CALLBACK_ABORT,
-    CEU_CALLBACK_LOG,
-    CEU_CALLBACK_TERMINATING,
-    CEU_CALLBACK_ASYNC_PENDING,
-    CEU_CALLBACK_THREAD_TERMINATING,
-    CEU_CALLBACK_ISR_ENABLE,
-    CEU_CALLBACK_ISR_ATTACH,
-    CEU_CALLBACK_ISR_DETACH,
-    CEU_CALLBACK_ISR_EMIT,
-    CEU_CALLBACK_WCLOCK_MIN,
-    CEU_CALLBACK_WCLOCK_DT,
-    CEU_CALLBACK_OUTPUT,
-    CEU_CALLBACK_REALLOC,
-};
-]]
 end
 
 if TESTS then
