@@ -134,7 +134,7 @@ native/pos do
     }
 
     tceu_callback_ret ceu_callback_sdl_pico (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
-        tceu_callback_ret ret;
+        tceu_callback_ret ret = { .is_handled=0 };
         switch (cmd) {
             case CEU_CALLBACK_OUTPUT:
                 switch (p1.num) {
@@ -410,11 +410,11 @@ native/pos do
         }
         return ret;
     }
-    static tceu_callback CEU_CALLBACK_EDU = { &ceu_callback_sdl_pico, NULL };
+    static tceu_callback CEU_CALLBACK_PICO = { &ceu_callback_sdl_pico, NULL };
 end
 
 {
-    ceu_callback_register(&CEU_CALLBACK_EDU);
+    ceu_callback_register(&CEU_CALLBACK_PICO);
 }
 
 var&? SDL_Init sdl = spawn SDL_Init("pico-Ceu", WIN_DIM,WIN_DIM, _);
@@ -451,7 +451,11 @@ watching sdl do
 
     emit GRAPHICS_SET_FONT("res/tiny.ttf", WIN_DIM/50);
     do finalize with
-        {TTF_CloseFont(FNT);}
+        {
+            if (TTF_WasInit() != 0 ) {
+                TTF_CloseFont(FNT);
+            }
+        }
     end
 
     _srand(_time(null));
