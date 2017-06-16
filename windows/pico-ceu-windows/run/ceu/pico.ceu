@@ -6,7 +6,7 @@
 
 native/plain _none, _yesno, _integer, _real, _text;
 native/pre do
-    //##include <ctime.h>
+    ##include <time.h>
     typedef void  none;
     typedef bool  yesno;
     typedef int   integer;
