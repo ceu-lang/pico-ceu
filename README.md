@@ -80,6 +80,6 @@ end         // ...and terminates when they both terminate (par/and)
 
 # Documentation
 
-## API documentation:
+## API Manual:
 
 <https://fsantanna.github.io/pico-ceu/out/manual/v0.30/>
