@@ -2,12 +2,12 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Introduction\n\n\nTODO", 
+            "text": "Introduction\n\n\npico-C\u00e9u\n is a tiny programming environment for visual and interactive\napplications such as video games.\nIt is composed of the programming language \nC\u00e9u\n and\nminimalist libraries for input, graphics, network, and sound.", 
             "title": "Introduction"
         }, 
         {
             "location": "/#introduction", 
-            "text": "TODO", 
+            "text": "pico-C\u00e9u  is a tiny programming environment for visual and interactive\napplications such as video games.\nIt is composed of the programming language  C\u00e9u  and\nminimalist libraries for input, graphics, network, and sound.", 
             "title": "Introduction"
         }, 
         {
