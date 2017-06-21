@@ -1,8 +1,12 @@
+emit WINDOW_SET_SIZE(640,480,640,480);
+emit GRAPHICS_SET_FONT("res/tiny.ttf", 20);
+
 par do
     var integer n;
     var byte&&  buf;
     every (n,buf) in NET_RECEIVE do
-        _printf("recv: %s\n", buf);
+        emit GRAPHICS_WRITE("recv: ");
+        emit GRAPHICS_WRITELN(buf);
     end
 with
     loop do

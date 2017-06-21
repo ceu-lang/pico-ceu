@@ -1,0 +1,28 @@
+native/pos do
+    static tceu_data_Color COLOR_BLACK      = {0x00,0x00,0x00};
+    static tceu_data_Color COLOR_WHITE      = {0xFF, 0xFF, 0xFF};
+    static tceu_data_Color COLOR_RED        = {0xFF, 0x00, 0x00};
+    static tceu_data_Color COLOR_GREEN      = {0x00, 0xFF, 0x00};
+    static tceu_data_Color COLOR_BLUE       = {0x00, 0x00, 0xFF};
+    static tceu_data_Color COLOR_LIGHT_BLUE = {0x00, 0x80, 0xFF};
+    static tceu_data_Color COLOR_DARK_BLUE  = {0x00, 0x00, 0x77};
+    static tceu_data_Color COLOR_YELLOW     = {0xFF, 0xFF, 0x00};
+    static tceu_data_Color COLOR_GRAY       = {0x77, 0x77, 0x77};
+    static tceu_data_Color COLOR_LIGHT_GRAY = {0xBB, 0xBB, 0xBB};
+    static tceu_data_Color COLOR_GRAY_50    = {0x77, 0x77, 0x77};
+    static tceu_data_Color COLOR_GRAY_75    = {0x77, 0x77, 0x77};
+    static tceu_data_Color COLOR_BROWN      = {0x40, 0x0D, 0x12};
+end
+#define COLOR_BLACK         ({COLOR_BLACK}      as Color)
+#define COLOR_WHITE         ({COLOR_WHITE}      as Color)
+#define COLOR_RED           ({COLOR_RED}        as Color)
+#define COLOR_GREEN         ({COLOR_GREEN}      as Color)
+#define COLOR_BLUE          ({COLOR_BLUE}       as Color)
+#define COLOR_LIGHT_BLUE    ({COLOR_LIGHT_BLUE} as Color)
+#define COLOR_DARK_BLUE     ({COLOR_DARK_BLUE}  as Color)
+#define COLOR_YELLOW        ({COLOR_YELLOW}     as Color)
+#define COLOR_GRAY          ({COLOR_GRAY}       as Color)
+#define COLOR_LIGHT_GRAY    ({COLOR_LIGHT_GRAY} as Color)
+#define COLOR_GRAY_50       ({COLOR_GRAY_50}    as Color)
+#define COLOR_GRAY_75       ({COLOR_GRAY_75}    as Color)
+#define COLOR_BROWN         ({COLOR_BROWN}      as Color)

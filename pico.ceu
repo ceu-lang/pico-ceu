@@ -3,6 +3,7 @@
 #include "c.ceu"
 #include "sdl/sdl.ceu"
 #include "keys.ceu"
+#include "colors.ceu"
 
 native/plain _none, _yesno, _integer, _real, _text;
 native/pre do
@@ -45,6 +46,7 @@ output (int,int,int,int) WINDOW_SET_SIZE;
 
 output (bool)            FRAMES_SET;
 output (int,int,int)     FRAMES_SET_CLEAR_RGB;
+output (Color)           FRAMES_SET_CLEAR_COLOR;
 input  (int)             FRAMES_UPDATE;
 input  (void)            FRAMES_REDRAW;
 
@@ -55,6 +57,7 @@ input (int)              KEY_PRESS;
 input (int)              KEY_UNPRESS;
 
 output (int,int,int)     GRAPHICS_SET_RGB;
+output (Color)           GRAPHICS_SET_COLOR;
 output (text,int)        GRAPHICS_SET_FONT;
 output (int,int)         GRAPHICS_SET_WRITE_CURSOR;
 output (bool)            GRAPHICS_SET_GRID;
@@ -127,7 +130,6 @@ native/pos do
         GRAPHICS_Show_Grid();
         SDL_RenderPresent(REN);
     }
-
 
     void SOUND_Wav_Done (int channel) {
         Mix_FreeChunk(SOUND_VEC[channel]);
@@ -204,10 +206,23 @@ native/pos do
                         FRAMES_SET_CLEAR_RGB.a = 0xFF;
                         break;
                     }
+                    case CEU_OUTPUT_FRAMES_SET_CLEAR_COLOR: {
+                        tceu_data_Color* clr = (tceu_data_Color*) p2.ptr;
+                        FRAMES_SET_CLEAR_RGB.r = clr->r;
+                        FRAMES_SET_CLEAR_RGB.g = clr->g;
+                        FRAMES_SET_CLEAR_RGB.b = clr->b;
+                        FRAMES_SET_CLEAR_RGB.a = 0xFF;
+                        break;
+                    }
 
                     case CEU_OUTPUT_GRAPHICS_SET_RGB: {
                         tceu_output_GRAPHICS_SET_RGB* clr = (tceu_output_GRAPHICS_SET_RGB*) p2.ptr;
                         SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_SET_COLOR: {
+                        tceu_data_Color* clr = (tceu_data_Color*) p2.ptr;
+                        SDL_SetRenderDrawColor(REN, clr->r, clr->g, clr->b, 0xFF);
                         break;
                     }
                     case CEU_OUTPUT_GRAPHICS_SET_FONT: {
@@ -370,7 +385,7 @@ native/pos do
                         int cursor_x = GRAPHICS_WRITE_CURSOR_X;
                         p1.num = CEU_OUTPUT_GRAPHICS_WRITE;
                         ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2);
-                        GRAPHICS_WRITE_CURSOR_X = cursor_x;
+                        GRAPHICS_WRITE_CURSOR_X = 0;
                         GRAPHICS_WRITE_CURSOR_Y += FNT_H;
                         break;
                     }
@@ -490,8 +505,8 @@ watching sdl do
                     var int b = _;
                     _SDL_GetRenderDrawColor({REN}, &&r as u8&&, &&g as u8&&, &&b as u8&&, null);
                     emit GRAPHICS_SET_RGB({FRAMES_SET_CLEAR_RGB.r},
-                                     {FRAMES_SET_CLEAR_RGB.g},
-                                     {FRAMES_SET_CLEAR_RGB.b});
+                                          {FRAMES_SET_CLEAR_RGB.g},
+                                          {FRAMES_SET_CLEAR_RGB.b});
                     emit GRAPHICS_CLEAR();
                     emit GRAPHICS_SET_RGB(r,g,b);
                     {GRAPHICS_Show_Grid();}
@@ -582,9 +597,12 @@ watching sdl do
             end
         end
     with
-        #define _STRINGIFY(X) #X
-        #define STRINGIFY(X) _STRINGIFY(X)
-        #include STRINGIFY(CEU_SRC)
+        do/_
+            #define _STRINGIFY(X) #X
+            #define STRINGIFY(X) _STRINGIFY(X)
+            #include STRINGIFY(CEU_SRC)
+        end
+        await FOREVER;
     end
 end
 
