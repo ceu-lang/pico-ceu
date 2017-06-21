@@ -156,6 +156,10 @@ native/pos do
 
                         SDL_SetWindowSize(WIN, win_w, win_h);
                         SDL_RenderSetLogicalSize(REN, log_w, log_h);
+#if 1
+                        // TODO: w/o delay, set_size + clear doesn't work
+                        SDL_Delay(100);
+#endif
 
                         if (!(win_w/log_w>1 && win_h/log_h>1)) {
                             GRAPHICS_SET_GRID = 0;
@@ -287,14 +291,7 @@ native/pos do
                     }
 
                     case CEU_OUTPUT_GRAPHICS_CLEAR: {
-// TODO: w/o double Fill/Present, a "SET_WINDOW();CLEAR()" doesn't work
-#if 1
-                        SDL_RenderFillRect(REN, NULL);
-                        if (!FRAMES_SET) {
-                            SDL_RenderPresent(REN);
-                        }
-#endif
-                        SDL_RenderFillRect(REN, NULL);
+                        SDL_RenderClear(REN);
                         GRAPHICS_Present();
                         break;
                     }
