@@ -74,6 +74,7 @@ output (text)            GRAPHICS_WRITELN;
 output (int)             SOUND_SET_VOLUME;
 output (text)            SOUND_PLAY;
 
+//output (&int)            NET_GET_ID;
 input  (int,byte&&)      NET_RECEIVE;
 output (int,byte&&)      NET_SEND;
 
@@ -135,7 +136,7 @@ native/pos do
         Mix_FreeChunk(SOUND_VEC[channel]);
     }
 
-    tceu_callback_ret ceu_callback_sdl_pico (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
+    tceu_callback_ret ceu_callback_sdl_pico (int cmd, tceu_callback_arg p1, tceu_callback_arg p2, const char* file, u32 line) {
         tceu_callback_ret ret = { .is_handled=0 };
         switch (cmd) {
             case CEU_CALLBACK_OUTPUT:
@@ -151,8 +152,8 @@ native/pos do
                         int win_h = ps->_2;
                         int log_w = ps->_3;
                         int log_h = ps->_4;
-                        ceu_dbg_assert(win_w%log_w == 0);
-                        ceu_dbg_assert(win_h%log_h == 0);
+                        ceu_callback_assert_msg_ex(win_w%log_w == 0, "invalid dimensions", file, line);
+                        ceu_callback_assert_msg_ex(win_h%log_h == 0, "invalid dimensions", file, line);
 
                         SDL_SetWindowSize(WIN, win_w, win_h);
                         SDL_RenderSetLogicalSize(REN, log_w, log_h);
@@ -170,7 +171,7 @@ native/pos do
                             SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
                             SDL_SetRenderDrawColor(REN, 0,0,0, 0xFF);
                             p1.num = CEU_OUTPUT_GRAPHICS_CLEAR;
-                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2);
+                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, file, line);
                             SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
                         }
 
@@ -236,7 +237,11 @@ native/pos do
                             TTF_CloseFont(FNT);
                         }
                         FNT = TTF_OpenFont(fnt->_1, FNT_H);
-                        ceu_dbg_assert(FNT != NULL);
+                        if (FNT == NULL) {
+                            char msg[255];
+                            snprintf(msg, 255, "file not found: \"%s\"", fnt->_1);
+                            ceu_callback_assert_msg_ex(0, msg, file, line);
+                        }
                         break;
                     }
                     case CEU_OUTPUT_GRAPHICS_SET_WRITE_CURSOR: {
@@ -282,7 +287,12 @@ native/pos do
                         SDL_Surface* sav_sfc = SDL_CreateRGBSurface(0, log_w, log_h, 32,
                                                 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
                         SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, sav_sfc->pixels, sav_sfc->pitch);
-                        ceu_dbg_assert(0 == SDL_SaveBMP(sav_sfc,*path));
+                        int ret = SDL_SaveBMP(sav_sfc,*path);
+                        if (ret != 0) {
+                            char msg[255];
+                            snprintf(msg, 255, "cannot save screenshot to \"%s\"", *path);
+                            ceu_callback_assert_msg_ex(0, msg, file, line);
+                        }
                         SDL_FreeSurface(sav_sfc);
 
                         SDL_SetRenderTarget(REN, NULL);
@@ -324,7 +334,11 @@ native/pos do
                     case CEU_OUTPUT_GRAPHICS_DRAW_BMP: {     // TODO: cache
                         tceu_output_GRAPHICS_DRAW_BMP* ps = (tceu_output_GRAPHICS_DRAW_BMP*) p2.ptr;
                         SDL_Surface* sfc = SDL_LoadBMP(ps->_3);
-                        ceu_dbg_assert(sfc != NULL);
+                        if (sfc == NULL) {
+                            char msg[255];
+                            snprintf(msg, 255, "file not found: \"%s\"", ps->_3);
+                            ceu_callback_assert_msg_ex(0, msg, file, line);
+                        }
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
                         ceu_dbg_assert(tex != NULL);
 
@@ -381,7 +395,7 @@ native/pos do
                     case CEU_OUTPUT_GRAPHICS_WRITELN: {
                         int cursor_x = GRAPHICS_WRITE_CURSOR_X;
                         p1.num = CEU_OUTPUT_GRAPHICS_WRITE;
-                        ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2);
+                        ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, file, line);
                         GRAPHICS_WRITE_CURSOR_X = 0;
                         GRAPHICS_WRITE_CURSOR_Y += FNT_H;
                         break;
@@ -395,6 +409,11 @@ native/pos do
                     case CEU_OUTPUT_SOUND_PLAY: {     // TODO: cache
                         char** path = (char**) p2.ptr;
                         Mix_Chunk* snd = Mix_LoadWAV(*path);
+                        if (snd == NULL) {
+                            char msg[255];
+                            snprintf(msg, 255, "file not found: \"%s\"", *path);
+                            ceu_callback_assert_msg_ex(0, msg, file, line);
+                        }
                         Mix_VolumeChunk(snd, MIX_MAX_VOLUME*SOUND_SET_VOLUME/100);
                         int channel = Mix_PlayChannel(-1, snd, 0);
                         ceu_dbg_assert(channel>=0 && channel<5);
