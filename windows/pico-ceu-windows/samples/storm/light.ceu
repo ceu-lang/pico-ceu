@@ -93,7 +93,7 @@ do
             await FOREVER;
         with
             every FRAMES_REDRAW do
-                emit GRAPHICS_SET_RGB(0xEA, 0xD7, 0xFF);
+                emit GRAPHICS_SET_COLOR_RGB(0xEA, 0xD7, 0xFF);
                 _SDL_RenderDrawLine(&&outer.sdl!.ren,
                                     pos_ini.x, pos_ini.y,
                                     pos_end.x, pos_end.y);

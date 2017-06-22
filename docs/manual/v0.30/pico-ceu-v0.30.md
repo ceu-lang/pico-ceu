@@ -16,6 +16,56 @@ screen.
 
 ### Configuration
 
+#### GRAPHICS_SET_COLOR_NAME
+
+Changes the color of all subsequent drawing operations.
+
+```ceu
+output (Color) GRAPHICS_SET_COLOR_NAME
+```
+
+- Parameters:
+    - `Color`: new color name
+
+The color names are based on the *HTML Web Colors*:
+
+<https://en.wikipedia.org/wiki/Web_colors#HTML_color_names>
+
+The possible values are
+    `COLOR_WHITE`,
+    `COLOR_SILVER`,
+    `COLOR_GRAY`,
+    `COLOR_BLACK`,
+    `COLOR_RED`,
+    `COLOR_MAROON`,
+    `COLOR_YELLOW`,
+    `COLOR_OLIVE`,
+    `COLOR_LIME`,
+    `COLOR_GREEN`,
+    `COLOR_AQUA`,
+    `COLOR_TEAL`,
+    `COLOR_BLUE`,
+    `COLOR_NAVY`,
+    `COLOR_FUCHSIA`,
+    `COLOR_PURPLE`.
+
+The default color is white.
+
+#### GRAPHICS_SET_COLOR_RGB
+
+Changes the color in RGB of all subsequent drawing operations.
+
+```ceu
+output (integer,integer,integer) GRAPHICS_SET_COLOR_RGB
+```
+
+- Parameters:
+    - `integer`: new red component
+    - `integer`: new green component
+    - `integer`: new blue component
+
+The default color is white.
+
 #### GRAPHICS_SET_GRID
 
 Enables or disables a visual grid delimiting the screen pixels.
@@ -44,19 +94,6 @@ output (text,integer) GRAPHICS_SET_FONT
     - `text`: path for the `.ttf` font filename
     - `integer`: height of the new font in pixels
 
-#### GRAPHICS_SET_RGB
-
-Changes the color of all subsequent drawing operations.
-
-```ceu
-output (integer,integer,integer) GRAPHICS_SET_RGB
-```
-
-- Parameters:
-    - `integer`: new red component
-    - `integer`: new green component
-    - `integer`: new blue component
-
 #### GRAPHICS_SET_WRITE_CURSOR
 
 Changes the cursor position for writing text with [`GRAPHICS_WRITE`](#graphics_write) and
@@ -83,7 +120,9 @@ output (none) GRAPHICS_CLEAR
 - Parameters:
     - `none`: no parameters
 
-The clear color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
+The clear color is specified with
+[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
+[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 #### GRAPHICS_DRAW_BMP
 
@@ -110,7 +149,9 @@ output (integer,integer) GRAPHICS_DRAW_PIXEL
     - `integer`: position in the `x-axis`
     - `integer`: position in the `y-axis`
 
-The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
+The drawing color is specified with
+[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
+[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 #### GRAPHICS_DRAW_LINE
 
@@ -126,7 +167,9 @@ output (integer,integer,integer,integer) GRAPHICS_DRAW_LINE;
     - `integer`: end position in the `x-axis`
     - `integer`: end position in the `y-axis`
 
-The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
+The drawing color is specified with
+[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
+[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 #### GRAPHICS_DRAW_RECT
 
@@ -142,7 +185,9 @@ output (integer,integer,integer,integer) GRAPHICS_DRAW_RECT
     - `integer`: rectangle width
     - `integer`: rectangle height
 
-The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
+The drawing color is specified with
+[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
+[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 #### GRAPHICS_DRAW_TEXT
 
@@ -158,7 +203,9 @@ output (int,int,text) GRAPHICS_DRAW_TEXT;
     - `text`: text to draw
 
 The drawing font is specified with [`GRAPHICS_SET_FONT`](#graphics_set_font).
-The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
+The drawing color is specified with
+[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
+[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 ### Writing
 
@@ -177,7 +224,9 @@ The drawing position is first specified with
 [`GRAPHICS_SET_WRITE_CURSOR`](#graphics_set_text_cursor).
 The cursor advances automatically for the position after the text.
 The drawing font is specified with [`GRAPHICS_SET_FONT`](#graphics_set_font).
-The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
+The drawing color is specified with
+[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
+[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 #### GRAPHICS_WRITELN
 
@@ -192,7 +241,9 @@ The drawing position is first specified with
 The cursor advances automatically for the next line after the text, at the same
 initial position.
 The drawing font is specified with [`GRAPHICS_SET_FONT`](#graphics_set_font).
-The drawing color is specified with [`GRAPHICS_SET_RGB`](#graphics_set_rgb).
+The drawing color is specified with
+[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
+[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 ### Other
 
@@ -376,12 +427,47 @@ output (yesno) FRAMES_SET
         - `yes`: enables the generation of frames
         - `no`: disables the generation of frames
 
-#### FRAMES_SET_CLEAR_RGB
+#### FRAMES_SET_CLEAR_COLOR_NAME
 
 Changes the redrawing background color.
 
+```ceu
+output (Color) FRAMES_SET_CLEAR_COLOR_NAME
 ```
-output (integer,integer,integer) FRAMES_SET_CLEAR_RGB
+
+- Parameters:
+    - `Color`: new color name
+
+The color names are based on the *HTML Web Colors*:
+
+<https://en.wikipedia.org/wiki/Web_colors#HTML_color_names>
+
+The possible values are
+    `COLOR_WHITE`,
+    `COLOR_SILVER`,
+    `COLOR_GRAY`,
+    `COLOR_BLACK`,
+    `COLOR_RED`,
+    `COLOR_MAROON`,
+    `COLOR_YELLOW`,
+    `COLOR_OLIVE`,
+    `COLOR_LIME`,
+    `COLOR_GREEN`,
+    `COLOR_AQUA`,
+    `COLOR_TEAL`,
+    `COLOR_BLUE`,
+    `COLOR_NAVY`,
+    `COLOR_FUCHSIA`,
+    `COLOR_PURPLE`.
+
+The default color is black.
+
+#### FRAMES_SET_CLEAR_COLOR_RGB
+
+Changes the redrawing background color in RGB.
+
+```
+output (integer,integer,integer) FRAMES_SET_CLEAR_COLOR_RGB
 ```
 
 - Parameters:
@@ -421,7 +507,8 @@ input (none) FRAMES_REDRAW
     - `none`: no payload
 
 Before the input occurs, the screen is cleared with the color set with
-[`FRAMES_SET_CLEAR_RGB`](#frames_set_clear_rgb).
+[`FRAMES_SET_CLEAR_COLOR_NAME`](#frames_set_clear_color_name) or
+[`FRAMES_SET_CLEAR_COLOR_RGB`](#frames_set_clear_color_rgb).
 
 # Window Management
 

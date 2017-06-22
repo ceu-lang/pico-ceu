@@ -7,7 +7,7 @@ emit GRAPHICS_DRAW_PIXEL(x,y);                  // draw a pixel in the initial p
 
 var integer key;
 every key in KEY_PRESS do                       // execute on every key press
-    //emit GRAPHICS_SET_COLOR(COLOR_BLACK);     // uncomment these two lines
+    //emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);// uncomment these two lines
     //emit GRAPHICS_DRAW_PIXEL(x,y);            // clear the old position
 
     if key == KEY_LEFT then                     // move in the four directions
@@ -20,6 +20,6 @@ every key in KEY_PRESS do                       // execute on every key press
         y = y + 1;
     end
 
-    emit GRAPHICS_SET_COLOR(COLOR_WHITE);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
     emit GRAPHICS_DRAW_PIXEL(x,y);              // draw in the new position
 end

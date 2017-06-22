@@ -176,9 +176,40 @@ inputs to the application.</p>
 </ul>
 </li>
 </ul>
-<h3 id="frames_set_clear_rgb">FRAMES_SET_CLEAR_RGB<a class="headerlink" href="#frames_set_clear_rgb" title="Permanent link">&para;</a></h3>
+<h3 id="frames_set_clear_color_name">FRAMES_SET_CLEAR_COLOR_NAME<a class="headerlink" href="#frames_set_clear_color_name" title="Permanent link">&para;</a></h3>
 <p>Changes the redrawing background color.</p>
-<pre><code>output (integer,integer,integer) FRAMES_SET_CLEAR_RGB
+<pre><code class="ceu">output (Color) FRAMES_SET_CLEAR_COLOR_NAME
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>Color</code>: new color name</li>
+</ul>
+</li>
+</ul>
+<p>The color names are based on the <em>HTML Web Colors</em>:</p>
+<p><a href="https://en.wikipedia.org/wiki/Web_colors#HTML_color_names">https://en.wikipedia.org/wiki/Web_colors#HTML_color_names</a></p>
+<p>The possible values are
+    <code>COLOR_WHITE</code>,
+    <code>COLOR_SILVER</code>,
+    <code>COLOR_GRAY</code>,
+    <code>COLOR_BLACK</code>,
+    <code>COLOR_RED</code>,
+    <code>COLOR_MAROON</code>,
+    <code>COLOR_YELLOW</code>,
+    <code>COLOR_OLIVE</code>,
+    <code>COLOR_LIME</code>,
+    <code>COLOR_GREEN</code>,
+    <code>COLOR_AQUA</code>,
+    <code>COLOR_TEAL</code>,
+    <code>COLOR_BLUE</code>,
+    <code>COLOR_NAVY</code>,
+    <code>COLOR_FUCHSIA</code>,
+    <code>COLOR_PURPLE</code>.</p>
+<p>The default color is black.</p>
+<h3 id="frames_set_clear_color_rgb">FRAMES_SET_CLEAR_COLOR_RGB<a class="headerlink" href="#frames_set_clear_color_rgb" title="Permanent link">&para;</a></h3>
+<p>Changes the redrawing background color in RGB.</p>
+<pre><code>output (integer,integer,integer) FRAMES_SET_CLEAR_COLOR_RGB
 </code></pre>
 
 <ul>
@@ -223,7 +254,8 @@ with the background color.</p>
 </li>
 </ul>
 <p>Before the input occurs, the screen is cleared with the color set with
-<a href="#frames_set_clear_rgb"><code>FRAMES_SET_CLEAR_RGB</code></a>.</p>
+<a href="#frames_set_clear_color_name"><code>FRAMES_SET_CLEAR_COLOR_NAME</code></a> or
+<a href="#frames_set_clear_color_rgb"><code>FRAMES_SET_CLEAR_COLOR_RGB</code></a>.</p>
               
             </div>
           </div>

@@ -1,7 +1,7 @@
 emit WINDOW_SET_TITLE("Birds");
 emit WINDOW_SET_SIZE(640,480,640,480);
 emit FRAMES_SET(yes);
-emit FRAMES_SET_CLEAR_COLOR(COLOR_BLACK);
+emit FRAMES_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
 
 code/tight Intersects (var& Rect rct1, var& Rect rct2) -> yesno
 do
@@ -113,7 +113,7 @@ par do
                 end;
                 watching bird do
                     every FRAMES_REDRAW do
-                        emit GRAPHICS_SET_COLOR(COLOR_WHITE);
+                        emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
                         emit GRAPHICS_DRAW_LINE(320,480, bird!.rct.x+20,bird!.rct.y+20);
                     end
                 end

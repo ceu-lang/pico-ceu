@@ -20,7 +20,7 @@ do
         end
     with
         every FRAMES_REDRAW do
-            emit GRAPHICS_SET_RGB(0xFF, 0x9D, 0x46);
+            emit GRAPHICS_SET_COLOR_RGB(0xFF, 0x9D, 0x46);
             var integer i;
             loop i in [0 -> 12[ do
                 emit GRAPHICS_DRAW_RECT(

@@ -161,6 +161,51 @@
 <p>Provides graphics operations, such as for drawing pixels and images on the
 screen.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="graphics_set_color_name">GRAPHICS_SET_COLOR_NAME<a class="headerlink" href="#graphics_set_color_name" title="Permanent link">&para;</a></h3>
+<p>Changes the color of all subsequent drawing operations.</p>
+<pre><code class="ceu">output (Color) GRAPHICS_SET_COLOR_NAME
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>Color</code>: new color name</li>
+</ul>
+</li>
+</ul>
+<p>The color names are based on the <em>HTML Web Colors</em>:</p>
+<p><a href="https://en.wikipedia.org/wiki/Web_colors#HTML_color_names">https://en.wikipedia.org/wiki/Web_colors#HTML_color_names</a></p>
+<p>The possible values are
+    <code>COLOR_WHITE</code>,
+    <code>COLOR_SILVER</code>,
+    <code>COLOR_GRAY</code>,
+    <code>COLOR_BLACK</code>,
+    <code>COLOR_RED</code>,
+    <code>COLOR_MAROON</code>,
+    <code>COLOR_YELLOW</code>,
+    <code>COLOR_OLIVE</code>,
+    <code>COLOR_LIME</code>,
+    <code>COLOR_GREEN</code>,
+    <code>COLOR_AQUA</code>,
+    <code>COLOR_TEAL</code>,
+    <code>COLOR_BLUE</code>,
+    <code>COLOR_NAVY</code>,
+    <code>COLOR_FUCHSIA</code>,
+    <code>COLOR_PURPLE</code>.</p>
+<p>The default color is white.</p>
+<h3 id="graphics_set_color_rgb">GRAPHICS_SET_COLOR_RGB<a class="headerlink" href="#graphics_set_color_rgb" title="Permanent link">&para;</a></h3>
+<p>Changes the color in RGB of all subsequent drawing operations.</p>
+<pre><code class="ceu">output (integer,integer,integer) GRAPHICS_SET_COLOR_RGB
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>integer</code>: new red component</li>
+<li><code>integer</code>: new green component</li>
+<li><code>integer</code>: new blue component</li>
+</ul>
+</li>
+</ul>
+<p>The default color is white.</p>
 <h3 id="graphics_set_grid">GRAPHICS_SET_GRID<a class="headerlink" href="#graphics_set_grid" title="Permanent link">&para;</a></h3>
 <p>Enables or disables a visual grid delimiting the screen pixels.</p>
 <pre><code class="ceu">output (yesno) GRAPHICS_SET_GRID
@@ -190,19 +235,6 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<h3 id="graphics_set_rgb">GRAPHICS_SET_RGB<a class="headerlink" href="#graphics_set_rgb" title="Permanent link">&para;</a></h3>
-<p>Changes the color of all subsequent drawing operations.</p>
-<pre><code class="ceu">output (integer,integer,integer) GRAPHICS_SET_RGB
-</code></pre>
-
-<ul>
-<li>Parameters:<ul>
-<li><code>integer</code>: new red component</li>
-<li><code>integer</code>: new green component</li>
-<li><code>integer</code>: new blue component</li>
-</ul>
-</li>
-</ul>
 <h3 id="graphics_set_write_cursor">GRAPHICS_SET_WRITE_CURSOR<a class="headerlink" href="#graphics_set_write_cursor" title="Permanent link">&para;</a></h3>
 <p>Changes the cursor position for writing text with <a href="#graphics_write"><code>GRAPHICS_WRITE</code></a> and
 <a href="#graphics_writeln"><code>GRAPHICS_WRITELN</code></a>.</p>
@@ -228,7 +260,9 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<p>The clear color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_SET_RGB</code></a>.</p>
+<p>The clear color is specified with
+<a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
+<a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
 <h3 id="graphics_draw_bmp">GRAPHICS_DRAW_BMP<a class="headerlink" href="#graphics_draw_bmp" title="Permanent link">&para;</a></h3>
 <p>Draws a bitmap image on the screen.</p>
 <pre><code class="ceu">output (integer,integer,text) GRAPHICS_DRAW_BMP
@@ -254,7 +288,9 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<p>The drawing color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_SET_RGB</code></a>.</p>
+<p>The drawing color is specified with
+<a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
+<a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
 <h3 id="graphics_draw_line">GRAPHICS_DRAW_LINE<a class="headerlink" href="#graphics_draw_line" title="Permanent link">&para;</a></h3>
 <p>Draws a line on the screen.</p>
 <pre><code class="ceu">output (integer,integer,integer,integer) GRAPHICS_DRAW_LINE;
@@ -269,7 +305,9 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<p>The drawing color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_SET_RGB</code></a>.</p>
+<p>The drawing color is specified with
+<a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
+<a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
 <h3 id="graphics_draw_rect">GRAPHICS_DRAW_RECT<a class="headerlink" href="#graphics_draw_rect" title="Permanent link">&para;</a></h3>
 <p>Draws a rectangle on the screen.</p>
 <pre><code class="ceu">output (integer,integer,integer,integer) GRAPHICS_DRAW_RECT
@@ -284,7 +322,9 @@ screen.</p>
 </ul>
 </li>
 </ul>
-<p>The drawing color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_SET_RGB</code></a>.</p>
+<p>The drawing color is specified with
+<a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
+<a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
 <h3 id="graphics_draw_text">GRAPHICS_DRAW_TEXT<a class="headerlink" href="#graphics_draw_text" title="Permanent link">&para;</a></h3>
 <p>Draws a text on the screen.</p>
 <pre><code class="ceu">output (int,int,text) GRAPHICS_DRAW_TEXT;
@@ -299,7 +339,9 @@ screen.</p>
 </li>
 </ul>
 <p>The drawing font is specified with <a href="#graphics_set_font"><code>GRAPHICS_SET_FONT</code></a>.
-The drawing color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_SET_RGB</code></a>.</p>
+The drawing color is specified with
+<a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
+<a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
 <h2 id="writing">Writing<a class="headerlink" href="#writing" title="Permanent link">&para;</a></h2>
 <h3 id="graphics_write">GRAPHICS_WRITE<a class="headerlink" href="#graphics_write" title="Permanent link">&para;</a></h3>
 <p>Writes a text on the screen.</p>
@@ -316,7 +358,9 @@ The drawing color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_S
 <a href="#graphics_set_text_cursor"><code>GRAPHICS_SET_WRITE_CURSOR</code></a>.
 The cursor advances automatically for the position after the text.
 The drawing font is specified with <a href="#graphics_set_font"><code>GRAPHICS_SET_FONT</code></a>.
-The drawing color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_SET_RGB</code></a>.</p>
+The drawing color is specified with
+<a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
+<a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
 <h3 id="graphics_writeln">GRAPHICS_WRITELN<a class="headerlink" href="#graphics_writeln" title="Permanent link">&para;</a></h3>
 <p>Writes a line of text on the screen.</p>
 <pre><code class="ceu">output (text) GRAPHICS_WRITELN;
@@ -327,7 +371,9 @@ The drawing color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_S
 The cursor advances automatically for the next line after the text, at the same
 initial position.
 The drawing font is specified with <a href="#graphics_set_font"><code>GRAPHICS_SET_FONT</code></a>.
-The drawing color is specified with <a href="#graphics_set_rgb"><code>GRAPHICS_SET_RGB</code></a>.</p>
+The drawing color is specified with
+<a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
+<a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
 <h2 id="other">Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h2>
 <h3 id="graphics_screenshot">GRAPHICS_SCREENSHOT<a class="headerlink" href="#graphics_screenshot" title="Permanent link">&para;</a></h3>
 <p>Takes a screen shot.</p>

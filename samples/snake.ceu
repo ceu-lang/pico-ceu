@@ -98,7 +98,7 @@ code/await Snake (none) -> (event void grow) -> void do
             loop i in [0 -> len[ do
                 var integer ii = (tail+i) % ($body as integer);
                 var Point pt = body[ii];
-                emit GRAPHICS_SET_COLOR(COLOR_WHITE);
+                emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
                 emit GRAPHICS_DRAW_PIXEL(pt.x,pt.y);
             end
         end
@@ -130,16 +130,16 @@ code/await Food (var&? Snake snake) -> (var Point pt) -> FOREVER do
     end
 
     every FRAMES_REDRAW do
-        emit GRAPHICS_SET_COLOR(COLOR_RED);
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_RED);
         emit GRAPHICS_DRAW_PIXEL(pt.x,pt.y);
     end
 end
 
 loop do
     emit FRAMES_SET(no);
-    emit GRAPHICS_SET_COLOR(COLOR_BLACK);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
     emit GRAPHICS_CLEAR();
-    emit GRAPHICS_SET_COLOR(COLOR_WHITE);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
     emit GRAPHICS_SET_FONT("res/tiny.ttf", 10);
     emit GRAPHICS_SET_WRITE_CURSOR(1, 0);
     emit GRAPHICS_WRITELN("PRESS");
@@ -148,7 +148,7 @@ loop do
     await KEY_PRESS;
 
     emit FRAMES_SET(yes);
-    emit FRAMES_SET_CLEAR_COLOR(COLOR_BLACK);
+    emit FRAMES_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
 
     var&? Snake snake = spawn Snake();
 

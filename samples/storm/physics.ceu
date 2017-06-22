@@ -36,7 +36,7 @@ do
             if not physics.clr? then
                 continue;
             end
-            emit GRAPHICS_SET_RGB(physics.clr!.r, physics.clr!.g, physics.clr!.b);
+            emit GRAPHICS_SET_COLOR_RGB(physics.clr!.r, physics.clr!.g, physics.clr!.b);
             emit GRAPHICS_DRAW_RECT(physics.x.pst as integer,
                                     physics.y.pst as integer,
                                     physics.x.len as integer,

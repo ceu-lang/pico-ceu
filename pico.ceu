@@ -45,8 +45,8 @@ output (int,int,int,int) WINDOW_SET_SIZE;
 //output (yesno)           WINDOW_SET_FULLSCREEN;
 
 output (bool)            FRAMES_SET;
-output (int,int,int)     FRAMES_SET_CLEAR_RGB;
-output (Color)           FRAMES_SET_CLEAR_COLOR;
+output (Color)           FRAMES_SET_CLEAR_COLOR_NAME;
+output (int,int,int)     FRAMES_SET_CLEAR_COLOR_RGB;
 input  (int)             FRAMES_UPDATE;
 input  (void)            FRAMES_REDRAW;
 
@@ -56,8 +56,8 @@ input (int,int)          MOUSE_MOVE;
 input (int)              KEY_PRESS;
 input (int)              KEY_UNPRESS;
 
-output (int,int,int)     GRAPHICS_SET_RGB;
-output (Color)           GRAPHICS_SET_COLOR;
+output (int,int,int)     GRAPHICS_SET_COLOR_RGB;
+output (Color)           GRAPHICS_SET_COLOR_NAME;
 output (text,int)        GRAPHICS_SET_FONT;
 output (int,int)         GRAPHICS_SET_WRITE_CURSOR;
 output (bool)            GRAPHICS_SET_GRID;
@@ -90,7 +90,7 @@ native/pos do
     int       FNT_H;
 
     bool      FRAMES_SET = 0;
-    SDL_Color FRAMES_SET_CLEAR_RGB;
+    SDL_Color FRAMES_SET_CLEAR_COLOR_RGB;
 
     bool GRAPHICS_SET_GRID = 0;
     int  GRAPHICS_WRITE_CURSOR_X = 0;
@@ -203,29 +203,29 @@ native/pos do
                         FRAMES_SET = *on;
                         break;
                     }
-                    case CEU_OUTPUT_FRAMES_SET_CLEAR_RGB: {
-                        tceu_output_FRAMES_SET_CLEAR_RGB* clr = (tceu_output_FRAMES_SET_CLEAR_RGB*) p2.ptr;
-                        FRAMES_SET_CLEAR_RGB.r = clr->_1;
-                        FRAMES_SET_CLEAR_RGB.g = clr->_2;
-                        FRAMES_SET_CLEAR_RGB.b = clr->_3;
-                        FRAMES_SET_CLEAR_RGB.a = 0xFF;
+                    case CEU_OUTPUT_FRAMES_SET_CLEAR_COLOR_RGB: {
+                        tceu_output_FRAMES_SET_CLEAR_COLOR_RGB* clr = (tceu_output_FRAMES_SET_CLEAR_COLOR_RGB*) p2.ptr;
+                        FRAMES_SET_CLEAR_COLOR_RGB.r = clr->_1;
+                        FRAMES_SET_CLEAR_COLOR_RGB.g = clr->_2;
+                        FRAMES_SET_CLEAR_COLOR_RGB.b = clr->_3;
+                        FRAMES_SET_CLEAR_COLOR_RGB.a = 0xFF;
                         break;
                     }
-                    case CEU_OUTPUT_FRAMES_SET_CLEAR_COLOR: {
+                    case CEU_OUTPUT_FRAMES_SET_CLEAR_COLOR_NAME: {
                         tceu_data_Color* clr = (tceu_data_Color*) p2.ptr;
-                        FRAMES_SET_CLEAR_RGB.r = clr->r;
-                        FRAMES_SET_CLEAR_RGB.g = clr->g;
-                        FRAMES_SET_CLEAR_RGB.b = clr->b;
-                        FRAMES_SET_CLEAR_RGB.a = 0xFF;
+                        FRAMES_SET_CLEAR_COLOR_RGB.r = clr->r;
+                        FRAMES_SET_CLEAR_COLOR_RGB.g = clr->g;
+                        FRAMES_SET_CLEAR_COLOR_RGB.b = clr->b;
+                        FRAMES_SET_CLEAR_COLOR_RGB.a = 0xFF;
                         break;
                     }
 
-                    case CEU_OUTPUT_GRAPHICS_SET_RGB: {
-                        tceu_output_GRAPHICS_SET_RGB* clr = (tceu_output_GRAPHICS_SET_RGB*) p2.ptr;
+                    case CEU_OUTPUT_GRAPHICS_SET_COLOR_RGB: {
+                        tceu_output_GRAPHICS_SET_COLOR_RGB* clr = (tceu_output_GRAPHICS_SET_COLOR_RGB*) p2.ptr;
                         SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
                         break;
                     }
-                    case CEU_OUTPUT_GRAPHICS_SET_COLOR: {
+                    case CEU_OUTPUT_GRAPHICS_SET_COLOR_NAME: {
                         tceu_data_Color* clr = (tceu_data_Color*) p2.ptr;
                         SDL_SetRenderDrawColor(REN, clr->r, clr->g, clr->b, 0xFF);
                         break;
@@ -474,11 +474,11 @@ watching sdl do
     emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM/10,WIN_DIM/10);
     //{SDL_SetWindowResizable(WIN, SDL_FALSE);}
 
-    emit FRAMES_SET_CLEAR_RGB(0x00,0x00,0x00);
+    emit FRAMES_SET_CLEAR_COLOR_RGB(0x00,0x00,0x00);
     emit GRAPHICS_SET_GRID(yes);
-    emit GRAPHICS_SET_RGB(0x00,0x00,0x00);
+    emit GRAPHICS_SET_COLOR_RGB(0x00,0x00,0x00);
     emit GRAPHICS_CLEAR();
-    emit GRAPHICS_SET_RGB(0xFF,0xFF,0xFF);
+    emit GRAPHICS_SET_COLOR_RGB(0xFF,0xFF,0xFF);
 
     emit GRAPHICS_SET_FONT("res/tiny.ttf", WIN_DIM/50);
     do finalize with
@@ -520,11 +520,11 @@ watching sdl do
                     var int g = _;
                     var int b = _;
                     _SDL_GetRenderDrawColor({REN}, &&r as u8&&, &&g as u8&&, &&b as u8&&, null);
-                    emit GRAPHICS_SET_RGB({FRAMES_SET_CLEAR_RGB.r},
-                                          {FRAMES_SET_CLEAR_RGB.g},
-                                          {FRAMES_SET_CLEAR_RGB.b});
+                    emit GRAPHICS_SET_COLOR_RGB({FRAMES_SET_CLEAR_COLOR_RGB.r},
+                                          {FRAMES_SET_CLEAR_COLOR_RGB.g},
+                                          {FRAMES_SET_CLEAR_COLOR_RGB.b});
                     emit GRAPHICS_CLEAR();
-                    emit GRAPHICS_SET_RGB(r,g,b);
+                    emit GRAPHICS_SET_COLOR_RGB(r,g,b);
                     {GRAPHICS_Show_Grid();}
                 end
             end
