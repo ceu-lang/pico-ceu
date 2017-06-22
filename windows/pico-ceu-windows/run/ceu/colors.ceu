@@ -1,23 +1,6 @@
 /*
  * https://en.wikipedia.org/wiki/Web_colors#HTML_color_names
-Name 	Hex (RGB) 	Red (RGB) 	Green (RGB) 	Blue (RGB) 	Hue (HSL/HSV) 	Satur.  (HSL) 	Light (HSL) 	Satur.  (HSV) 	Value (HSV) 	CGA number (name); alias
-White 	#FFFFFF 	100% 	100% 	100% 	0° 	0% 	100% 	0% 	100% 	15 (white)
-Silver 	#C0C0C0 	75% 	75% 	75% 	0° 	0% 	75% 	0% 	75% 	7 (light gray)
-Gray 	#808080 	50% 	50% 	50% 	0° 	0% 	50% 	0% 	50% 	8 (dark gray)
-Black 	#000000 	0% 	0% 	0% 	0° 	0% 	0% 	0% 	0% 	0 (black)
-Red 	#FF0000 	100% 	0% 	0% 	0° 	100% 	50% 	100% 	100% 	12 (high red)
-Maroon 	#800000 	50% 	0% 	0% 	0° 	100% 	25% 	100% 	50% 	4 (low red)
-Yellow 	#FFFF00 	100% 	100% 	0% 	60° 	100% 	50% 	100% 	100% 	14 (yellow)
-Olive 	#808000 	50% 	50% 	0% 	60° 	100% 	25% 	100% 	50% 	6 (brown)
-Lime 	#00FF00 	0% 	100% 	0% 	120° 	100% 	50% 	100% 	100% 	10 (high green); green
-Green 	#008000 	0% 	50% 	0% 	120° 	100% 	25% 	100% 	50% 	2 (low green)
-Aqua 	#00FFFF 	0% 	100% 	100% 	180° 	100% 	50% 	100% 	100% 	11 (high cyan); cyan
-Teal 	#008080 	0% 	50% 	50% 	180° 	100% 	25% 	100% 	50% 	3 (low cyan)
-Blue 	#0000FF 	0% 	0% 	100% 	240° 	100% 	50% 	100% 	100% 	9 (high blue)
-Navy 	#000080 	0% 	0% 	50% 	240° 	100% 	25% 	100% 	50% 	1 (low blue)
-Fuchsia #FF00FF 	100% 	0% 	100% 	300° 	100% 	50% 	100% 	100% 	13 (high magenta); magenta
-Purple 	#800080 	50% 	0% 	50% 	300° 	100% 	25% 	100% 	50% 	5 (low magenta)
-*/
+ */
 
 native/pos do
     static tceu_data_Color COLOR_WHITE      = {0xFF, 0xFF, 0xFF};
