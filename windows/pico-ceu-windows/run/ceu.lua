@@ -33,7 +33,7 @@ SOFTWARE.
 PAK = {
     lua_exe = 'lua5.3',
     ceu_ver = '0.30-alpha',
-    ceu_git = '38995ca5fa304156c2c5156076309da60862f024',
+    ceu_git = '1d0db8b037936109f773abc552937166320ff490',
     files = {
         ceu_c =
             [====[
@@ -2322,11 +2322,11 @@ Options:
     --ceu                       Céu phase: compiles Céu into C
     --ceu-input=FILE                input file to compile (Céu source)
     --ceu-output=FILE               output source file to generate (C source)
-    --ceu-line-directives=BOOL      insert `#line´ directives in the C output
+    --ceu-line-directives=BOOL      insert `#line` directives in the C output
 
-    --ceu-features-lua=BOOL         enable `lua´ support
-    --ceu-features-thread=BOOL      enable `async/thread´ support
-    --ceu-features-isr=BOOL         enable `async/isr´ support
+    --ceu-features-lua=BOOL         enable `lua` support
+    --ceu-features-thread=BOOL      enable `async/thread` support
+    --ceu-features-isr=BOOL         enable `async/isr` support
 
     --ceu-err-unused=OPT            effect for unused identifier: error|warning|pass
     --ceu-err-unused-native=OPT                unused native identifier
@@ -2404,7 +2404,7 @@ end
 if CEU.opts.pre then
     CEU.opts.pre_exe  = CEU.opts.pre_exe  or 'cpp'
     CEU.opts.pre_args = CEU.opts.pre_args or ''
-    ASR(CEU.opts.pre_input, 'expected option `pre-input´')
+    ASR(CEU.opts.pre_input, 'expected option `pre-input`')
     CEU.opts.pre_output = CEU.opts.pre_output or '-'
 else
     check_no('pre')
@@ -2445,7 +2445,7 @@ if CEU.opts.ceu then
     if CEU.opts.pre then
         if CEU.opts.ceu_input then
             ASR(CEU.opts.ceu_input == CEU.opts.pre_output,
-                "`pre-output´ and `ceu-input´ don't match")
+                "`pre-output` and `ceu-input` don't match")
         else
             if CEU.opts.pre_output == '-' then
                 CEU.opts.pre_output = os.tmpname()
@@ -2453,24 +2453,24 @@ if CEU.opts.ceu then
             CEU.opts.ceu_input = CEU.opts.pre_output
         end
     end
-    ASR(CEU.opts.ceu_input, 'expected option `ceu-input´')
+    ASR(CEU.opts.ceu_input, 'expected option `ceu-input`')
 else
     check_no('ceu')
 end
 
 if CEU.opts.env then
     if not CEU.opts.ceu then
-        ASR(not CEU.opts.pre, 'expected option `ceu´')
+        ASR(not CEU.opts.pre, 'expected option `ceu`')
     end
 
-    ASR(CEU.opts.env_types,   'expected option `env-types´')
-    --ASR(CEU.opts.env_threads, 'expected option `env-threads´')
-    --ASR(CEU.opts.env_main,    'expected option `env-main´')
+    ASR(CEU.opts.env_types,   'expected option `env-types`')
+    --ASR(CEU.opts.env_threads, 'expected option `env-threads`')
+    --ASR(CEU.opts.env_main,    'expected option `env-main`')
 
     if CEU.opts.ceu then
         if CEU.opts.env_ceu then
             ASR(CEU.opts.env_ceu == CEU.opts.ceu_output,
-                "`ceu-output´ and `env-ceu´ don't match")
+                "`ceu-output` and `env-ceu` don't match")
         else
             if CEU.opts.ceu_output == '-' then
                 CEU.opts.ceu_output = os.tmpname()
@@ -2478,15 +2478,15 @@ if CEU.opts.env then
             CEU.opts.env_ceu = CEU.opts.ceu_output
         end
     end
-    ASR(CEU.opts.env_ceu, 'expected option `env-ceu´')
+    ASR(CEU.opts.env_ceu, 'expected option `env-ceu`')
 else
     check_no('env')
 end
 
 if CEU.opts.cc then
     if not CEU.opts.env then
-        ASR(not CEU.opts.pre, 'expected option `env´')
-        ASR(not CEU.opts.ceu, 'expected option `env´')
+        ASR(not CEU.opts.pre, 'expected option `env`')
+        ASR(not CEU.opts.ceu, 'expected option `env`')
     end
 
     CEU.opts.cc_exe  = CEU.opts.cc_exe  or 'gcc'
@@ -2495,7 +2495,7 @@ if CEU.opts.cc then
     if CEU.opts.env then
         if CEU.opts.cc_input then
             ASR(CEU.opts.cc_input == CEU.opts.env_output,
-                "`env-output´ and `cc-input´ don't match")
+                "`env-output` and `cc-input` don't match")
         else
             if CEU.opts.env_output == '-' then
                 CEU.opts.env_output = os.tmpname()
@@ -2503,9 +2503,9 @@ if CEU.opts.cc then
             CEU.opts.cc_input = CEU.opts.env_output
         end
     end
-    ASR(CEU.opts.cc_input, 'expected option `cc-input´')
+    ASR(CEU.opts.cc_input, 'expected option `cc-input`')
 
-    ASR(CEU.opts.cc_output, 'expected option `cc-output´')
+    ASR(CEU.opts.cc_output, 'expected option `cc-output`')
 else
     check_no('cc')
 end
@@ -2626,16 +2626,16 @@ local X = V'__SPACE'^1
 
 local T = {
     {
-        '`%*´ or `/´ or `%%´ or `%+´ or `%-´ or `>>´ or `<<´ or `&´ or `^´ or `|´ or `!=´ or `==´ or `<=´ or `>=´ or `<´ or `>´ or `and´ or `or´',
+        '`%*` or `/` or `%%` or `%+` or `%-` or `>>` or `<<` or `&` or `^` or `|` or `!=` or `==` or `<=` or `>=` or `<` or `>` or `and` or `or`',
         'binary operator'
     },
     {
-        '`%*´ or `/´ or `%%´ or `%+´ or `%-´ or `>>´ or `<<´ or `^´ or `|´ or `!=´ or `==´ or `<=´ or `>=´ or `<´ or `>´ or `and´ or `or´',
+        '`%*` or `/` or `%%` or `%+` or `%-` or `>>` or `<<` or `^` or `|` or `!=` or `==` or `<=` or `>=` or `<` or `>` or `and` or `or`',
         'binary operator'
     },
 
     {
-        '`&&´ or `%?´',
+        '`&&` or `%?`',
         'type modifier'
     },
 
@@ -2645,48 +2645,48 @@ local T = {
     },
 
     {
-        '`native´ or `code´ or end of file',
+        '`native` or `code` or end of file',
         'end of file'
     },
     {
-        '`;´ or `native´ or `code´ or `with´',
-        '`with´'
+        '`;` or `native` or `code` or `with`',
+        '`with`'
     },
     {
-        '`native´ or `code´ or `end´',
-        '`end´'
+        '`native` or `code` or `end`',
+        '`end`'
     },
 
     {
-        ' or `/dynamic´ or `/static´ or `/recursive´',
+        ' or `/dynamic` or `/static` or `/recursive`',
         '',
     },
 
     {
-        '`%*´ or `%$´ or internal identifier or native identifier or `outer´',
+        '`%*` or `%$` or internal identifier or native identifier or `outer`',
         'location'
     },
 
     {
-        '`do´ or `await´ or `%[´ or location or `{´ or `%(´ or `not´ or `%-´ or `%+´ or `~´ or `%$%$´ or `&&´ or `&´ or `call´ or `sizeof´ or `null´ or number or `false´ or `true´ or `"´ or string literal or `emit´ or `call/recursive´ or `val´ or `new´ or `spawn´ or `_´ or `nil´ or `request´ or `watching´',
+        '`do` or `await` or `%[` or location or `{` or `%(` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `call` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `emit` or `call/recursive` or `val` or `new` or `spawn` or `_` or `nil` or `request` or `watching`',
         'expression'
     },
     {
-        '`not´ or `%-´ or `%+´ or `~´ or `%$%$´ or `%*´ or `%$´ or `&&´ or `&´ or `call´ or internal identifier or native identifier or `outer´ or `{´ or `%(´ or `sizeof´ or `null´ or number or `false´ or `true´ or `"´ or string literal',
+        '`not` or `%-` or `%+` or `~` or `%$%$` or `%*` or `%$` or `&&` or `&` or `call` or internal identifier or native identifier or `outer` or `{` or `%(` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal',
         'expression'
     },
 
     {
-        --'`nothing´ or `var´ or `vector´ or `pool´ or `event´ or `input´ or `output´ or `data´ or `code´ or `input/output´ or `output/input´ or `native´ or `deterministic´ or location or `{´ or `%(´ or `await´ or `emit´ or `call/recursive´ or `call´ or `request´ or `spawn´ or `kill´ or `not´ or `%-´ or `%+´ or `~´ or `%$%$´ or `&&´ or `&´ or `sizeof´ or `null´ or number or `false´ or `true´ or `"´ or string literal or `do´ or `if´ or `loop´ or `every´ or `lock´ or `par/or´ or `par/and´ or `watching´ or `pause/if´ or `atomic´ or `pre´ or `%[´ or `lua´ or `escape´ or `break´ or `continue´ or `par´ or end of file',
-        '`code´ or `input/output´ or `output/input´ or `data´ or `native´ or `do´ or `if´ or `loop´ or `every´ or `lock´ or `spawn´ or `par/or´ or `par/and´ or `watching´ or `pause/if´ or `await´ or `atomic´ or `pre´ or `{´ or `%[´ or `lua´ or `var´ or `nothing´ or `vector´ or `pool´ or `event´ or `input´ or `output´ or `deterministic´ or location or `%(´ or `emit´ or `call/recursive´ or `call´ or `request´ or `kill´ or `not´ or `%-´ or `%+´ or `~´ or `%$%$´ or `&&´ or `&´ or `sizeof´ or `null´ or number or `false´ or `true´ or `"´ or string literal or `escape´ or `break´ or `continue´ or `par´ or end of file',
+        --'`nothing` or `var` or `vector` or `pool` or `event` or `input` or `output` or `data` or `code` or `input/output` or `output/input` or `native` or `deterministic` or location or `{` or `%(` or `await` or `emit` or `call/recursive` or `call` or `request` or `spawn` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `do` or `if` or `loop` or `every` or `lock` or `par/or` or `par/and` or `watching` or `pause/if` or `atomic` or `pre` or `%[` or `lua` or `escape` or `break` or `continue` or `par` or end of file',
+        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `vector` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or end of file',
         'statement'
     },
     {
-        '`code´ or `input/output´ or `output/input´ or `data´ or `native´ or `do´ or `if´ or `loop´ or `every´ or `lock´ or `spawn´ or `par/or´ or `par/and´ or `watching´ or `pause/if´ or `await´ or `atomic´ or `pre´ or `{´ or `%[´ or `lua´ or `var´ or `nothing´ or `vector´ or `pool´ or `event´ or `input´ or `output´ or `deterministic´ or location or `%(´ or `emit´ or `call/recursive´ or `call´ or `request´ or `kill´ or `not´ or `%-´ or `%+´ or `~´ or `%$%$´ or `&&´ or `&´ or `sizeof´ or `null´ or number or `false´ or `true´ or `"´ or string literal or `escape´ or `break´ or `continue´ or `par´ or `with´',
+        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `vector` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or `with`',
         'statement'
     },
     {
-        '`code´ or `input/output´ or `output/input´ or `data´ or `native´ or `do´ or `if´ or `loop´ or `every´ or `lock´ or `spawn´ or `par/or´ or `par/and´ or `watching´ or `pause/if´ or `await´ or `atomic´ or `pre´ or `{´ or `%[´ or `lua´ or `var´ or `nothing´ or `vector´ or `pool´ or `event´ or `input´ or `output´ or `deterministic´ or location or `%(´ or `emit´ or `call/recursive´ or `call´ or `request´ or `kill´ or `not´ or `%-´ or `%+´ or `~´ or `%$%$´ or `&&´ or `&´ or `sizeof´ or `null´ or number or `false´ or `true´ or `"´ or string literal or `escape´ or `break´ or `continue´ or `par´ or `end´',
+        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `vector` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or `end`',
         'statement'
     },
 }
@@ -2730,7 +2730,7 @@ local function ERR ()
     local file, line = unpack(CEU.i2l[LST_i])
     return 'ERR : '..file..
               ' : line '..line..
-              ' : after `'..LST_str..'´'..
+              ' : after `'..LST_str..'`'..
               ' : expected '..translate(table.concat(ERR_strs,' or '))
 end
 
@@ -2749,7 +2749,7 @@ end
 -- KK accepts leading chars
 local function KK (patt, err, nox)
     if type(patt) == 'string' then
-        err = err or '`'..patt..'´'
+        err = err or '`'..patt..'`'
     else
         err = err or error(debug.traceback())
     end
@@ -2783,7 +2783,7 @@ end
 
 -- K is exact match
 local function K (patt, err, nox)
-    err = err or '`'..patt..'´'
+    err = err or '`'..patt..'`'
     patt = patt * -m.R('09','__','az','AZ','\127\255')
     return KK(patt, err, nox)
 end
@@ -3228,7 +3228,7 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
 
     , __sets_many = V'_Set_Emit_Ext_req' + V'_Set_Await_many' + V'_Set_Watching'
 
-    -- after `=´
+    -- after `=`
 
     , _Set_Do            = #K'do'            * V'_Do'
 
@@ -3276,7 +3276,7 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
     , __ID_ext  = CK(m.R'AZ'*ALPHANUM^0  -KEYS, 'external identifier')
     , __ID_int  = CK(m.R'az'*Alphanum^0  -KEYS, 'internal identifier')
     , __ID_nat  = CK(P'_' * Alphanum^1,         'native identifier')
-    , __ID_any  = CK(P'_' * -Alphanum,          '`_´')
+    , __ID_any  = CK(P'_' * -Alphanum,          '`_`')
 
     , __id_abs  = m.R'AZ'*V'__one_az' -KEYS
     , __id_data = V'__id_abs' * ('.' * V'__id_abs')^1
@@ -4243,7 +4243,7 @@ error'TODO: luacov never executes this?'
                                         node('ID_int', me.ln, '__max_'..me.n)),
                                     AST.copy(max)),
                                 node('STRING', me.ln,
-                                    '"`loop´ overflow"'))))
+                                    '"`loop` overflow"'))))
         end
 
         local Stmts = AST.asr(body,'Block', 1,'Stmts')
@@ -5338,9 +5338,9 @@ EXPS.F = {
         -- ctx
         if e.tag ~= 'Type' then
             if e.info.dcl.tag~='Evt' and TYPES.is_nat(TYPES.get(e.info.tp,1)) then
-                INFO.asr_tag(e, {'Val','Nat','Var','Vec'}, 'invalid operand to `sizeof´')
+                INFO.asr_tag(e, {'Val','Nat','Var','Vec'}, 'invalid operand to `sizeof`')
             else
-                INFO.asr_tag(e, {'Val','Nat','Var'}, 'invalid operand to `sizeof´')
+                INFO.asr_tag(e, {'Val','Nat','Var'}, 'invalid operand to `sizeof`')
             end
         end
 
@@ -5374,11 +5374,11 @@ EXPS.F = {
 
         if mods_dcl.dynamic then
             ASR(mods_call.dynamic or mods_call.static, me,
-                'invalid call : expected `/dynamic´ or `/static´ modifier')
+                'invalid call : expected `/dynamic` or `/static` modifier')
         else
             local mod = (mods_call.dynamic or mods_call.static)
             ASR(not mod, me, mod and
-                'invalid call : unexpected `/'..mod..'´ modifier')
+                'invalid call : unexpected `/'..mod..'` modifier')
         end
 
         -- ctx
@@ -5388,7 +5388,7 @@ EXPS.F = {
                                          ..' "'..(ID_abs.dcl.id or '')..'"')
         ASR(mods_dcl.tight, me,
                 'invalid call : '..
-                'expected `code/tight´ : got `code/await´ ('..ID_abs.dcl.ln[1]..':'..ID_abs.ln[2]..')')
+                'expected `code/tight` : got `code/await` ('..ID_abs.dcl.ln[1]..':'..ID_abs.ln[2]..')')
 
         -- info
         me.info = INFO.new(me, 'Val', nil,
@@ -5406,7 +5406,7 @@ EXPS.F = {
             assert(Loc.info.dcl)
             local alias = unpack(Loc.info.dcl)
             ASR(alias~='&?', me,
-                'invalid operand to `.´ : unexpected option alias')
+                'invalid operand to `.` : unexpected option alias')
         end
 
         local err_str
@@ -5462,7 +5462,7 @@ EXPS.F = {
                 end
             else
                 ASR(val.tag=='ID_any' or (not (val.info and val.info.tag=='Alias')), me,
-                    'invalid binding : argument #'..i..' : expected declaration with `&´')
+                    'invalid binding : argument #'..i..' : expected declaration with `&`')
             end
 
             if val.tag == 'NIL' then
@@ -5500,10 +5500,10 @@ error'TODO: remove below'
                         assert(not is_alias)
 
                         ASR(to_abs.n_vars == fr_abs.n_vars, me,
-                            err_str..' argument #'..i..' : `data´ copy : unmatching fields')
+                            err_str..' argument #'..i..' : `data` copy : unmatching fields')
 
                         --ASR(to_abs.weaker=='plain', me,
-                            --'invalid assignment : `data´ copy : expected plain `data´')
+                            --'invalid assignment : `data` copy : expected plain `data`')
                     end
                 end
             end
@@ -5520,7 +5520,7 @@ error'TODO: remove below'
 
         -- ctx
         -- all?
-        --INFO.asr_tag(e, {'Var','Evt','Pool','Nat','Vec'}, 'invalid operand to `'..op..'´')
+        --INFO.asr_tag(e, {'Var','Evt','Pool','Nat','Vec'}, 'invalid operand to `'..op..'`')
 
         local par = me.__par
         if par.tag == 'Exp_as' then
@@ -5528,10 +5528,10 @@ error'TODO: remove below'
             par = par.__par
         end
         ASR(par.tag=='Set_Alias' or par.tag=='List_Exp' or par.tag=='Abslist', me,
-            'invalid expression : unexpected context for operation `&´')
+            'invalid expression : unexpected context for operation `&`')
 
         if e.info.tag == 'Nat' then
-            ASR(e.tag == 'Exp_call', me, 'invalid operand to `'..op..'´ : expected native call')
+            ASR(e.tag == 'Exp_call', me, 'invalid operand to `'..op..'` : expected native call')
         end
 
         -- tp
@@ -5548,11 +5548,11 @@ error'TODO: remove below'
         local op,e = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Nat','Var','Evt'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e, {'Nat','Var','Evt'}, 'invalid operand to `'..op..'`')
 
         -- tp
         ASR((e.info.dcl[1]=='&?') or TYPES.check(e.info.tp,'?'), me,
-            'invalid operand to `'..op..'´ : expected option type : got "'..
+            'invalid operand to `'..op..'` : expected option type : got "'..
             TYPES.tostring(e.info.tp)..'"')
 
         -- info
@@ -5618,13 +5618,13 @@ error'TODO: remove below'
             me.info.id = 'outer.'..member
         else
             ASR(TYPES.ID_plain(e.info.tp), me,
-                'invalid operand to `.´ : expected plain type : got "'..
+                'invalid operand to `.` : expected plain type : got "'..
                 TYPES.tostring(e.info.tp)..'"')
 
             if e.info.dcl then
                 local alias = unpack(e.info.dcl)
                 ASR(alias~='&?', me,
-                    'invalid operand to `.´ : unexpected option alias')
+                    'invalid operand to `.` : unexpected option alias')
 
                 local ID_abs = unpack(e.info.tp)
                 if ID_abs and (ID_abs.dcl.tag=='Data' or ID_abs.dcl.tag=='Code') then
@@ -5655,7 +5655,7 @@ error'TODO: remove below'
                 end
             else
                 ASR(TYPES.is_nat(e.info.tp), me,
-                    'invalid operand to `.´ : expected native or data type')
+                    'invalid operand to `.` : expected native or data type')
             end
         end
     end,
@@ -5666,14 +5666,14 @@ error'TODO: remove below'
         local op, e = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Nat','Var','Pool','Vec','Val'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e, {'Nat','Var','Pool','Vec','Val'}, 'invalid operand to `'..op..'`')
 
         -- tp
         if e.info.tag == 'Val' then
             ASR(TYPES.is_nat(e.info.tp), me, 'expected native type')
         else
             ASR(not (e.info.dcl[1]=='&?' or TYPES.check(e.info.tp,'?')), me,
-                'invalid operand to `'..op..'´ : unexpected option type')
+                'invalid operand to `'..op..'` : unexpected option type')
         end
 
         -- info
@@ -5686,7 +5686,7 @@ error'TODO: remove below'
         local op,e = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Nat','Var','Pool','Val'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e, {'Nat','Var','Pool','Val'}, 'invalid operand to `'..op..'`')
 --DBG('TODO: remove pool')
 
         -- tp
@@ -5694,7 +5694,7 @@ error'TODO: remove below'
         local is_ptr = TYPES.check(e.info.tp,'&&')
         local is_nat = TYPES.is_nat(e.info.tp)
         ASR(is_ptr or is_nat, me,
-            'invalid operand to `'..op..'´ : expected pointer type : got "'..
+            'invalid operand to `'..op..'` : expected pointer type : got "'..
             TYPES.tostring(e.info.tp)..'"')
 
         -- info
@@ -5710,15 +5710,15 @@ error'TODO: remove below'
         local op,e = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Nat','Var','Evt'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e, {'Nat','Var','Evt'}, 'invalid operand to `'..op..'`')
         if e.info.dcl.tag == 'Evt' then
             ASR(e.info.dcl[1] == '&?', me,
-                'invalid operand to `?´ : unexpected context for event "'..e.info.dcl.id..'"')
+                'invalid operand to `?` : unexpected context for event "'..e.info.dcl.id..'"')
         end
 
         -- tp
         ASR((e.info.dcl[1]=='&?') or TYPES.check(e.info.tp,'?'), me,
-            'invalid operand to `'..op..'´ : expected option type')
+            'invalid operand to `'..op..'` : expected option type')
 
         -- info
         me.info = INFO.new(me, 'Val', nil, 'bool')
@@ -5731,7 +5731,7 @@ error'TODO: remove below'
         local op,vec = unpack(me)
 
         -- ctx
-        INFO.asr_tag(vec, {'Vec'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(vec, {'Vec'}, 'invalid operand to `'..op..'`')
 
         -- tp
         -- any
@@ -5748,11 +5748,11 @@ error'TODO: remove below'
         local op, e = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
 
         -- tp
         ASR(TYPES.check(e.info.tp,'bool'), me,
-            'invalid operand to `'..op..'´ : expected boolean type')
+            'invalid operand to `'..op..'` : expected boolean type')
 
         -- info
         me.info = INFO.new(me, 'Val', nil, 'bool')
@@ -5766,11 +5766,11 @@ error'TODO: remove below'
         local op, e = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
 
         -- tp
         ASR(TYPES.is_num(e.info.tp), me,
-            'invalid operand to `'..op..'´ : expected numeric type')
+            'invalid operand to `'..op..'` : expected numeric type')
 
         -- info
         me.info = INFO.copy(e.info)
@@ -5789,16 +5789,16 @@ error'TODO: remove below'
         local op, e1, e2 = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
-        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
+        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
 
         -- tp
         ASR(TYPES.is_num(e1.info.tp) and TYPES.is_num(e2.info.tp), me,
-            'invalid operand to `'..op..'´ : expected numeric type')
+            'invalid operand to `'..op..'` : expected numeric type')
 
         -- info
         local max = TYPES.max(e1.info.tp, e2.info.tp)
-        ASR(max, me, 'invalid operands to `'..op..'´ : '..
+        ASR(max, me, 'invalid operands to `'..op..'` : '..
                         'incompatible numeric types : "'..
                         TYPES.tostring(e1.info.tp)..'" vs "'..
                         TYPES.tostring(e2.info.tp)..'"')
@@ -5815,16 +5815,16 @@ error'TODO: remove below'
         local op, e1, e2 = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
-        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
+        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
 
         -- tp
         ASR(TYPES.is_int(e1.info.tp) and TYPES.is_int(e2.info.tp), me,
-            'invalid operand to `'..op..'´ : expected integer type')
+            'invalid operand to `'..op..'` : expected integer type')
 
         -- info
         local max = TYPES.max(e1.info.tp, e2.info.tp)
-        ASR(max, me, 'invalid operands to `'..op..'´ : '..
+        ASR(max, me, 'invalid operands to `'..op..'` : '..
                         'incompatible integer types : "'..
                         TYPES.tostring(e1.info.tp)..'" vs "'..
                         TYPES.tostring(e2.info.tp)..'"')
@@ -5835,11 +5835,11 @@ error'TODO: remove below'
         local op, e = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
 
         -- tp
         ASR(TYPES.is_int(e.info.tp), me,
-            'invalid operand to `'..op..'´ : expected integer type')
+            'invalid operand to `'..op..'` : expected integer type')
 
         -- info
         me.info = INFO.copy(e.info)
@@ -5856,12 +5856,12 @@ error'TODO: remove below'
         local op, e1, e2 = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
-        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
+        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
 
         -- tp
         ASR(TYPES.is_num(e1.info.tp) and TYPES.is_num(e2.info.tp), me,
-            'invalid operand to `'..op..'´ : expected numeric type')
+            'invalid operand to `'..op..'` : expected numeric type')
 
         -- info
         me.info = INFO.new(me, 'Val', nil, 'bool')
@@ -5875,8 +5875,8 @@ error'TODO: remove below'
         local op, e1, e2 = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
-        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
+        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
 
         -- tp
 
@@ -5884,11 +5884,11 @@ error'TODO: remove below'
         local ID2 = TYPES.ID_plain(e2.info.tp)
         ASR( (not (ID1 and ID1.tag=='ID_abs')) and
              (not (ID2 and ID2.tag=='ID_abs')), me,
-            'invalid operands to `'..op..'´ : unexpected `data´ value' )
+            'invalid operands to `'..op..'` : unexpected `data` value' )
 
         ASR(TYPES.contains(e1.info.tp,e2.info.tp) or
             TYPES.contains(e2.info.tp,e1.info.tp), me,
-            'invalid operands to `'..op..'´ : '..
+            'invalid operands to `'..op..'` : '..
             'incompatible types : "'..
                 TYPES.tostring(e1.info.tp)..'" vs "'..
                 TYPES.tostring(e2.info.tp)..'"')
@@ -5905,12 +5905,12 @@ error'TODO: remove below'
         local op, e1, e2 = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
-        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e1, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
+        INFO.asr_tag(e2, {'Val','Nat','Var'}, 'invalid operand to `'..op..'`')
 
         -- tp
         ASR(TYPES.check(e1.info.tp,'bool') and TYPES.check(e2.info.tp,'bool'), me,
-            'invalid operand to `'..op..'´ : expected boolean type')
+            'invalid operand to `'..op..'` : expected boolean type')
 
         -- info
         me.info = INFO.new(me, 'Val', nil, 'bool')
@@ -5924,11 +5924,11 @@ error'TODO: remove below'
 
         -- ctx
         INFO.asr_tag(e, {'Alias','Val','Nat','Var','Pool'},
-                     'invalid operand to `'..op..'´')
+                     'invalid operand to `'..op..'`')
 
         -- tp
         ASR(not TYPES.check(e.info.tp,'?'), me,
-            'invalid operand to `'..op..'´ : unexpected option type : got "'..
+            'invalid operand to `'..op..'` : unexpected option type : got "'..
             TYPES.tostring(e.info.tp)..'"')
 
         local dcl = e.info.tp[1].dcl
@@ -5937,14 +5937,14 @@ error'TODO: remove below'
             if TYPES.check(Type,'int') then
                 -- OK: "d as int"
                 ASR(dcl.hier, me,
-                    'invalid operand to `'..op..'´ : expected `data´ type in a hierarchy : got "'..TYPES.tostring(e.info.tp)..'"')
+                    'invalid operand to `'..op..'` : expected `data` type in a hierarchy : got "'..TYPES.tostring(e.info.tp)..'"')
             else
                 -- NO: not alias
                 --  var Dx d = ...;
                 --  (d as Ex)...
                 local is_alias = unpack(dcl)
                 ASR(is_alias, me,
-                    'invalid operand to `'..op..'´ : unexpected plain `data´ : got "'..
+                    'invalid operand to `'..op..'` : unexpected plain `data` : got "'..
                     TYPES.tostring(e.info.tp)..'"')
 
                 -- NO:
@@ -5959,7 +5959,7 @@ error'TODO: remove below'
                                 (DCLS.is_super(cast,dcl) or     -- to dyn/call super
                                  DCLS.is_super(dcl,cast))
                     ASR(ok, me,
-                        'invalid operand to `'..op..'´ : unmatching `data´ abstractions')
+                        'invalid operand to `'..op..'` : unmatching `data` abstractions')
                 end
             end
         end
@@ -5978,18 +5978,18 @@ DBG'TODO: type annotation'
         local op,e,cast = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Val','Nat','Var','Pool'}, 'invalid operand to `'..op..'´')
+        INFO.asr_tag(e, {'Val','Nat','Var','Pool'}, 'invalid operand to `'..op..'`')
 
         -- tp
         local plain = TYPES.ID_plain(e.info.tp)
         ASR(plain and plain.dcl.tag=='Data', me,
-            'invalid operand to `'..op..'´ : expected plain `data´ type : got "'..TYPES.tostring(e.info.tp)..'"')
+            'invalid operand to `'..op..'` : expected plain `data` type : got "'..TYPES.tostring(e.info.tp)..'"')
         ASR(plain and plain.dcl.hier, me,
-            'invalid operand to `'..op..'´ : expected `data´ type in some hierarchy : got "'..TYPES.tostring(e.info.tp)..'"')
+            'invalid operand to `'..op..'` : expected `data` type in some hierarchy : got "'..TYPES.tostring(e.info.tp)..'"')
 
         cast = cast[1].dcl
         ASR(cast and cast.hier and DCLS.is_super(plain.dcl,cast), me,
-            'invalid operand to `'..op..'´ : unmatching `data´ abstractions')
+            'invalid operand to `'..op..'` : unmatching `data` abstractions')
 
         -- info
         me.info = INFO.new(me, 'Val', nil, 'bool')
@@ -6024,7 +6024,7 @@ local function iter_boundary (cur, id, can_cross)
                 if string.match(c.tag,'^.?Async') and string.sub(id,1,1)==string.upper(string.sub(id,1,1))
                     and string.sub(id,1,1) ~= '_'
                 then
-                    ASR(false, cur, 'abstraction inside `async´ : not implemented') -- TODO: ID_abs is ok
+                    ASR(false, cur, 'abstraction inside `async` : not implemented') -- TODO: ID_abs is ok
                     can_cross2 = true
                 end
 
@@ -6057,7 +6057,7 @@ function DCLS.outer (me)
     local async = AST.par(me,'_Async_Isr') or AST.par(me,'Async_Isr')
     local do_   = AST.iter(__do)()
     local code  = AST.par(me,'Code')
-    ASR(async or do_ or code, me, 'invalid `outer´')
+    ASR(async or do_ or code, me, 'invalid `outer`')
 
     local ret = async
     if do_ and ((not ret) or AST.depth(do_)>AST.depth(ret)) then
@@ -6095,7 +6095,7 @@ function DCLS.asr (me, blk_or_data, id, can_cross, err)
             ASR(false, me, 
                 'invalid member access : "'..
                 err..  '" has no member "'..id..'" : '..
-                '`data´ "'..data.id..
+                '`data` "'..data.id..
                 '" ('..data.ln[1]..':'..  data.ln[2]..')')
         else
             -- recursive use
@@ -6169,7 +6169,7 @@ function DCLS.base (data)
     end
 end
 
--- native declarations are allowed until `native/end´
+-- native declarations are allowed until `native/end`
 local native_end = false
 
 DCLS.F = {
@@ -6274,7 +6274,7 @@ DCLS.F = {
                 end
             end
             ASR(ok, tp,
-                'invalid declaration : unexpected context for `'..AST.tag2id[ID.dcl.tag]..'´ "'..
+                'invalid declaration : unexpected context for `'..AST.tag2id[ID.dcl.tag]..'` "'..
                     (ID.dcl.id or ID.dcl[2])..'"')
         end
     end,
@@ -6291,7 +6291,7 @@ DCLS.F = {
                 if alias == '&' then
                     local tp = AST.get(ID.dcl,'Code', 3,'Block', 1,'Stmts',
                                                       1,'Code_Ret', 1,'', 2,'Type')
-                    ASR(not tp, me, 'invalid declaration : `code/await´ must execute forever')
+                    ASR(not tp, me, 'invalid declaration : `code/await` must execute forever')
                 end
                 me.__dcls_code_alias = true
                 -- ok
@@ -6309,13 +6309,13 @@ DCLS.F = {
             -- NO: alias to pointer
             --  var& int&& x = ...;
             ASR(not TYPES.check(Type,'&&'), me,
-                'invalid declaration : unexpected `&&´ : cannot alias a pointer')
+                'invalid declaration : unexpected `&&` : cannot alias a pointer')
         end
 
         local ID_prim,mod = unpack(Type)
         if ID_prim.tag=='ID_prim' and ID_prim[1]=='void' and (not mod) then
             ASR(alias, me,
-                'invalid declaration : variable cannot be of type `void´') 
+                'invalid declaration : variable cannot be of type `void`') 
         end
 
         local inits = DCLS.F.Var__POS__POS(me)
@@ -6417,14 +6417,14 @@ DCLS.F = {
         local code = AST.par(me, 'Code')
         if code and code[1].tight and (not is_alias) then
             ASR(false, me,
-                'invalid declaration : vector inside `code/tight´')
+                'invalid declaration : vector inside `code/tight`')
         end
 
         -- vector[] void vec;
         local ID_prim,mod = unpack(Type)
         if ID_prim.tag=='ID_prim' and ID_prim[1]=='void' and (not mod) then
             ASR(false, me,
-                'invalid declaration : vector cannot be of type `void´') 
+                'invalid declaration : vector cannot be of type `void`') 
         end
     end,
 
@@ -6447,7 +6447,7 @@ DCLS.F = {
             ASR(id.dcl.tag=='Prim' or TYPES.is_nat_plain(Type), me,
                 'invalid event type : must be primitive')
             ASR(not mod, me,
-                mod and 'invalid event type : cannot use `'..mod..'´')
+                mod and 'invalid event type : cannot use `'..mod..'`')
         end
 
         dcls_new(AST.par(me,'Block'), me)
@@ -6507,7 +6507,7 @@ DCLS.F = {
             local _,_,_,dcl_mods = unpack(dcl)
             if dcl_mods and dcl_mods.dynamic then
                 ASR(mods.dynamic, me,
-                    'invalid `dynamic´ modifier : expected enclosing `code/dynamic´')
+                    'invalid `dynamic` modifier : expected enclosing `code/dynamic`')
                 local is_alias,Type = unpack(dcl)
                 dcl.id_dyn = '_'..i..'_'..dcl.tag..
                              '_'..(is_alias and 'y' or 'n')..
@@ -6519,7 +6519,7 @@ DCLS.F = {
 
         if mods.dynamic and #me>0 then
             ASR(me.ids_dyn ~= '', me,
-                'invalid `dynamic´ declaration : expected dynamic parameters')
+                'invalid `dynamic` declaration : expected dynamic parameters')
         end
     end,
 
@@ -6565,7 +6565,7 @@ DCLS.F = {
         local mods1,id,body1 = unpack(me)
 
         --ASR(not AST.par(me,'Code'), me,
-            --'invalid `code´ declaration : nesting is not allowed')
+            --'invalid `code` declaration : nesting is not allowed')
 
         me.depth = 0
         local par = AST.par(me, 'Code')
@@ -6602,11 +6602,11 @@ DCLS.F = {
         end
 
         if old then
-            ASR(old.tag == 'Code', me, 'invalid `code´ declaration')
+            ASR(old.tag == 'Code', me, 'invalid `code` declaration')
             local mods2,_,body2 = unpack(old)
             if me.is_impl then
                 ASR(not (old.is_impl or old.__impl), me,
-                    'invalid `code´ declaration : body for "'..id..'" already exists')
+                    'invalid `code` declaration : body for "'..id..'" already exists')
                 old.__impl = true
             end
 
@@ -6631,7 +6631,7 @@ DCLS.F = {
             end
 
             ASR(ok, me,
-                'invalid `code´ declaration : unmatching prototypes '..
+                'invalid `code` declaration : unmatching prototypes '..
                 '(vs. '..proto1.ln[1]..':'..proto2.ln[2]..')')
         else
             dcls_new(blk,me)
@@ -6713,7 +6713,7 @@ DCLS.F = {
                 local ID_prim,mod = unpack(Type)
                 if ID_prim.tag=='ID_prim' and ID_prim[1]=='void' and (not mod) then
                     ASR(false, me,
-                        'invalid declaration : unexpected type `void´')
+                        'invalid declaration : unexpected type `void`')
                 end
             end
         end
@@ -6937,12 +6937,12 @@ DCLS.F = {
     Break = function (me)
         me.outer = DCLS.F.__outer(me)
         ASR(me.outer, me,
-            'invalid `break´ : expected matching enclosing `loop´')
+            'invalid `break` : expected matching enclosing `loop`')
     end,
     Continue = function (me)
         me.outer = DCLS.F.__outer(me)
         ASR(me.outer, me,
-            'invalid `continue´ : expected matching enclosing `loop´')
+            'invalid `continue` : expected matching enclosing `loop`')
     end,
 
     TODO__POS = function (me)
@@ -6966,7 +6966,7 @@ DCLS.F = {
                     end
                 end
             end
-            ASR(do_, esc, 'invalid `escape´ : no matching enclosing `do´')
+            ASR(do_, esc, 'invalid `escape` : no matching enclosing `do`')
             esc.outer = do_
             local _,outer,_,to = unpack(do_)
             local set = AST.get(me.__par,'Set_Exp') or AST.asr(me.__par,'Set_Alias')
@@ -6974,12 +6974,12 @@ DCLS.F = {
             local fr = unpack(set)
             if to and type(to)~='boolean' then
                 ASR(type(fr)~='boolean', me,
-                    'invalid `escape´ : expected expression')
+                    'invalid `escape` : expected expression')
                 to.__dcls_is_escape = true
                 return AST.copy(to)
             else
                 ASR(type(fr)=='boolean', me,
-                    'invalid `escape´ : unexpected expression')
+                    'invalid `escape` : unexpected expression')
                 set.tag = 'Nothing'
                 return node('Nothing', me.ln)
             end
@@ -7110,7 +7110,7 @@ F = {
         local max = unpack(me)
         if max then
             ASR(max.is_const=='int' or max.is_const==true, max,
-                'invalid `loop´ : limit must be an integer constant')
+                'invalid `loop` : limit must be an integer constant')
         end
     end,
 
@@ -7118,7 +7118,7 @@ F = {
         local _, num = unpack(me)
         if num and num~='nothing' then
             ASR(num.is_const=='int' or num.is_const==true, num,
-                'invalid `data´ declaration : after `is´ : expected integer constant')
+                'invalid `data` declaration : after `is` : expected integer constant')
         end
     end,
 }
@@ -7364,7 +7364,7 @@ STMTS.F = {
 
         local err do
             if AST.get(me.__par,'Stmts', me.__i+1,'Escape') then
-                err = 'invalid `escape´'
+                err = 'invalid `escape`'
             else
                 err = 'invalid assignment'
             end
@@ -7379,14 +7379,14 @@ STMTS.F = {
         INFO.asr_tag(to, {'Nat','Var','Pool'}, err)
         INFO.asr_tag(fr, {'Val','Nat','Var'}, err)
         ASR((not fr.info.dcl) or (fr.info.dcl[1]~='&?'), me,
-            err..' : expected operator `!´')
+            err..' : expected operator `!`')
 
         -- tp
         EXPS.check_tp(me, to.info.tp, fr.info.tp, err)
 
         if not TYPES.check(to.info.tp,'?') then
             ASR(not TYPES.check(fr.info.tp,'?'), me,
-                'invalid assignment : expected operator `!´')
+                'invalid assignment : expected operator `!`')
         end
 
         -- abs vs abs
@@ -7400,10 +7400,10 @@ STMTS.F = {
 
                 EXPS.check_tp(me, to.info.tp, fr.info.tp, 'invalid assignment')
                 ASR(to_abs.n_vars == fr_abs.n_vars, me,
-                    'invalid assignment : `data´ copy : unmatching fields')
+                    'invalid assignment : `data` copy : unmatching fields')
 
                 --ASR(to_abs.weaker=='plain', me,
-                    --'invalid assignment : `data´ copy : expected plain `data´')
+                    --'invalid assignment : `data` copy : expected plain `data`')
             end
         end
     end,
@@ -7505,12 +7505,12 @@ STMTS.F = {
         local Loc = AST.asr(to,'Loc')
         local ID_int = AST.get(Loc,'', 1,'ID_int')
         local op = unpack(Loc[1])
-        ASR(ID_int, me, 'invalid binding : unexpected context for operator `'..op..'´')
-        ASR(ID_int.dcl[1], me, 'invalid binding : expected declaration with `&´')
+        ASR(ID_int, me, 'invalid binding : unexpected context for operator `'..op..'`')
+        ASR(ID_int.dcl[1], me, 'invalid binding : expected declaration with `&`')
 
         -- NO: f1 = &f              // f may die
         if to.info.tag=='Var' and TYPES.abs_dcl(to.info.tp,'Code') then
-            --ASR(alias == '&?', me, 'invalid binding : expected `spawn´')
+            --ASR(alias == '&?', me, 'invalid binding : expected `spawn`')
         end
 
         -- tp
@@ -7523,7 +7523,7 @@ STMTS.F = {
             if fr[2].tag == 'Exp_call' then
                 assert(fr.info.dcl and fr.info.dcl.tag=='Nat')
                 ASR(TYPES.is_nat(to.info.tp), me,
-                    'invalid binding : expected `native´ type')
+                    'invalid binding : expected `native` type')
             else
                 local ID_abs = AST.asr(fr,'', 2,'Abs_Call', 2,'Abs_Cons',
                                               2,'ID_abs')
@@ -7540,7 +7540,7 @@ STMTS.F = {
 
             if fr.info.dcl[1] then
                 ASR(to.info.dcl[1] == fr.info.dcl[1], me,
-                    'invalid binding : unmatching alias `&´ declaration')
+                    'invalid binding : unmatching alias `&` declaration')
             end
         end
 
@@ -7581,11 +7581,11 @@ STMTS.F = {
         local _,to = unpack(me)
 
         -- ctx
-        INFO.asr_tag(to, {'Nat','Var'}, 'invalid `async/thread´ assignment')
+        INFO.asr_tag(to, {'Nat','Var'}, 'invalid `async/thread` assignment')
 
         -- tp
         ASR(TYPES.check(to.info.tp,'bool'), me,
-            'invalid `async/thread´ assignment : expected `bool´ destination')
+            'invalid `async/thread` assignment : expected `bool` destination')
     end,
 
 -- ABS
@@ -7598,7 +7598,7 @@ STMTS.F = {
         -- ctx
         INFO.asr_tag(to, {'Var'}, 'invalid constructor')
         ASR(ID_abs.dcl.tag == 'Data', me,
-            'invalid constructor : expected `data´ abstraction : got `code´ "'..
+            'invalid constructor : expected `data` abstraction : got `code` "'..
             ID_abs.dcl.id..'" ('..ID_abs.dcl.ln[1]..':'..ID_abs.dcl.ln[2]..')')
 
         -- tp
@@ -7609,7 +7609,7 @@ STMTS.F = {
         --  var Dd d = val Dd();
         local _, num = unpack(ID_abs.dcl)
         ASR(num ~= 'nothing', me,
-            'invalid constructor : cannot instantiate `data´ "'..ID_abs.dcl.id..'"')
+            'invalid constructor : cannot instantiate `data` "'..ID_abs.dcl.id..'"')
 
         -- exact match on constructor
         local to_str = TYPES.tostring(to.info.tp)
@@ -7646,7 +7646,7 @@ STMTS.F = {
         local ID_ext = AST.asr(me,'', 1,'Emit_Ext_emit', 1,'ID_ext')
         local io,_ = unpack(ID_ext.dcl)
         ASR(io=='output', me,
-            'invalid assignment : `input´')
+            'invalid assignment : `input`')
     end,
 
     Set_Await_one = function (me)
@@ -7658,7 +7658,7 @@ STMTS.F = {
         if me.__adjs_is_watching then
             -- var int? us = watching 1s do ... end
             ASR(TYPES.check(to.info.tp,'?'), me,
-                'invalid `watching´ assignment : expected option type `?´ : got "'..TYPES.tostring(to.info.tp)..'"')
+                'invalid `watching` assignment : expected option type `?` : got "'..TYPES.tostring(to.info.tp)..'"')
         end
     end,
 
@@ -7675,7 +7675,7 @@ STMTS.F = {
         -- tp
         if fr.tag == 'Await_Int' then
             ASR(fr.tp, me,
-                'invalid assignment : `code´ executes forever')
+                'invalid assignment : `code` executes forever')
         end
 
         EXPS.check_tp(me, to.tp, fr.tp, 'invalid assignment')
@@ -7684,7 +7684,7 @@ STMTS.F = {
             for _, e in ipairs(to) do
                 -- var int? us = watching 1s do ... end
                 ASR(TYPES.check(e.info.tp,'?'), me,
-                    'invalid `watching´ assignment : expected option type `?´ : got "'..TYPES.tostring(e.info.tp)..'"')
+                    'invalid `watching` assignment : expected option type `?` : got "'..TYPES.tostring(e.info.tp)..'"')
             end
         end
     end,
@@ -7701,7 +7701,7 @@ STMTS.F = {
         if inout_have == inout_expected then
             return true
         else
-            return false, 'expected `'..inout_expected..'´ external identifier'
+            return false, 'expected `'..inout_expected..'` external identifier'
         end
     end,
 
@@ -7710,7 +7710,7 @@ STMTS.F = {
 
         -- ctx
         local ok, msg = STMTS.F.__await_ext_err(ID_ext, 'input')
-        ASR(ok, me, msg and 'invalid `await´ : '..msg)
+        ASR(ok, me, msg and 'invalid `await` : '..msg)
 
         me.tp = ID_ext.dcl[2]
     end,
@@ -7735,20 +7735,20 @@ STMTS.F = {
 
         local mods_dcl = unpack(me.__code)
         ASR(mods_dcl.await, me,
-            'invalid `'..AST.tag2id[me.tag]..'´ : expected `code/await´ declaration '..
+            'invalid `'..AST.tag2id[me.tag]..'` : expected `code/await` declaration '..
                 '('..me.__code.ln[1]..':'..me.__code.ln[2]..')')
 
         if mods_dcl.dynamic then
             ASR(mods_call.dynamic or mods_call.static, me,
-                'invalid `'..AST.tag2id[me.tag]..'´ : expected `/dynamic´ or `/static´ modifier')
+                'invalid `'..AST.tag2id[me.tag]..'` : expected `/dynamic` or `/static` modifier')
         else
             local mod = (mods_call.dynamic or mods_call.static)
             ASR(not mod, me, mod and
-                'invalid `'..AST.tag2id[me.tag]..'´ : unexpected `/'..mod..'´ modifier')
+                'invalid `'..AST.tag2id[me.tag]..'` : unexpected `/'..mod..'` modifier')
         end
 
         ASR(AST.par(me,'Code') ~= me.__code, me,
-            'invalid `'..AST.tag2id[me.tag]..'´ : unexpected recursive invocation')
+            'invalid `'..AST.tag2id[me.tag]..'` : unexpected recursive invocation')
 
         local ret = AST.get(me.__code,'', 3,'Block', 1,'Stmts',
                                           1,'Code_Ret', 1,'', 2,'Type')
@@ -7761,7 +7761,7 @@ STMTS.F = {
                                           1,'Stmts',  1,'Set_Abs_Spawn',
                                           1,'Abs_Spawn')
             if me1 == me then
-                ASR(ret, watch, 'invalid `watching´ : `code´ executes forever')
+                ASR(ret, watch, 'invalid `watching` : `code` executes forever')
             end
         end
      end,
@@ -7771,16 +7771,16 @@ STMTS.F = {
         local alias, _ = unpack(e.info.dcl)
 
         -- ctx
-        INFO.asr_tag(e, {'Var','Evt','Pool'}, 'invalid `await´')
+        INFO.asr_tag(e, {'Var','Evt','Pool'}, 'invalid `await`')
         if e.info.tag == 'Var' then
             ASR(e.info.dcl[1] == '&?', me,
-                'invalid `await´ : expected `var´ with `&?´ modifier')
+                'invalid `await` : expected `var` with `&?` modifier')
         end
 
         -- tp
         if e.info.tag == 'Var' then
             local abs = TYPES.abs_dcl(e.info.tp, 'Code')
-            ASR(abs, me, 'invalid `await´ : expected `code/await´ abstraction')
+            ASR(abs, me, 'invalid `await` : expected `code/await` abstraction')
             assert(alias == '&?')
             local tp = AST.get(abs,'Code', 3,'Block', 1,'Stmts',
                                            1,'Code_Ret', 1,'', 2,'Type')
@@ -7803,15 +7803,15 @@ STMTS.F = {
         local alias = unpack(loc.info.dcl)
 
         -- ctx
-        INFO.asr_tag(loc, {'Var'}, 'invalid `kill´')
+        INFO.asr_tag(loc, {'Var'}, 'invalid `kill`')
 
         -- tp
         local abs = TYPES.abs_dcl(loc.info.tp, 'Code')
-        ASR(abs, me, 'invalid `kill´ : expected `code/await´ abstraction')
-        ASR(alias=='&?', me, 'invalid `kill´ : expected `&?´ alias')
+        ASR(abs, me, 'invalid `kill` : expected `code/await` abstraction')
+        ASR(alias=='&?', me, 'invalid `kill` : expected `&?` alias')
         local tp = AST.get(abs,'Code', 3,'Block', 1,'Stmts',
                                        1,'Code_Ret', 1,'', 2,'Type')
-        --ASR(tp, me, 'invalid kill : `code/await´ executes forever')
+        --ASR(tp, me, 'invalid kill : `code/await` executes forever')
         -- TODO: check e vs tp
     end,
 
@@ -7821,7 +7821,7 @@ STMTS.F = {
         local _, cond = unpack(me)
         if cond then
             ASR(TYPES.check(cond.info.tp,'bool'), me,
-                'invalid expression : `until´ condition must be of boolean type')
+                'invalid expression : `until` condition must be of boolean type')
         end
     end,
 
@@ -7831,13 +7831,13 @@ STMTS.F = {
         -- ctx
         local ok, msg = STMTS.F.__await_ext_err(e, 'input')
         if not ok then
-            INFO.asr_tag(e, {'Evt'}, 'invalid `pause/if´')
+            INFO.asr_tag(e, {'Evt'}, 'invalid `pause/if`')
         end
 
         -- tp
         local Typelist = AST.asr((e.dcl and e.dcl[2]) or e.info.tp,'Typelist')
         ASR(#Typelist==1 and TYPES.check(Typelist[1],'bool'), me,
-            'invalid `pause/if´ : expected event of type `bool´')
+            'invalid `pause/if` : expected event of type `bool`')
     end,
 
     Do = function (me)
@@ -7850,7 +7850,7 @@ STMTS.F = {
     If = function (me)
         local cnd = unpack(me)
         ASR(TYPES.check(cnd.info.tp,'bool'), me,
-            'invalid `if´ condition : expected boolean type')
+            'invalid `if` condition : expected boolean type')
     end,
 
     Loop_Num = function (me)
@@ -7860,7 +7860,7 @@ STMTS.F = {
                                          fr.info.tp,
                                          (to.info and to.info.tp or step.info.tp),
                                          step.info.tp
-        ASR(TYPES.is_num(i_tp), me, 'invalid `loop´ : expected numeric variable')
+        ASR(TYPES.is_num(i_tp), me, 'invalid `loop` : expected numeric variable')
         ASR(TYPES.contains(i_tp,fr_tp), me,
             'invalid control variable : types mismatch : "'..TYPES.tostring(i_tp)..'" <= "'..TYPES.tostring(fr_tp)..'"')
         ASR(TYPES.contains(i_tp,to_tp), me,
@@ -7873,7 +7873,7 @@ STMTS.F = {
         local _,i,pool = unpack(me)
 
         -- ctx
-        INFO.asr_tag(pool, {'Pool'}, 'invalid `pool´ iterator')
+        INFO.asr_tag(pool, {'Pool'}, 'invalid `pool` iterator')
 
         -- tp
         if i.tag ~= 'ID_any' then
@@ -7888,13 +7888,13 @@ STMTS.F = {
         local e, ps = unpack(me)
 
         -- ctx
-        INFO.asr_tag(e, {'Evt'}, 'invalid `emit´')
+        INFO.asr_tag(e, {'Evt'}, 'invalid `emit`')
 
         -- tp
-        EXPS.check_tp(me, e.info.tp, ps.tp, 'invalid `emit´')
+        EXPS.check_tp(me, e.info.tp, ps.tp, 'invalid `emit`')
 
         ASR(e.info.dcl[1] ~= '&?', me,
-            'invalid `emit´ : unexpected `event´ with `&?´ modifier')
+            'invalid `emit` : unexpected `event` with `&?` modifier')
     end,
 
     Emit_Ext_emit = function (me)
@@ -7913,12 +7913,12 @@ STMTS.F = {
         end
 
         ASR(have==expects, me,
-            'invalid `emit´ : '..
+            'invalid `emit` : '..
             'unexpected context for '..AST.tag2id[ID_ext.dcl.tag]..' `'..
-            have..'´ "'..ID_ext.dcl.id..'"')
+            have..'` "'..ID_ext.dcl.id..'"')
 
         -- tp
-        EXPS.check_tp(me, ID_ext.dcl[2], ps.tp, 'invalid `emit´')
+        EXPS.check_tp(me, ID_ext.dcl[2], ps.tp, 'invalid `emit`')
     end,
 
     Emit_Ext_call = function (me)
@@ -7946,12 +7946,12 @@ STMTS.F = {
             -- tp
             local is_opt = (p.info.dcl and p.info.dcl[1]=='&?')
             ASR(not (is_opt or TYPES.check(p.info.tp,'?')), me,
-                'invalid call : unexpected context for operator `?´')
+                'invalid call : unexpected context for operator `?`')
 
             if p.info.tag ~= 'Nat' then
                 local is_alias = unpack(p.info)
                 ASR(not is_alias, me,
-                    'invalid call : unexpected context for operator `&´')
+                    'invalid call : unexpected context for operator `&`')
             end
         end
     end,
@@ -8026,7 +8026,7 @@ local function err_inits (dcl, stmt, msg, endof)
     endof = (endof and 'end of ') or ''
     ASR(false, dcl,
         'uninitialized '..AST.tag2id[dcl.tag]..' "'..dcl.id..'" : '..
-        'reached '..(msg or (endof..'`'..AST.tag2id[stmt.tag]..'´'))..
+        'reached '..(msg or (endof..'`'..AST.tag2id[stmt.tag]..'`'))..
                 ' ('..stmt.ln[1]..':'..stmt.ln[2]..')')
 end
 
@@ -8167,7 +8167,7 @@ local function run_inits (par, i, Dcl, stop, dont_await)
                 return true, me
             else
                 -- don't allow only one because of alias binding (2x)
-                err_inits(Dcl, me, 'end of `'..AST.tag2id[me.tag]..'´')
+                err_inits(Dcl, me, 'end of `'..AST.tag2id[me.tag]..'`')
             end
         else
             return run_inits(me, #me, Dcl, stop, dont_await)
@@ -8206,10 +8206,10 @@ local function run_inits (par, i, Dcl, stop, dont_await)
                             local loop = AST.par(me, DCLS.F.__loop)
                             if loop then
                                 ASR(AST.depth(loop) < AST.depth(Dcl), me,
-                                    'invalid binding : crossing `loop´ ('..loop.ln[1]..':'..loop.ln[2]..')')
+                                    'invalid binding : crossing `loop` ('..loop.ln[1]..':'..loop.ln[2]..')')
                             end
                             ASR(me.tag=='Set_Alias' or me.tag=='Set_Abs_Spawn', me,
-                                'invalid binding : expected operator `&´ in the right side')
+                                'invalid binding : expected operator `&` in the right side')
                         else
                             --assert(me.tag ~= 'Set_Alias')
                         end
@@ -8429,7 +8429,7 @@ F = {
                 ASR(false, me,
                     'invalid pointer access : crossed '..
                     'yielding statement '..
-                    --AST.tag2id[yield.tag]..'´ '..
+                    --AST.tag2id[yield.tag]..'` '..
                     '('..out.ln[1]..':'..out.ln[2]..')')
             end
         end
@@ -8469,7 +8469,7 @@ F = {
             ASR(me.__run_ptrs_ok, me,
                 'invalid pointer access : crossed '..
                 'yielding statement '..
-                --AST.tag2id[yield.tag]..'´ '..
+                --AST.tag2id[yield.tag]..'` '..
                 '('..yield.ln[1]..':'..yield.ln[2]..')')
         end
     end,
@@ -8577,15 +8577,15 @@ F = {
             if not ok then
                 local stmts = AST.get(me,1,'Stmts')
                 if stmts and AST.get(stmts,'', #stmts,'Escape') and stmts[#stmts-1]==me then
-                    ASR(false, me, 'invalid `escape´ : incompatible scopes')
+                    ASR(false, me, 'invalid `escape` : incompatible scopes')
                 elseif fr_data_ptr then
                     ASR(false, me,
-                        'invalid assignment : incompatible scopes : `data´ "'..
+                        'invalid assignment : incompatible scopes : `data` "'..
                             ID.dcl.id..'" is not plain')
                 else
                     local fin = AST.par(me, 'Finalize')
                     ASR(fin and fin[1]==me, me,
-                        'invalid pointer assignment : expected `finalize´ for variable "'..fr.info.id..'"')
+                        'invalid pointer assignment : expected `finalize` for variable "'..fr.info.id..'"')
                     assert(not fin.__fin_vars, 'TODO')
                     fin.__fin_vars = {
                         blk = assert(fr_blk),
@@ -8606,12 +8606,12 @@ F = {
         local _, call = unpack(fr)
         if (call.tag=='Exp_call' or call.tag=='Abs_Call') then
             ASR(to.info.dcl[1], me,
-                'invalid binding : expected option alias `&?´ as destination : got "'
+                'invalid binding : expected option alias `&?` as destination : got "'
                 ..TYPES.tostring(to.info.tp)..'"')
 
             local fin = AST.par(me, 'Finalize')
             ASR(fin, me,
-                'invalid binding : expected `finalize´')
+                'invalid binding : expected `finalize`')
 
             -- all finalization vars must be in the same block
             local blk = to.info.dcl_obj and to.info.dcl_obj.blk or
@@ -8621,7 +8621,7 @@ F = {
             if fin.__fin_vars then
                 --ASR(check_blk(blk,fin.__fin_vars.blk), me,
                 ASR(blk == fin.__fin_vars.blk, me,
-                    'invalid `finalize´ : incompatible scopes')
+                    'invalid `finalize` : incompatible scopes')
                 fin.__fin_vars[#fin.__fin_vars+1] = assert(to.info.dcl)
             else
                 fin.__fin_vars = { blk=blk, assert(to.info.dcl) }
@@ -8694,7 +8694,7 @@ F = {
                 watch = AST.par(watch, 'Watching')
             end
             ASR(ok, me,
-                'invalid binding : unexpected source with `&?´ : destination may outlive source')
+                'invalid binding : unexpected source with `&?` : destination may outlive source')
         end
     end,
 
@@ -8722,13 +8722,13 @@ F = {
                     -- x = &_f(...);
                     -- x = _f(...);
                 ASR(ok, me,
-                    'invalid `call´ : expected `finalize´ for variable "'..p.info.id..'"')
+                    'invalid `call` : expected `finalize` for variable "'..p.info.id..'"')
                 -- all finalization vars must be in the same block
                 local blk = p.info.dcl_obj and p.info.dcl_obj.blk or
                                 p.info.dcl.blk
                 if fin.__fin_vars then
                     ASR(blk == fin.__fin_vars.blk, me,
-                        'invalid `finalize´ : incompatible scopes')
+                        'invalid `finalize` : incompatible scopes')
                     fin.__fin_vars[#fin.__fin_vars+1] = assert(p.info.dcl)
                 else
                     fin.__fin_vars = { blk=blk, p.info.dcl }
@@ -8747,7 +8747,7 @@ F = {
         local Stmt, List_Loc = unpack(me)
         if not Stmt then
             ASR(List_Loc==false, me,
-                'invalid `finalize´ : unexpected `varlist´')
+                'invalid `finalize` : unexpected `varlist`')
             me.blk = AST.par(me, 'Block')
             return
         end
@@ -8756,17 +8756,17 @@ F = {
         -- NO: |do r=await... finalize...end|
         local tag_id = AST.tag2id[Stmt.tag]
         ASR(F.__stmts[Stmt.tag], Stmt,
-            'invalid `finalize´ : unexpected '..
-            (tag_id and '`'..tag_id..'´' or 'statement'))
+            'invalid `finalize` : unexpected '..
+            (tag_id and '`'..tag_id..'`' or 'statement'))
 
         ASR(me.__fin_vars, me,
-            'invalid `finalize´ : nothing to finalize')
+            'invalid `finalize` : nothing to finalize')
         ASR(List_Loc and List_Loc.tag=='List_Loc', List_Loc or me,
-            'invalid `finalize´ : expected `varlist´')
+            'invalid `finalize` : expected `varlist`')
 
         for _, v1 in ipairs(me.__fin_vars) do
             ASR(v1.tag=='Nat' or v1.tag=='Var', Stmt,
-                'invalid `finalize´ : expected identifier : got "'..v1.id..'"')
+                'invalid `finalize` : expected identifier : got "'..v1.id..'"')
 
             local ok = false
             for _, v2 in ipairs(List_Loc) do
@@ -8777,7 +8777,7 @@ F = {
                 end
             end
             ASR(ok, List_Loc,
-                'invalid `finalize´ : unmatching identifiers : expected "'..
+                'invalid `finalize` : unmatching identifiers : expected "'..
                 v1.id..'" (vs. '..Stmt.ln[1]..':'..Stmt.ln[2]..')')
         end
 
@@ -8898,7 +8898,7 @@ TIGHT_.F = {
         local in_async = AST.par(me,'Async') or AST.par(me,'Async_Thread')
                             or AST.par(me,'Async_Isr')
         WRN(in_async, me,
-            'invalid tight `loop´ : unbounded number of non-awaiting iterations')
+            'invalid tight `loop` : unbounded number of non-awaiting iterations')
     end,
 
     Loop = function (me)
@@ -8939,21 +8939,21 @@ G = {
         if impls[Code] or (not (Par and Par[1].tight)) then
             if mods_call.recursive then
                 ASR(mods_dcl.recursive, me,
-                    'invalid `call´ : unexpected `/recursive´')
+                    'invalid `call` : unexpected `/recursive`')
             else
                 ASR(not mods_dcl.recursive, me,
-                    'invalid `call´ : expected `/recursive´')
+                    'invalid `call` : expected `/recursive`')
             end
 
         -- calling unknown Code
         else
             -- Code must be '/recursive'
             ASR(mods_dcl.recursive, Code,
-                'invalid `code´ declaration : expected `/recursive´ : `call´ to unknown body ('..me.ln[1]..':'..me.ln[2]..')')
+                'invalid `code` declaration : expected `/recursive` : `call` to unknown body ('..me.ln[1]..':'..me.ln[2]..')')
 
             -- Call must be '/recursive'
             ASR(mods_call.recursive, me,
-                'invalid `call´ : expected `/recursive´ : `call´ to unknown body')
+                'invalid `call` : expected `/recursive` : `call` to unknown body')
         end
 
         -- calling from Par code with '/recursive'
@@ -8961,7 +8961,7 @@ G = {
             -- Par must be '/recursive'
             local mods_dcl = unpack(Par)
             ASR(mods_dcl.await or mods_dcl.recursive, Par,
-                'invalid `code´ declaration : expected `/recursive´ : nested `call/recursive´ ('..me.ln[1]..':'..me.ln[2]..')')
+                'invalid `code` declaration : expected `/recursive` : nested `call/recursive` ('..me.ln[1]..':'..me.ln[2]..')')
         end
     end,
 }
@@ -9036,7 +9036,7 @@ PROPS_.F = {
 
                 ASR(false, me,
                     'invalid `'..AST.tag2id[me.tag]..
-                    '´ : unexpected enclosing `'..AST.tag2id[par.tag]..'´')
+                    '` : unexpected enclosing `'..AST.tag2id[par.tag]..'`')
             end
         end
     end,
@@ -9045,7 +9045,7 @@ PROPS_.F = {
 
     Emit_Wclock = function (me)
         ASR(AST.par(me,'Async') or AST.par(me,'Async_Isr'), me,
-            'invalid `emit´ : expected enclosing `async´ or `async/isr´')
+            'invalid `emit` : expected enclosing `async` or `async/isr`')
     end,
 
     __escape = function (me)
@@ -9053,14 +9053,14 @@ PROPS_.F = {
         local Async = AST.par(me,'Async')
         if Async then
             ASR(AST.depth(me.outer) > AST.depth(Async), me,
-                'invalid `'..AST.tag2id[me.tag]..'´ : unexpected enclosing `async´')
+                'invalid `'..AST.tag2id[me.tag]..'` : unexpected enclosing `async`')
         end
 
 --[[
         local Every = AST.par(me,'Every')
         if Every then
             ASR(me.outer.__depth > Every.__depth, me,
-                'invalid `'..AST.tag2id[me.tag]..'´ : unexpected enclosing `every´')
+                'invalid `'..AST.tag2id[me.tag]..'` : unexpected enclosing `every`')
         end
 ]]
 
@@ -9069,7 +9069,7 @@ PROPS_.F = {
             local _,_,later = unpack(Finalize)
             if AST.is_par(later,me) then
                 ASR(AST.depth(me.outer) > AST.depth(Finalize), me,
-                    'invalid `'..AST.tag2id[me.tag]..'´ : unexpected enclosing `finalize´')
+                    'invalid `'..AST.tag2id[me.tag]..'` : unexpected enclosing `finalize`')
             end
         end
     end,
@@ -9121,8 +9121,8 @@ error'oi'
                     local _,Type,id = unpack(dcl)
                     local data = AST.get(Type,'',1,'ID_abs')
                     ASR(data and data.dcl.hier, me,
-                        'invalid `dynamic´ declaration : parameter #'..i..
-                        ' : expected `data´ in hierarchy')
+                        'invalid `dynamic` declaration : parameter #'..i..
+                        ' : expected `data` in hierarchy')
                 end
             end
         end
@@ -9130,7 +9130,7 @@ error'oi'
 
     __check = function (me)
         local _,num = unpack(me)
-        ASR(num, me, 'invalid `data´ declaration : missing `as´')
+        ASR(num, me, 'invalid `data` declaration : missing `as`')
         for _, sub in ipairs(me.hier.down) do
             PROPS_.F.__check(sub)
         end
@@ -9139,7 +9139,7 @@ error'oi'
     Data = function (me)
         local _,num = unpack(me)
         if num then
-            ASR(me.hier, me, 'invalid `as´ declaration : expected `data´ hierarchy')
+            ASR(me.hier, me, 'invalid `as` declaration : expected `data` hierarchy')
             if num ~= 'nothing' then
                 PROPS_.F.__check(DCLS.base(me))
             end
@@ -9150,18 +9150,18 @@ error'oi'
 
     Lua_Do = 'Lua',
     Lua = function (me)
-        ASR(CEU.opts.ceu_features_lua, me, '`lua´ support is disabled')
+        ASR(CEU.opts.ceu_features_lua, me, '`lua` support is disabled')
     end,
 
     Async_Thread = function (me)
-        ASR(CEU.opts.ceu_features_thread, me, '`async/thread´ support is disabled')
+        ASR(CEU.opts.ceu_features_thread, me, '`async/thread` support is disabled')
     end,
     Async_Isr = function (me)
-        ASR(CEU.opts.ceu_features_isr, me, '`async/isr´ support is disabled')
+        ASR(CEU.opts.ceu_features_isr, me, '`async/isr` support is disabled')
     end,
     Atomic = function (me)
         ASR(CEU.opts.ceu_features_thread or CEU.opts.ceu_features_isr, me,
-            '`atomic´ support is disabled: enable `--ceu-features-thread´ or `--ceu-features-isr´')
+            '`atomic` support is disabled: enable `--ceu-features-thread` or `--ceu-features-isr`')
     end,
 }
 
@@ -10296,7 +10296,7 @@ error'oi'
                     local _,Type,id = unpack(dcl)
                     local data = AST.asr(Type,'',1,'ID_abs')
                     ASR(data.dcl.hier and (not data.dcl.hier.up), me,
-                        'invalid `code´ declaration : missing base case')
+                        'invalid `code` declaration : missing base case')
 --[=[
                     me.mems.args = me.mems.args .. [[
 tceu_ndata _data_]]..i..[[;     /* force multimethod arg data id */
@@ -10449,7 +10449,7 @@ assert(me.hier)
     end,
 
     Var = function (me)
-        -- new `?´ type
+        -- new `?` type
         local alias,tp = unpack(me)
         if not (alias=='&?' or TYPES.check(tp,'?')) then
             return
@@ -11099,7 +11099,7 @@ memset(&_ceu_mem->_trails, 0, ]]..AST.root.trails_n..[[*sizeof(tceu_trl));
         local pre_pos, code = unpack(me)
         pre_pos = string.sub(pre_pos,2)
 
-        -- unescape `##´ => `#´
+        -- unescape `##` => `#`
         code = string.gsub(code, '^%s*##',  '#')
         code = string.gsub(code, '\n%s*##', '\n#')
 
@@ -11274,7 +11274,7 @@ if (0)
         local Type = AST.get(body,'Block', 1,'Stmts', 1,'Code_Ret', 1,'', 2,'Type')
         if not Type then
             LINE(me, [[
-ceu_callback_assert_msg(0, "reached end of `code´");
+ceu_callback_assert_msg(0, "reached end of `code`");
 ]])
         end
 
@@ -11607,7 +11607,7 @@ _ceu_mem->_trails[]]..me.trails[1]..[[].pse_paused = 0;
         local _,_,blk,set = unpack(me)
         if set and set.info.dcl[1]~='&?' and (not TYPES.check(set.info.tp,'?')) then
             LINE(me, [[
-ceu_callback_assert_msg(0, "reached end of `do´");
+ceu_callback_assert_msg(0, "reached end of `do`");
 ]])
         end
         CASE(me, me.lbl_out)
@@ -11644,7 +11644,7 @@ RETURN_CEU_LBL(NULL, _ceu_stk,
 ]]..CUR('__max_'..me.n)..[[ = 0;
 ]],
                 chk = [[
-ceu_callback_assert_msg(]]..CUR('__max_'..me.n)..' < '..V(max)..[[, "`loop´ overflow");
+ceu_callback_assert_msg(]]..CUR('__max_'..me.n)..' < '..V(max)..[[, "`loop` overflow");
 ]],
                 inc = [[
 ]]..CUR('__max_'..me.n)..[[++;
@@ -11721,7 +11721,7 @@ while (1) {
                         num = -num
                     end
                     ASR(num>0, me,
-                        'invalid `loop´ step : expected positive number : got "'..num..'"')
+                        'invalid `loop` step : expected positive number : got "'..num..'"')
                 end
             end
         end
@@ -11736,7 +11736,7 @@ while (1) {
         local sig = (dir=='->' and '' or '-')
         LINE(me, [[
 ]]..max.ini..[[
-ceu_callback_assert_msg(]]..sig..V(step)..[[> 0, "invalid `loop´ step : expected positive number");
+ceu_callback_assert_msg(]]..sig..V(step)..[[> 0, "invalid `loop` step : expected positive number");
 ]])
         local op = (dir=='->' and '>' or '<')
         LINE(me, [[
