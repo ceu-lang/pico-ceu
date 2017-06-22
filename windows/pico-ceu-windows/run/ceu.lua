@@ -33,7 +33,7 @@ SOFTWARE.
 PAK = {
     lua_exe = 'lua5.3',
     ceu_ver = '0.30-alpha',
-    ceu_git = '1b0d3c60fb778001d05f6b83db9fd28725a43c62',
+    ceu_git = '38995ca5fa304156c2c5156076309da60862f024',
     files = {
         ceu_c =
             [====[
@@ -48,35 +48,42 @@ typedef struct tceu_callback_ret {
     tceu_callback_arg value;
 } tceu_callback_ret;
 
-typedef tceu_callback_ret (*tceu_callback_f) (int, tceu_callback_arg, tceu_callback_arg);
+typedef tceu_callback_ret (*tceu_callback_f) (int, tceu_callback_arg, tceu_callback_arg, const char*, u32);
 typedef struct tceu_callback {
     tceu_callback_f       f;
     struct tceu_callback* nxt;
 } tceu_callback;
 
-static tceu_callback_ret ceu_callback (int cmd, tceu_callback_arg p1, tceu_callback_arg p2);
+static tceu_callback_ret ceu_callback (int cmd, tceu_callback_arg p1, tceu_callback_arg p2, const char* file, u32 line);
 
 #define ceu_callback_void_void(cmd)                     \
         ceu_callback(cmd, (tceu_callback_arg){},        \
-                          (tceu_callback_arg){})
+                          (tceu_callback_arg){},        \
+                          __FILE__, __LINE__)
 #define ceu_callback_num_void(cmd,p1)                   \
         ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
-                          (tceu_callback_arg){})
+                          (tceu_callback_arg){},        \
+                          __FILE__, __LINE__)
 #define ceu_callback_num_ptr(cmd,p1,p2)                 \
         ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
-                          (tceu_callback_arg){.ptr=p2})
+                          (tceu_callback_arg){.ptr=p2}, \
+                          __FILE__, __LINE__)
 #define ceu_callback_num_num(cmd,p1,p2)                 \
         ceu_callback(cmd, (tceu_callback_arg){.num=p1}, \
-                          (tceu_callback_arg){.num=p2})
+                          (tceu_callback_arg){.num=p2}, \
+                          __FILE__, __LINE__)
 #define ceu_callback_ptr_num(cmd,p1,p2)                 \
         ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
-                          (tceu_callback_arg){.num=p2})
+                          (tceu_callback_arg){.num=p2}, \
+                          __FILE__, __LINE__)
 #define ceu_callback_ptr_ptr(cmd,p1,p2)                 \
         ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
-                          (tceu_callback_arg){.ptr=p2})
+                          (tceu_callback_arg){.ptr=p2}, \
+                          __FILE__, __LINE__)
 #define ceu_callback_ptr_size(cmd,p1,p2)                \
         ceu_callback(cmd, (tceu_callback_arg){.ptr=p1}, \
-                          (tceu_callback_arg){.size=p2})
+                          (tceu_callback_arg){.size=p2},\
+                          __FILE__, __LINE__)
 
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 
@@ -152,9 +159,9 @@ void  ceu_vector_init         (tceu_vector* vector, usize max, bool is_dyn,
 byte* ceu_vector_setmax       (tceu_vector* vector, usize len, bool freeze);
 int   ceu_vector_setlen_could (tceu_vector* vector, usize len, bool grow);
 void  ceu_vector_setlen_ex    (tceu_vector* vector, usize len, bool grow,
-                               const char* file, int line);
+                               const char* file, u32 line);
 byte* ceu_vector_geti_ex      (tceu_vector* vector, usize idx,
-                               const char* file, int line);
+                               const char* file, u32 line);
 
 #if 0
 char* ceu_vector_tochar (tceu_vector* vector);
@@ -233,7 +240,7 @@ int ceu_vector_setlen_could (tceu_vector* vector, usize len, bool grow)
 }
 
 void ceu_vector_setlen_ex (tceu_vector* vector, usize len, bool grow,
-                           const char* file, int line)
+                           const char* file, u32 line)
 {
     /* must fit w/o growing */
     if (!grow) {
@@ -267,7 +274,7 @@ void ceu_vector_setlen_ex (tceu_vector* vector, usize len, bool grow,
     vector->len = len;
 }
 
-byte* ceu_vector_geti_ex (tceu_vector* vector, usize idx, const char* file, int line) {
+byte* ceu_vector_geti_ex (tceu_vector* vector, usize idx, const char* file, u32 line) {
     ceu_callback_assert_msg_ex(idx < vector->len, "access out of bounds", file, line);
     return ceu_vector_buf_get(vector, idx);
 }
@@ -462,7 +469,7 @@ typedef struct tceu_pool_pak {
     u8                n_traversing;
 } tceu_pool_pak;
 
-static tceu_evt* CEU_OPTION_EVT (tceu_evt* alias, const char* file, int line) {
+static tceu_evt* CEU_OPTION_EVT (tceu_evt* alias, const char* file, u32 line) {
     ceu_callback_assert_msg_ex(alias != NULL, "value is not set", file, line);
     return alias;
 }
@@ -551,7 +558,7 @@ static int ceu_data_is (tceu_ndata* supers, tceu_ndata me, tceu_ndata cmp) {
 }
 
 static void* ceu_data_as (tceu_ndata* supers, tceu_ndata* me, tceu_ndata cmp,
-                          const char* file, int line) {
+                          const char* file, u32 line) {
     ceu_callback_assert_msg_ex(ceu_data_is(supers, *me, cmp),
                                "invalid cast `as´", file, line);
     return me;
@@ -840,10 +847,10 @@ CEU_API void ceu_callback_register (tceu_callback* cb) {
     CEU_APP.cbs = cb;
 }
 
-static tceu_callback_ret ceu_callback (int cmd, tceu_callback_arg p1, tceu_callback_arg p2) {
+static tceu_callback_ret ceu_callback (int cmd, tceu_callback_arg p1, tceu_callback_arg p2, const char* file, u32 line) {
     tceu_callback* cur = CEU_APP.cbs;
     while (cur) {
-        tceu_callback_ret ret = cur->f(cmd,p1,p2);
+        tceu_callback_ret ret = cur->f(cmd,p1,p2,file,line);
         if (ret.is_handled) {
             return ret;
         }
@@ -3121,8 +3128,10 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
     , _Pool_set = K'pool'   * OPT(CKK'&') * V'__Dim' * V'Type'             * V'__var_set'
     , _Evt_set  = K'event'  * OPT(CKK'&') * (PARENS(V'_Typelist')+V'Type') * V'__var_set'
 
-    , Ext       = (CK'input'+CK'output') * (PARENS(V'_Typelist')+V'Type') * V'__ID_ext'
-    , _Typelist = LIST(V'Type')
+    , Ext = CK'input'  * (PARENS(V'_Typelist')     + V'Type')             * V'__ID_ext'
+          + CK'output' * (PARENS(V'_Typelist_amp') + OPT(CKK'&')*V'Type') * V'__ID_ext'
+    , _Typelist     = LIST(V'Type')
+    , _Typelist_amp = LIST(OPT(CKK'&') * V'Type')
 
     , __Dcls    = V'_Var_set' + V'_Vec_set' + V'_Pool_set' + V'_Evt_set'
 -- AWAIT, EMIT
@@ -4754,7 +4763,27 @@ error'TODO: luacov never executes this?'
     -- input void X -> input () X;
     Ext__PRE = 'Evt__PRE',
     Evt__PRE = function (me)
-        local _,Type = unpack(me)
+        local class,Type,x = unpack(me)
+        if class == 'output' then
+            me.are_aliases = {}
+            if Type and Type.tag=='_Typelist_amp' then
+                for i=#Type, 1, -2 do
+                    local is_alias,tp = Type[i-1], Type[i]
+                    ASR(is_alias==false or is_alias=='&')
+                    ASR(tp.tag == 'Type')
+                    table.remove(Type,i-1)
+                    table.insert(me.are_aliases, 1, is_alias)
+                end
+                Type.tag = '_Typelist'
+            else
+                ASR(Type==false or Type=='&')
+                ASR(x.tag=='Type')
+                me.are_aliases[1] = Type
+                table.remove(me, 2)
+                Type = x
+            end
+        end
+
         if Type.tag == 'Type' then
             AST.set(me, 2, node('_Typelist', me.ln, Type))
         end
@@ -6129,11 +6158,14 @@ function DCLS.is_super (super, sub)
 end
 
 function DCLS.base (data)
-    assert(data.hier)
-    if data.hier.up then
-        return DCLS.base(data.hier.up)
+    if data.hier then
+        if data.hier.up then
+            return DCLS.base(data.hier.up)
+        else
+            return data
+        end
     else
-        return data
+        return false
     end
 end
 
@@ -7931,8 +7963,13 @@ STMTS.F = {
         for i, e in ipairs(me) do
             -- ctx
 -- TODO: call/emit, argument
-            INFO.asr_tag(e, {'Val','Nat','Var'},
-                'invalid expression list : item #'..i)
+            if AST.par(me,'Exp_call') then
+                INFO.asr_tag(e, {'Val','Nat','Var'},
+                    'invalid expression list : item #'..i)
+            else
+                INFO.asr_tag(e, {'Val','Nat','Var','Alias'},
+                    'invalid expression list : item #'..i)
+            end
 
             -- info
             Typelist[i] = AST.copy(e.info.tp)
@@ -9933,15 +9970,15 @@ CEU_CODE_]]..ID_abs.dcl.id_..'('..V(Abs_Cons)..','..mem..[[)
         end
 
         local ret do
-            if Type[1].tag=='ID_abs' and Type[1].dcl.tag=='Data' then
+            local base = (Type[1].tag=='ID_abs' and Type[1].dcl.tag=='Data')
+                            and DCLS.base(Type[1].dcl)
+            if base then
                 local ptr1,ptr2,ptr3 = '*', '*', '&'
                 if TYPES.check(Type,'&&') then
                     ptr1, ptr2, ptr3 = '', '', ''
                 elseif e.info.tag == 'Alias' then
                     ptr1, ptr2, ptr3 = '', '*', ''
                 end
-
-                local base = DCLS.base(Type[1].dcl)
                 ret = [[
 (]]..ptr1..[[(
 (]]..TYPES.toc(Type)..ptr2..[[)
@@ -10734,7 +10771,8 @@ for _, dcl in ipairs(MEMS.exts) do
     -- type
     local mem = 'typedef struct tceu_'..inout..'_'..dcl.id..' {\n'
     for i,Type in ipairs(Typelist) do
-        mem = mem..'    '..TYPES.toc(Type)..' _'..i..';\n'
+        local ptr = (dcl.are_aliases and dcl.are_aliases[i] and '*') or ''
+        mem = mem..'    '..TYPES.toc(Type)..ptr..' _'..i..';\n'
     end
     mem = mem..'} tceu_'..inout..'_'..dcl.id..';\n'
 

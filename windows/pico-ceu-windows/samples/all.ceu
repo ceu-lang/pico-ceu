@@ -19,7 +19,7 @@ par do
     var integer i;
     loop i in [1->_[, 2 do
         await 1s;
-        emit GRAPHICS_SET_RGB(0xFF,0,0);
+        emit GRAPHICS_SET_COLOR(COLOR_RED);
         emit GRAPHICS_DRAW_PIXEL(i,i);
         await 1s;
         emit GRAPHICS_SET_RGB(0,0xFF,0);
