@@ -560,7 +560,7 @@ static int ceu_data_is (tceu_ndata* supers, tceu_ndata me, tceu_ndata cmp) {
 static void* ceu_data_as (tceu_ndata* supers, tceu_ndata* me, tceu_ndata cmp,
                           const char* file, u32 line) {
     ceu_callback_assert_msg_ex(ceu_data_is(supers, *me, cmp),
-                               "invalid cast `as´", file, line);
+                               "invalid cast `as`", file, line);
     return me;
 }
 
@@ -2554,7 +2554,9 @@ local patt
 
 CEU.i2l = {}
 
-local line = m.Cmt('\n',
+local CRLF = m.P'\r'^-1 * '\n'
+
+local line = m.Cmt(CRLF,
     function (s,i)
         for i=#CEU.i2l, i do
             CEU.i2l[i] = { FILE, LINE }
@@ -2563,7 +2565,7 @@ local line = m.Cmt('\n',
         return true
     end )
 
-local S = (m.S'\t\r ' + m.P'\\'*(1-m.P'\n')^0*'\n')
+local S = (m.S'\t\r ' + m.P'\\'*(1-m.P'\n')^0*CRLF)
 local SS = S^0
 
 -- #line N "file" :: directive to set line/filename
@@ -2571,7 +2573,7 @@ local dir_lins = m.Cmt( m.P'#' *SS* m.P'line'^-1
                           *SS* m.C(m.R'09'^1)             -- line
                           *SS* ( m.P'"' * m.C((1-m.P'"')^0) * m.P'"'
                               + m.Cc(false) )            -- file
-                          * (S + (m.P(1)-'\n'))^0 * '\n' -- \n
+                          * (S + (m.P(1)-CRLF))^0 * CRLF -- \n
                  ,
     function (s,i, line, file)
         LINE = tonumber(line)
