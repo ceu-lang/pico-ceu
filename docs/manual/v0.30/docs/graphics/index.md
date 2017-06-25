@@ -71,7 +71,8 @@ output (text,integer) GRAPHICS_SET_FONT
 
 ### GRAPHICS_SET_WRITE_CURSOR
 
-Changes the cursor position for writing text with [`GRAPHICS_WRITE`](#graphics_write) and
+Changes the cursor starting position for writing text with
+[`GRAPHICS_WRITE`](#graphics_write) and
 [`GRAPHICS_WRITELN`](#graphics_writeln).
 
 ```ceu
@@ -81,6 +82,11 @@ output (integer,integer) GRAPHICS_SET_WRITE_CURSOR
 - Parameters:
     - `integer`: new position in the `x-axis`
     - `integer`: new position in the `y-axis`
+
+The default starting position is the top-left of the screen.
+
+The current position is reset on every
+[`WINDOW_CLEAR`](../window/#window_clear) operation.
 
 ## Drawing
 

@@ -98,8 +98,9 @@ native/pos do
     bool      FRAMES_SET = 0;
 
     SDL_Color GRAPHICS_SET_CLEAR_COLOR_RGB;
-    int  GRAPHICS_WRITE_CURSOR_X = 0;
-    int  GRAPHICS_WRITE_CURSOR_Y = 0;
+    int GRAPHICS_SET_WRITE_CURSOR = 0;
+    int GRAPHICS_SET_WRITE_CURSOR_X, GRAPHICS_SET_WRITE_CURSOR_Y;
+    int GRAPHICS_CUR_WRITE_CURSOR_X, GRAPHICS_CUR_WRITE_CURSOR_Y;
 
     Mix_Chunk* SOUND_VEC[5] = { NULL, NULL, NULL, NULL, NULL };
     int SOUND_SET_VOLUME = 50;
@@ -245,6 +246,15 @@ native/pos do
                                                GRAPHICS_SET_CLEAR_COLOR_RGB.g,
                                                GRAPHICS_SET_CLEAR_COLOR_RGB.b,
                                                0xFF);
+
+                        if (GRAPHICS_SET_WRITE_CURSOR) {
+                            GRAPHICS_CUR_WRITE_CURSOR_X = GRAPHICS_SET_WRITE_CURSOR_X;
+                            GRAPHICS_CUR_WRITE_CURSOR_Y = GRAPHICS_SET_WRITE_CURSOR_Y;
+                        } else {
+                            GRAPHICS_CUR_WRITE_CURSOR_X = -LOG_W/2;
+                            GRAPHICS_CUR_WRITE_CURSOR_Y =  LOG_H/2;
+                        }
+
                         WINDOW_Present();
                         break;
                     }
@@ -267,6 +277,10 @@ native/pos do
                     }
                     case CEU_OUTPUT_GRAPHICS_SET_COLOR_NAME: {
                         tceu_data_Color* clr = (tceu_data_Color*) p2.ptr;
+                        GRAPHICS_SET_CLEAR_COLOR_RGB.r = clr->r;
+                        GRAPHICS_SET_CLEAR_COLOR_RGB.g = clr->g;
+                        GRAPHICS_SET_CLEAR_COLOR_RGB.b = clr->b;
+                        GRAPHICS_SET_CLEAR_COLOR_RGB.a = 0xFF;
                         SDL_SetRenderDrawColor(REN, clr->r, clr->g, clr->b, 0xFF);
                         break;
                     }
@@ -286,8 +300,13 @@ native/pos do
                     }
                     case CEU_OUTPUT_GRAPHICS_SET_WRITE_CURSOR: {
                         tceu_output_GRAPHICS_SET_WRITE_CURSOR* pt = (tceu_output_GRAPHICS_SET_WRITE_CURSOR*) p2.ptr;
-                        GRAPHICS_WRITE_CURSOR_X = pt->_1;
-                        GRAPHICS_WRITE_CURSOR_Y = pt->_2;
+
+                        GRAPHICS_SET_WRITE_CURSOR   = 1;
+                        GRAPHICS_SET_WRITE_CURSOR_X = pt->_1;
+                        GRAPHICS_SET_WRITE_CURSOR_Y = pt->_2;
+
+                        GRAPHICS_CUR_WRITE_CURSOR_X = pt->_1;
+                        GRAPHICS_CUR_WRITE_CURSOR_Y = pt->_2;
                         break;
                     }
 
@@ -405,22 +424,22 @@ native/pos do
 
                         int w, h;
                         TTF_SizeText(FNT, *str, &w,&h);
-                        SDL_Rect rct = { X(GRAPHICS_WRITE_CURSOR_X),Y(GRAPHICS_WRITE_CURSOR_Y), w,h };
+                        SDL_Rect rct = { X(GRAPHICS_CUR_WRITE_CURSOR_X),Y(GRAPHICS_CUR_WRITE_CURSOR_Y), w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         WINDOW_Present();
 
-                        GRAPHICS_WRITE_CURSOR_X += w;
+                        GRAPHICS_CUR_WRITE_CURSOR_X += w;
 
                         SDL_DestroyTexture(tex);
                         SDL_FreeSurface(sfc);
                         break;
                     }
                     case CEU_OUTPUT_GRAPHICS_WRITELN: {
-                        int cursor_x = GRAPHICS_WRITE_CURSOR_X;
+                        int cursor_x = GRAPHICS_CUR_WRITE_CURSOR_X;
                         p1.num = CEU_OUTPUT_GRAPHICS_WRITE;
                         ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, file, line);
-                        GRAPHICS_WRITE_CURSOR_X = -LOG_W;
-                        GRAPHICS_WRITE_CURSOR_Y -= FNT_H;
+                        GRAPHICS_CUR_WRITE_CURSOR_X = (GRAPHICS_SET_WRITE_CURSOR ? GRAPHICS_SET_WRITE_CURSOR_X : -LOG_W/2);
+                        GRAPHICS_CUR_WRITE_CURSOR_Y -= FNT_H;
                         break;
                     }
 
