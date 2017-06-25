@@ -1,67 +1,244 @@
-emit WINDOW_SET_SIZE(500,500,50,50);
-emit GRAPHICS_SET_GRID(yes);
+#if 1
+emit GRAPHICS_DRAW_TEXT(-25,0,"= WIN =");
 await 1s;
-emit GRAPHICS_CLEAR();
-emit GRAPHICS_SET_COLOR_RGB(0,0,0xFF);
-emit GRAPHICS_DRAW_LINE(0,0,50,50);
-emit GRAPHICS_DRAW_TEXT(25,25,"alo");
-emit GRAPHICS_DRAW_RECT(25,0,25,25);
-emit GRAPHICS_DRAW_BMP(30,5, "res/star.bmp");
 
-var int vol;
-loop vol in [0 -> 100], 10 do
-    emit SOUND_SET_VOLUME(vol);
-    emit SOUND_PLAY("res/click1.wav");
-    await 500ms;
-end
+    // pico-Ceu -> new title -> pico-Ceu
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"new title");
+    await 1s;
+    emit WINDOW_SET_TITLE("new title");
+    await 1s;
+    emit WINDOW_SET_TITLE("pico-Ceu");
+    await 1s;
 
-par do
-    var integer i;
-    loop i in [1->_[, 2 do
-        await 1s;
-        emit GRAPHICS_SET_COLOR_NAME(COLOR_RED);
-        emit GRAPHICS_DRAW_PIXEL(i,i);
-        await 1s;
-        emit GRAPHICS_SET_COLOR_RGB(0,0xFF,0);
-        emit GRAPHICS_DRAW_PIXEL(i+1,i+1);
+    // black -> red -> black
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"red");
+    await 1s;
+    emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_RED);
+    emit WINDOW_CLEAR();
+    await 1s;
+    emit GRAPHICS_DRAW_TEXT(-25,0,"black");
+    await 1s;
+    emit WINDOW_SET_CLEAR_COLOR_RGB(0,0,0);
+    emit WINDOW_CLEAR();
+    await 1s;
+
+    // (51,51) -> (11,11) -> (51,51)
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"500/10,10");
+    await 1s;
+    emit WINDOW_SET_SIZE(550,550,11,11);
+    await 1s;
+    emit WINDOW_SET_SIZE(510,510,51,51);
+    await 1s;
+
+    // grid -> no grid -> grid
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"no grid");
+    await 1s;
+    emit WINDOW_SET_GRID(no);
+    await 1s;
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"grid");
+    await 1s;
+    emit WINDOW_SET_GRID(yes);
+    await 1s;
+#endif
+
+#if 1
+emit WINDOW_CLEAR();
+emit GRAPHICS_DRAW_TEXT(-25,0,"= SOUND =");
+await 1s;
+
+    var int vol;
+    loop vol in [0 -> 100], 10 do
+        emit WINDOW_CLEAR();
+        vector[10] byte str;
+        _snprintf(&&str[0],10, "%d", vol);
+        emit GRAPHICS_DRAW_TEXT(-25,0,&&str[0]);
+        emit SOUND_SET_VOLUME(vol);
+        emit SOUND_PLAY("res/click1.wav");
+        await 500ms;
     end
-with
-    await 5s;
+#endif
+
+#if 1
+emit WINDOW_CLEAR();
+emit GRAPHICS_DRAW_TEXT(-25,0,"= GRAPHICS =");
+await 1s;
+
+    // white -> red -> white
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"W -> G");
+    await 1s;
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"G -> W");
+    await 1s;
     emit GRAPHICS_SET_COLOR_RGB(0xFF,0xFF,0xFF);
-    emit GRAPHICS_CLEAR();
-with
-    loop do
-        var integer key = await KEY_PRESS;
-        {printf(">>> press %c\n", @key);}
-        key = await KEY_UNPRESS;
-        {printf(">>> unpress %c\n", @key);}
+    await 1s;
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"white");
+    await 1s;
+
+    // FONT
+
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_TEXT(-25,0,"- FONT -");
+    await 1s;
+
+    // 1 -> 50 ppt
+    var int size;
+    loop size in [1 -> 50], 1 do
+        emit WINDOW_CLEAR();
+        vector[10] byte str;
+        _snprintf(&&str[0],10, "%d", size);
+        emit GRAPHICS_SET_FONT("res/tiny.ttf", size);
+        emit GRAPHICS_DRAW_TEXT(-25,0,&&str[0]);
+        await 250ms;
     end
-with
-    loop do
+
+    // FreeSans 10
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_SET_FONT("res/FreeSans.ttf", 10);
+    emit GRAPHICS_DRAW_TEXT(-25,0,"FreeSans");
+    await 1s;
+
+    // Tiny 10
+    emit GRAPHICS_SET_FONT("res/tiny.ttf", 10);
+    await 1s;
+
+    // CURSOR
+
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_WRITELN("line 1");
+    await 1s;
+    emit GRAPHICS_WRITELN("line 2");
+    await 1s;
+
+    // move to (-10,10) pixels
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_WRITELN("(-10,10)");
+    emit GRAPHICS_SET_WRITE_CURSOR(-10,10);
+    await 1s;
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_WRITELN("line 1");
+    await 1s;
+    emit GRAPHICS_WRITELN("line 2");
+    await 1s;
+
+    // -> 1 2 3
+    emit GRAPHICS_WRITE("1");
+    await 1s;
+    emit GRAPHICS_WRITE("2");
+    await 1s;
+    emit GRAPHICS_WRITE("3");
+    await 1s;
+
+    // BMP
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_WRITELN("bmp");
+    await 1s;
+    emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_WHITE);
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_DRAW_BMP(0,0, "res/star.bmp");
+    emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
+    await 1s;
+
+    // PIXEL
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_WRITELN("X pixels");
+    emit GRAPHICS_WRITELN("red/blue");
+    await 1s;
+    emit WINDOW_CLEAR();
+    par/and do
+        var integer i;
+        loop i in [-25 -> 25] do
+            emit GRAPHICS_SET_COLOR_RGB(0xFF,0,0);
+            emit GRAPHICS_DRAW_PIXEL(i,i);
+            await 100ms;
+        end
+    with
+        var integer i;
+        loop i in [-25 -> 25] do
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+            emit GRAPHICS_DRAW_PIXEL(i,-i);
+            await 100ms;
+        end
+    end
+
+    // RECT / LINE
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_WRITELN("rect");
+    emit GRAPHICS_WRITELN("lines");
+    await 1s;
+    emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_WHITE);
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_RED);
+    emit GRAPHICS_DRAW_RECT(0,0, 10,10);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);
+    emit GRAPHICS_DRAW_LINE(-25,-25,25,25);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+    emit GRAPHICS_DRAW_LINE(-25,25,25,-25);
+    await 1s;
+    emit GRAPHICS_SCREENSHOT("res/screen.bmp");
+    await 1s;
+    emit WINDOW_CLEAR();
+    emit GRAPHICS_WRITELN("screenshot");
+    await 1s;
+    emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
+#endif
+
+#if 1
+emit WINDOW_CLEAR();
+emit GRAPHICS_DRAW_TEXT(-25,0,"= INPUT =");
+await 1s;
+
+    emit GRAPHICS_SET_FONT("res/tiny.ttf", 8);
+    par do
+        var integer key;
+        every key in KEY_PRESS do
+            vector[25] byte str;
+            emit WINDOW_CLEAR();
+            _snprintf(&&str[0],25, "press: %d", key);
+            emit GRAPHICS_DRAW_TEXT(-25,0,&&str[0]);
+        end
+    with
+        var integer key;
+        every key in KEY_UNPRESS do
+            vector[25] byte str;
+            _snprintf(&&str[0],25, "unpress: %d", key);
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_DRAW_TEXT(-25,0,&&str[0]);
+        end
+    with
         var integer x;
         var integer y;
-        (_,x,y) = await MOUSE_CLICK;
-        {printf(">>> click %d %d\n", @x,@y);}
-        (_,x,y) = await MOUSE_UNCLICK;
-        {printf(">>> unclick %d %d\n", @x,@y);}
+        every (x,y) in MOUSE_MOVE do
+            vector[25] byte str;
+            _snprintf(&&str[0],25, "move: %d,%d", x,y);
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_DRAW_TEXT(-25,0,&&str[0]);
+        end
+    with
+        var integer x;
+        var integer y;
+        every (_,x,y) in MOUSE_CLICK do
+            vector[25] byte str;
+            _snprintf(&&str[0],25, "click: %d,%d", x,y);
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_DRAW_TEXT(-25,0,&&str[0]);
+        end
+    with
+        var integer x;
+        var integer y;
+        every (_,x,y) in MOUSE_UNCLICK do
+            vector[25] byte str;
+            _snprintf(&&str[0],25, "unclick: %d,%d", x,y);
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_DRAW_TEXT(-25,0,&&str[0]);
+        end
     end
-with
-    var integer x;
-    var integer y;
-    every (x,y) in MOUSE_MOVE do
-        {printf(">>> move: %d %d\n", @x,@y);}
-    end
-with
-    emit GRAPHICS_SET_WRITE_CURSOR(1,5);
-    spawn do
-        await 5s;
-        emit GRAPHICS_SET_FONT("res/FreeSans.ttf", 10);
-        emit GRAPHICS_SET_WRITE_CURSOR(1,5);
-        await 2s;
-        emit GRAPHICS_SCREENSHOT("res/screen.bmp");
-    end
-    every 1s do
-        emit GRAPHICS_WRITE("|");
-        emit GRAPHICS_WRITELN(" Ola Mundo");
-    end
-end
+#endif
