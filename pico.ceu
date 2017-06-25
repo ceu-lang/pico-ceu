@@ -22,6 +22,9 @@ end
 #define yes     true
 #define no      false
 
+#define X(x) ((x)+LOG_W/2)
+#define Y(y) (LOG_H/2-(y))
+
 data Color with
     var integer r;
     var integer g;
@@ -85,6 +88,7 @@ output (int,byte&&)      NET_SEND;
 native/pos do
     SDL_Window*   WIN;
     #define REN (SDL_GetRenderer(WIN))
+    int LOG_W, LOG_H;
 
     TTF_Font* FNT = NULL;
     int       FNT_H;
@@ -157,6 +161,8 @@ native/pos do
 
                         SDL_SetWindowSize(WIN, win_w, win_h);
                         SDL_RenderSetLogicalSize(REN, log_w, log_h);
+                        LOG_W = log_w;
+                        LOG_H = log_h;
 #if 1
                         // TODO: w/o delay, set_size + clear doesn't work
                         SDL_Delay(100);
@@ -259,6 +265,8 @@ native/pos do
                         SDL_GetWindowSize(WIN, &win_w, &win_h);
                         SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
                         ceu_dbg_assert(win_w/log_w>1 && win_h/log_h>1);
+
+                        GRAPHICS_Present();
                         break;
                     }
 
@@ -308,7 +316,7 @@ native/pos do
 
                     case CEU_OUTPUT_GRAPHICS_DRAW_PIXEL: {
                         tceu_output_GRAPHICS_DRAW_PIXEL* pt = (tceu_output_GRAPHICS_DRAW_PIXEL*) p2.ptr;
-                        SDL_Rect rct = { pt->_1, pt->_2, 1, 1 };
+                        SDL_Rect rct = { X(pt->_1), Y(pt->_2), 1, 1 };
                         SDL_RenderFillRect(REN, &rct);
                         GRAPHICS_Present();
                         break;
@@ -319,14 +327,14 @@ native/pos do
 //SDL_GetWindowSize(REN, &win_w, &win_h);
 //SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
 //SDL_RenderSetScale(REN, 10,10);
-                        SDL_RenderDrawLine(REN, ps->_1, ps->_2, ps->_3, ps->_4);
+                        SDL_RenderDrawLine(REN, X(ps->_1), Y(ps->_2), X(ps->_3), Y(ps->_4));
 //SDL_RenderSetScale(REN, 1, 1);
                         GRAPHICS_Present();
                         break;
                     }
                     case CEU_OUTPUT_GRAPHICS_DRAW_RECT: {
                         tceu_output_GRAPHICS_DRAW_RECT* ps = (tceu_output_GRAPHICS_DRAW_RECT*) p2.ptr;
-                        SDL_Rect rct = { ps->_1, ps->_2, ps->_3, ps->_4 };
+                        SDL_Rect rct = { X(ps->_1), X(ps->_2), ps->_3, ps->_4 };
                         SDL_RenderFillRect(REN, &rct);
                         GRAPHICS_Present();
                         break;
@@ -342,7 +350,7 @@ native/pos do
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
                         ceu_dbg_assert(tex != NULL);
 
-                        SDL_Rect rct = { ps->_1,ps->_2, sfc->w,sfc->h };
+                        SDL_Rect rct = { X(ps->_1),Y(ps->_2), sfc->w,sfc->h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GRAPHICS_Present();
 
@@ -362,7 +370,7 @@ native/pos do
 
                         int w, h;
                         TTF_SizeText(FNT, ps->_3, &w,&h);
-                        SDL_Rect rct = { ps->_1,ps->_2, w,h };
+                        SDL_Rect rct = { X(ps->_1),Y(ps->_2), w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GRAPHICS_Present();
 
@@ -382,7 +390,7 @@ native/pos do
 
                         int w, h;
                         TTF_SizeText(FNT, *str, &w,&h);
-                        SDL_Rect rct = { GRAPHICS_WRITE_CURSOR_X,GRAPHICS_WRITE_CURSOR_Y, w,h };
+                        SDL_Rect rct = { X(GRAPHICS_WRITE_CURSOR_X),Y(GRAPHICS_WRITE_CURSOR_Y), w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         GRAPHICS_Present();
 
@@ -396,8 +404,8 @@ native/pos do
                         int cursor_x = GRAPHICS_WRITE_CURSOR_X;
                         p1.num = CEU_OUTPUT_GRAPHICS_WRITE;
                         ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, file, line);
-                        GRAPHICS_WRITE_CURSOR_X = 0;
-                        GRAPHICS_WRITE_CURSOR_Y += FNT_H;
+                        GRAPHICS_WRITE_CURSOR_X = -LOG_W;
+                        GRAPHICS_WRITE_CURSOR_Y -= FNT_H;
                         break;
                     }
 
