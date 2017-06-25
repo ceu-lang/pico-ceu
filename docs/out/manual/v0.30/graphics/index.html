@@ -162,6 +162,29 @@
 screen.</p>
 <p><code>TODO: axis, anchor, etc</code></p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="graphics_set_anchor">GRAPHICS_SET_ANCHOR<a class="headerlink" href="#graphics_set_anchor" title="Permanent link">&para;</a></h3>
+<p>Changes the drawing anchor of all subsequent drawing operations
+<a href="#graphics_draw_bmp"><code>GRAPHICS_DRAW_BMP</code></a>,
+<a href="#graphics_draw_rect"><code>GRAPHICS_DRAW_RECT</code></a>, and
+<a href="#graphics_draw_text"><code>GRAPHICS_DRAW_TEXT</code></a>.</p>
+<pre><code class="ceu">output (HAnchor,VAnchor) GRAPHICS_SET_ANCHOR;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>HAnchor</code>: new horizontal anchor</li>
+<li><code>VAnchor</code>: new vertical anchor</li>
+</ul>
+</li>
+</ul>
+<p>The anchor specifies the part of the shape to appear at the pixel position of
+the drawing operation.</p>
+<p>The possible values for <code>HAnchor</code> are <code>HANCHOR_LEFT</code>, <code>HANCHOR_CENTER</code>,
+and <code>HANCHOR_RIGHT</code>.
+The default value is <code>HANCHOR_CENTER</code>.</p>
+<p>The possible values for <code>HVnchor</code> are <code>VANCHOR_TOP</code>, <code>VANCHOR_CENTER</code>,
+and <code>VANCHOR_BOTTOM</code>.
+The default value is <code>VANCHOR_CENTER</code>.</p>
 <h3 id="graphics_set_color_name">GRAPHICS_SET_COLOR_NAME<a class="headerlink" href="#graphics_set_color_name" title="Permanent link">&para;</a></h3>
 <p>Changes the color of all subsequent drawing operations.</p>
 <pre><code class="ceu">output (Color) GRAPHICS_SET_COLOR_NAME

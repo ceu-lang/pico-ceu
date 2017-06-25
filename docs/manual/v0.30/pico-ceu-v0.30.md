@@ -18,6 +18,31 @@ screen.
 
 ### Configuration
 
+#### GRAPHICS_SET_ANCHOR
+
+Changes the drawing anchor of all subsequent drawing operations
+[`GRAPHICS_DRAW_BMP`](#graphics_draw_bmp),
+[`GRAPHICS_DRAW_RECT`](#graphics_draw_rect), and
+[`GRAPHICS_DRAW_TEXT`](#graphics_draw_text).
+
+```ceu
+output (HAnchor,VAnchor) GRAPHICS_SET_ANCHOR;
+```
+- Parameters:
+    - `HAnchor`: new horizontal anchor
+    - `VAnchor`: new vertical anchor
+
+The anchor specifies the part of the shape to appear at the pixel position of
+the drawing operation.
+
+The possible values for `HAnchor` are `HANCHOR_LEFT`, `HANCHOR_CENTER`,
+and `HANCHOR_RIGHT`.
+The default value is `HANCHOR_CENTER`.
+
+The possible values for `HVnchor` are `VANCHOR_TOP`, `VANCHOR_CENTER`,
+and `VANCHOR_BOTTOM`.
+The default value is `VANCHOR_CENTER`.
+
 #### GRAPHICS_SET_COLOR_NAME
 
 Changes the color of all subsequent drawing operations.
