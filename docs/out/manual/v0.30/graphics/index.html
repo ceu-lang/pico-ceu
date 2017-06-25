@@ -160,6 +160,7 @@
                 <h1 id="graphics">Graphics<a class="headerlink" href="#graphics" title="Permanent link">&para;</a></h1>
 <p>Provides graphics operations, such as for drawing pixels and images on the
 screen.</p>
+<p><code>TODO: axis, anchor, etc</code></p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="graphics_set_color_name">GRAPHICS_SET_COLOR_NAME<a class="headerlink" href="#graphics_set_color_name" title="Permanent link">&para;</a></h3>
 <p>Changes the color of all subsequent drawing operations.</p>
@@ -206,23 +207,6 @@ screen.</p>
 </li>
 </ul>
 <p>The default color is white.</p>
-<h3 id="graphics_set_grid">GRAPHICS_SET_GRID<a class="headerlink" href="#graphics_set_grid" title="Permanent link">&para;</a></h3>
-<p>Enables or disables a visual grid delimiting the screen pixels.</p>
-<pre><code class="ceu">output (yesno) GRAPHICS_SET_GRID
-</code></pre>
-
-<ul>
-<li>Parameters:<ul>
-<li><code>yesno</code>: new state<ul>
-<li><code>yes</code>: enables the grid</li>
-<li><code>no</code>: disables the grid</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>The ratio between the real and logical dimensions set with
-<a href="./../window/#window_set_size"><code>WINDOW_SET_SIZE</code></a> must be greater then one.</p>
 <h3 id="graphics_set_font">GRAPHICS_SET_FONT<a class="headerlink" href="#graphics_set_font" title="Permanent link">&para;</a></h3>
 <p>Changes the font for drawing and writing text.</p>
 <pre><code class="ceu">output (text,integer) GRAPHICS_SET_FONT
@@ -236,7 +220,8 @@ screen.</p>
 </li>
 </ul>
 <h3 id="graphics_set_write_cursor">GRAPHICS_SET_WRITE_CURSOR<a class="headerlink" href="#graphics_set_write_cursor" title="Permanent link">&para;</a></h3>
-<p>Changes the cursor position for writing text with <a href="#graphics_write"><code>GRAPHICS_WRITE</code></a> and
+<p>Changes the cursor starting position for writing text with
+<a href="#graphics_write"><code>GRAPHICS_WRITE</code></a> and
 <a href="#graphics_writeln"><code>GRAPHICS_WRITELN</code></a>.</p>
 <pre><code class="ceu">output (integer,integer) GRAPHICS_SET_WRITE_CURSOR
 </code></pre>
@@ -248,21 +233,10 @@ screen.</p>
 </ul>
 </li>
 </ul>
+<p>The default starting position is the top-left of the screen.</p>
+<p>The current position is reset on every
+<a href="./../window/#window_clear"><code>WINDOW_CLEAR</code></a> operation.</p>
 <h2 id="drawing">Drawing<a class="headerlink" href="#drawing" title="Permanent link">&para;</a></h2>
-<h3 id="graphics_clear">GRAPHICS_CLEAR<a class="headerlink" href="#graphics_clear" title="Permanent link">&para;</a></h3>
-<p>Clears the screen.</p>
-<pre><code class="ceu">output (none) GRAPHICS_CLEAR
-</code></pre>
-
-<ul>
-<li>Parameters:<ul>
-<li><code>none</code>: no parameters</li>
-</ul>
-</li>
-</ul>
-<p>The clear color is specified with
-<a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
-<a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
 <h3 id="graphics_draw_bmp">GRAPHICS_DRAW_BMP<a class="headerlink" href="#graphics_draw_bmp" title="Permanent link">&para;</a></h3>
 <p>Draws a bitmap image on the screen.</p>
 <pre><code class="ceu">output (integer,integer,text) GRAPHICS_DRAW_BMP

@@ -99,9 +99,7 @@
                 
                     <li><a class="toctree-l4" href="#configuration">Configuration</a></li>
                 
-                    <li><a class="toctree-l4" href="#update">Update</a></li>
-                
-                    <li><a class="toctree-l4" href="#redraw">Redraw</a></li>
+                    <li><a class="toctree-l4" href="#inputs">Inputs</a></li>
                 
             
             </ul>
@@ -176,54 +174,7 @@ inputs to the application.</p>
 </ul>
 </li>
 </ul>
-<h3 id="frames_set_clear_color_name">FRAMES_SET_CLEAR_COLOR_NAME<a class="headerlink" href="#frames_set_clear_color_name" title="Permanent link">&para;</a></h3>
-<p>Changes the redrawing background color.</p>
-<pre><code class="ceu">output (Color) FRAMES_SET_CLEAR_COLOR_NAME
-</code></pre>
-
-<ul>
-<li>Parameters:<ul>
-<li><code>Color</code>: new color name</li>
-</ul>
-</li>
-</ul>
-<p>The color names are based on the <em>HTML Web Colors</em>:</p>
-<p><a href="https://en.wikipedia.org/wiki/Web_colors#HTML_color_names">https://en.wikipedia.org/wiki/Web_colors#HTML_color_names</a></p>
-<p>The possible values are
-    <code>COLOR_WHITE</code>,
-    <code>COLOR_SILVER</code>,
-    <code>COLOR_GRAY</code>,
-    <code>COLOR_BLACK</code>,
-    <code>COLOR_RED</code>,
-    <code>COLOR_MAROON</code>,
-    <code>COLOR_YELLOW</code>,
-    <code>COLOR_OLIVE</code>,
-    <code>COLOR_LIME</code>,
-    <code>COLOR_GREEN</code>,
-    <code>COLOR_AQUA</code>,
-    <code>COLOR_TEAL</code>,
-    <code>COLOR_BLUE</code>,
-    <code>COLOR_NAVY</code>,
-    <code>COLOR_FUCHSIA</code>,
-    <code>COLOR_PURPLE</code>.</p>
-<p>The default color is black.</p>
-<h3 id="frames_set_clear_color_rgb">FRAMES_SET_CLEAR_COLOR_RGB<a class="headerlink" href="#frames_set_clear_color_rgb" title="Permanent link">&para;</a></h3>
-<p>Changes the redrawing background color in RGB.</p>
-<pre><code>output (integer,integer,integer) FRAMES_SET_CLEAR_COLOR_RGB
-</code></pre>
-
-<ul>
-<li>Parameters:<ul>
-<li><code>integer</code>: new red component</li>
-<li><code>integer</code>: new green component</li>
-<li><code>integer</code>: new blue component</li>
-</ul>
-</li>
-</ul>
-<p>On every frame before <a href="#frames_redraw"><code>FRAMES_REDRAW</code></a>, the screen is cleared
-with the background color.</p>
-<p>The default color is black.</p>
-<h2 id="update">Update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h2>
+<h2 id="inputs">Inputs<a class="headerlink" href="#inputs" title="Permanent link">&para;</a></h2>
 <h3 id="frames_update">FRAMES_UPDATE<a class="headerlink" href="#frames_update" title="Permanent link">&para;</a></h3>
 <pre><code class="ceu">input (integer) FRAMES_UPDATE
 </code></pre>
@@ -234,11 +185,10 @@ with the background color.</p>
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>integer</code>: the number of elapsed milliseconds since the previous frame</li>
+<li><code>integer</code>: the number of milliseconds elapsed since the previous frame</li>
 </ul>
 </li>
 </ul>
-<h2 id="redraw">Redraw<a class="headerlink" href="#redraw" title="Permanent link">&para;</a></h2>
 <h3 id="frames_redraw">FRAMES_REDRAW<a class="headerlink" href="#frames_redraw" title="Permanent link">&para;</a></h3>
 <pre><code class="ceu">input (none) FRAMES_REDRAW
 </code></pre>
@@ -253,9 +203,8 @@ with the background color.</p>
 </ul>
 </li>
 </ul>
-<p>Before the input occurs, the screen is cleared with the color set with
-<a href="#frames_set_clear_color_name"><code>FRAMES_SET_CLEAR_COLOR_NAME</code></a> or
-<a href="#frames_set_clear_color_rgb"><code>FRAMES_SET_CLEAR_COLOR_RGB</code></a>.</p>
+<p>Before the input occurs, the screen is automatically cleared with
+<a href="./../window/#window_clear"><code>WINDOW_CLEAR</code></a>.</p>
               
             </div>
           </div>

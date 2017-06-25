@@ -106,6 +106,8 @@
                 
                     <li><a class="toctree-l4" href="#configuration">Configuration</a></li>
                 
+                    <li><a class="toctree-l4" href="#clear">Clear</a></li>
+                
             
             </ul>
         
@@ -154,6 +156,69 @@
                 <h1 id="window-management">Window Management<a class="headerlink" href="#window-management" title="Permanent link">&para;</a></h1>
 <p>Manages the application window.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="window_set_clear_color_name">WINDOW_SET_CLEAR_COLOR_NAME<a class="headerlink" href="#window_set_clear_color_name" title="Permanent link">&para;</a></h3>
+<p>Changes the background color of <a href="#window_clear"><code>WINDOW_CLEAR</code></a>.</p>
+<pre><code class="ceu">output (Color) WINDOW_SET_CLEAR_COLOR_NAME
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>Color</code>: new color name</li>
+</ul>
+</li>
+</ul>
+<p>The color names are based on the <em>HTML Web Colors</em>:</p>
+<p><a href="https://en.wikipedia.org/wiki/Web_colors#HTML_color_names">https://en.wikipedia.org/wiki/Web_colors#HTML_color_names</a></p>
+<p>The possible values are
+    <code>COLOR_WHITE</code>,
+    <code>COLOR_SILVER</code>,
+    <code>COLOR_GRAY</code>,
+    <code>COLOR_BLACK</code>,
+    <code>COLOR_RED</code>,
+    <code>COLOR_MAROON</code>,
+    <code>COLOR_YELLOW</code>,
+    <code>COLOR_OLIVE</code>,
+    <code>COLOR_LIME</code>,
+    <code>COLOR_GREEN</code>,
+    <code>COLOR_AQUA</code>,
+    <code>COLOR_TEAL</code>,
+    <code>COLOR_BLUE</code>,
+    <code>COLOR_NAVY</code>,
+    <code>COLOR_FUCHSIA</code>,
+    <code>COLOR_PURPLE</code>.</p>
+<p>The default color is black.</p>
+<h3 id="window_set_clear_color_rgb">WINDOW_SET_CLEAR_COLOR_RGB<a class="headerlink" href="#window_set_clear_color_rgb" title="Permanent link">&para;</a></h3>
+<p>Changes the background color of <a href="#window_clear"><code>WINDOW_CLEAR</code></a> in RGB.</p>
+<pre><code>output (integer,integer,integer) WINDOW_SET_CLEAR_COLOR_RGB
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>integer</code>: new red component</li>
+<li><code>integer</code>: new green component</li>
+<li><code>integer</code>: new blue component</li>
+</ul>
+</li>
+</ul>
+<p>The default color is black.</p>
+<h3 id="window_set_grid">WINDOW_SET_GRID<a class="headerlink" href="#window_set_grid" title="Permanent link">&para;</a></h3>
+<p>Enables or disables a visual grid delimiting the screen pixels.</p>
+<pre><code class="ceu">output (yesno) WINDOW_SET_GRID
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>yesno</code>: new state<ul>
+<li><code>yes</code>: enables the grid</li>
+<li><code>no</code>: disables the grid</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>The ratio between the real and logical dimensions set with
+<a href="./../window/#window_set_size"><code>WINDOW_SET_SIZE</code></a> must be greater then one.</p>
+<p>The window is automatically cleared with <a href="#window_clear"><code>WINDOW_CLEAR</code></a>.</p>
 <h3 id="window_set_size">WINDOW_SET_SIZE<a class="headerlink" href="#window_set_size" title="Permanent link">&para;</a></h3>
 <p>Changes the real and logical sizes of the window.</p>
 <pre><code class="ceu">output (integer,integer,integer,integer) WINDOW_SET_SIZE
@@ -168,7 +233,7 @@
 </ul>
 </li>
 </ul>
-<p>The window is automatically cleared with black.</p>
+<p>The window is automatically cleared with <a href="#window_clear"><code>WINDOW_CLEAR</code></a>.</p>
 <p>The arithmetic division between the real and logical dimensions must be exact.</p>
 <h3 id="window_set_title">WINDOW_SET_TITLE<a class="headerlink" href="#window_set_title" title="Permanent link">&para;</a></h3>
 <p>Changes the title of the window.</p>
@@ -181,6 +246,22 @@
 </ul>
 </li>
 </ul>
+<h2 id="clear">Clear<a class="headerlink" href="#clear" title="Permanent link">&para;</a></h2>
+<h3 id="window_clear">WINDOW_CLEAR<a class="headerlink" href="#window_clear" title="Permanent link">&para;</a></h3>
+<p>Clears the window screen.</p>
+<pre><code class="ceu">output (none) WINDOW_CLEAR
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>none</code>: no parameters</li>
+</ul>
+</li>
+</ul>
+<p>The clear color is specified with
+<a href="#window_set_clear_color_name"><code>WINDOW_SET_CLEAR_COLOR_NAME</code></a> or
+<a href="#window_set_clear_color_rgb"><code>WINDOW_SET_CLEAR_COLOR_RGB</code></a>.</p>
+<p>The default color is black.</p>
               
             </div>
           </div>

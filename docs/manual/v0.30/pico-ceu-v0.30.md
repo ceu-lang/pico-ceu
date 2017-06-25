@@ -14,6 +14,8 @@ minimalist libraries for input, graphics, network, and sound.
 Provides graphics operations, such as for drawing pixels and images on the
 screen.
 
+`TODO: axis, anchor, etc`
+
 ### Configuration
 
 #### GRAPHICS_SET_COLOR_NAME
@@ -66,22 +68,6 @@ output (integer,integer,integer) GRAPHICS_SET_COLOR_RGB
 
 The default color is white.
 
-#### GRAPHICS_SET_GRID
-
-Enables or disables a visual grid delimiting the screen pixels.
-
-```ceu
-output (yesno) GRAPHICS_SET_GRID
-```
-
-- Parameters:
-    - `yesno`: new state
-        - `yes`: enables the grid
-        - `no`: disables the grid
-
-The ratio between the real and logical dimensions set with
-[`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
-
 #### GRAPHICS_SET_FONT
 
 Changes the font for drawing and writing text.
@@ -96,7 +82,8 @@ output (text,integer) GRAPHICS_SET_FONT
 
 #### GRAPHICS_SET_WRITE_CURSOR
 
-Changes the cursor position for writing text with [`GRAPHICS_WRITE`](#graphics_write) and
+Changes the cursor starting position for writing text with
+[`GRAPHICS_WRITE`](#graphics_write) and
 [`GRAPHICS_WRITELN`](#graphics_writeln).
 
 ```ceu
@@ -107,22 +94,12 @@ output (integer,integer) GRAPHICS_SET_WRITE_CURSOR
     - `integer`: new position in the `x-axis`
     - `integer`: new position in the `y-axis`
 
+The default starting position is the top-left of the screen.
+
+The current position is reset on every
+[`WINDOW_CLEAR`](../window/#window_clear) operation.
+
 ### Drawing
-
-#### GRAPHICS_CLEAR
-
-Clears the screen.
-
-```ceu
-output (none) GRAPHICS_CLEAR
-```
-
-- Parameters:
-    - `none`: no parameters
-
-The clear color is specified with
-[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
-[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 #### GRAPHICS_DRAW_BMP
 
@@ -427,12 +404,47 @@ output (yesno) FRAMES_SET
         - `yes`: enables the generation of frames
         - `no`: disables the generation of frames
 
-#### FRAMES_SET_CLEAR_COLOR_NAME
+### Inputs
 
-Changes the redrawing background color.
+#### FRAMES_UPDATE
 
 ```ceu
-output (Color) FRAMES_SET_CLEAR_COLOR_NAME
+input (integer) FRAMES_UPDATE
+```
+
+- Occurrences:
+    - on every frame, before [`FRAMES_REDRAW`](#frames_redraw)
+- Payload:
+    - `integer`: the number of milliseconds elapsed since the previous frame
+
+#### FRAMES_REDRAW
+
+```ceu
+input (none) FRAMES_REDRAW
+```
+
+- Occurrences:
+    - on every frame, after [`FRAMES_UPDATE`](#frames_update)
+- Payload:
+    - `none`: no payload
+
+Before the input occurs, the screen is automatically cleared with
+[`WINDOW_CLEAR`](../window/#window_clear).
+
+# Window Management
+
+## Window Management
+
+Manages the application window.
+
+### Configuration
+
+#### WINDOW_SET_CLEAR_COLOR_NAME
+
+Changes the background color of [`WINDOW_CLEAR`](#window_clear).
+
+```ceu
+output (Color) WINDOW_SET_CLEAR_COLOR_NAME
 ```
 
 - Parameters:
@@ -462,12 +474,12 @@ The possible values are
 
 The default color is black.
 
-#### FRAMES_SET_CLEAR_COLOR_RGB
+#### WINDOW_SET_CLEAR_COLOR_RGB
 
-Changes the redrawing background color in RGB.
+Changes the background color of [`WINDOW_CLEAR`](#window_clear) in RGB.
 
 ```
-output (integer,integer,integer) FRAMES_SET_CLEAR_COLOR_RGB
+output (integer,integer,integer) WINDOW_SET_CLEAR_COLOR_RGB
 ```
 
 - Parameters:
@@ -475,48 +487,25 @@ output (integer,integer,integer) FRAMES_SET_CLEAR_COLOR_RGB
     - `integer`: new green component
     - `integer`: new blue component
 
-On every frame before [`FRAMES_REDRAW`](#frames_redraw), the screen is cleared
-with the background color.
-
 The default color is black.
 
-### Update
+#### WINDOW_SET_GRID
 
-#### FRAMES_UPDATE
-
-```ceu
-input (integer) FRAMES_UPDATE
-```
-
-- Occurrences:
-    - on every frame, before [`FRAMES_REDRAW`](#frames_redraw)
-- Payload:
-    - `integer`: the number of elapsed milliseconds since the previous frame
-
-### Redraw
-
-#### FRAMES_REDRAW
+Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-input (none) FRAMES_REDRAW
+output (yesno) WINDOW_SET_GRID
 ```
 
-- Occurrences:
-    - on every frame, after [`FRAMES_UPDATE`](#frames_update)
-- Payload:
-    - `none`: no payload
+- Parameters:
+    - `yesno`: new state
+        - `yes`: enables the grid
+        - `no`: disables the grid
 
-Before the input occurs, the screen is cleared with the color set with
-[`FRAMES_SET_CLEAR_COLOR_NAME`](#frames_set_clear_color_name) or
-[`FRAMES_SET_CLEAR_COLOR_RGB`](#frames_set_clear_color_rgb).
+The ratio between the real and logical dimensions set with
+[`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
 
-# Window Management
-
-## Window Management
-
-Manages the application window.
-
-### Configuration
+The window is automatically cleared with [`WINDOW_CLEAR`](#window_clear).
 
 #### WINDOW_SET_SIZE
 
@@ -532,7 +521,7 @@ output (integer,integer,integer,integer) WINDOW_SET_SIZE
     - `integer`: new logical width
     - `integer`: new logical height
 
-The window is automatically cleared with black.
+The window is automatically cleared with [`WINDOW_CLEAR`](#window_clear).
 
 The arithmetic division between the real and logical dimensions must be exact.
 
@@ -546,6 +535,25 @@ output (text) WINDOW_SET_TITLE
 
 - Parameters:
     - `text`: new window title
+
+### Clear
+
+#### WINDOW_CLEAR
+
+Clears the window screen.
+
+```ceu
+output (none) WINDOW_CLEAR
+```
+
+- Parameters:
+    - `none`: no parameters
+
+The clear color is specified with
+[`WINDOW_SET_CLEAR_COLOR_NAME`](#window_set_clear_color_name) or
+[`WINDOW_SET_CLEAR_COLOR_RGB`](#window_set_clear_color_rgb).
+
+The default color is black.
 
 # License
 
