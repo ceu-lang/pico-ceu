@@ -1,4 +1,4 @@
-#define WIN_DIM 500
+#define WIN_DIM 510
 
 #include "c.ceu"
 #include "sdl/sdl.ceu"
@@ -167,7 +167,7 @@ native/pos do
                         LOG_H = log_h;
 #if 1
                         // TODO: w/o delay, set_size + clear doesn't work
-                        SDL_Delay(100);
+                        SDL_Delay(500);
 #endif
 
                         if (!(win_w/log_w>1 && win_h/log_h>1)) {
