@@ -3,6 +3,8 @@
 Provides graphics operations, such as for drawing pixels and images on the
 screen.
 
+`TODO: axis, anchor, etc`
+
 ## Configuration
 
 ### GRAPHICS_SET_COLOR_NAME
@@ -97,21 +99,6 @@ output (integer,integer) GRAPHICS_SET_WRITE_CURSOR
     - `integer`: new position in the `y-axis`
 
 ## Drawing
-
-### GRAPHICS_CLEAR
-
-Clears the screen.
-
-```ceu
-output (none) GRAPHICS_CLEAR
-```
-
-- Parameters:
-    - `none`: no parameters
-
-The clear color is specified with
-[`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
-[`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
 
 ### GRAPHICS_DRAW_BMP
 
