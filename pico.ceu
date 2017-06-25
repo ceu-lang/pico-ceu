@@ -43,10 +43,11 @@ data Rect with
     var integer h;
 end
 
-output (text)            WINDOW_SET_TITLE;
-output (int,int,int,int) WINDOW_SET_SIZE;
 output (Color)           WINDOW_SET_CLEAR_COLOR_NAME;
 output (int,int,int)     WINDOW_SET_CLEAR_COLOR_RGB;
+output (bool)            WINDOW_SET_GRID;
+output (int,int,int,int) WINDOW_SET_SIZE;
+output (text)            WINDOW_SET_TITLE;
 output (void)            WINDOW_CLEAR;
 //output (yesno)           WINDOW_SET_FULLSCREEN;
 
@@ -64,7 +65,6 @@ output (int,int,int)     GRAPHICS_SET_COLOR_RGB;
 output (Color)           GRAPHICS_SET_COLOR_NAME;
 output (text,int)        GRAPHICS_SET_FONT;
 output (int,int)         GRAPHICS_SET_WRITE_CURSOR;
-output (bool)            GRAPHICS_SET_GRID;
 output (text)            GRAPHICS_SCREENSHOT;
 output (int,int)         GRAPHICS_DRAW_PIXEL;
 output (int,int,int,int) GRAPHICS_DRAW_LINE;
@@ -90,13 +90,14 @@ native/pos do
     #define REN (SDL_GetRenderer(WIN))
     int LOG_W, LOG_H;
     SDL_Color WINDOW_SET_CLEAR_COLOR_RGB;
+    bool WINDOW_SET_GRID = 0;
 
     TTF_Font* FNT = NULL;
     int       FNT_H;
 
     bool      FRAMES_SET = 0;
 
-    bool GRAPHICS_SET_GRID = 0;
+    SDL_Color GRAPHICS_SET_CLEAR_COLOR_RGB;
     int  GRAPHICS_WRITE_CURSOR_X = 0;
     int  GRAPHICS_WRITE_CURSOR_Y = 0;
 
@@ -106,8 +107,8 @@ native/pos do
     UDPsocket NET_recv, NET_send;
     UDPpacket *NET_recv_pkt, *NET_send_pkt;
 
-    void GRAPHICS_Show_Grid (void) {
-        if (!GRAPHICS_SET_GRID) return;
+    void WINDOW_Show_Grid (void) {
+        if (!WINDOW_SET_GRID) return;
 
         int win_w,win_h, log_w,log_h;
         SDL_GetWindowSize(WIN, &win_w, &win_h);
@@ -130,9 +131,9 @@ native/pos do
         SDL_RenderSetLogicalSize(REN, log_w, log_w);
     }
 
-    void GRAPHICS_Present (void) {
+    void WINDOW_Present (void) {
         if (FRAMES_SET) return;
-        GRAPHICS_Show_Grid();
+        WINDOW_Show_Grid();
         SDL_RenderPresent(REN);
     }
 
@@ -169,7 +170,7 @@ native/pos do
 #endif
 
                         if (!(win_w/log_w>1 && win_h/log_h>1)) {
-                            GRAPHICS_SET_GRID = 0;
+                            WINDOW_SET_GRID = 0;
                         }
 
                         { // clears the window
@@ -215,6 +216,39 @@ native/pos do
                         break;
                     }
 #endif
+                    case CEU_OUTPUT_WINDOW_SET_GRID: {
+                        bool* on = (bool*) p2.ptr;
+                        WINDOW_SET_GRID = *on;
+
+                        int win_w,win_h, log_w,log_h;
+                        SDL_GetWindowSize(WIN, &win_w, &win_h);
+                        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+                        ceu_dbg_assert(win_w/log_w>1 && win_h/log_h>1);
+
+                        { // clears the window
+                            p1.num = CEU_OUTPUT_WINDOW_CLEAR;
+                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, file, line);
+                        }
+
+                        break;
+                    }
+
+                    case CEU_OUTPUT_WINDOW_CLEAR: {
+                        SDL_SetRenderDrawColor(REN,
+                                               WINDOW_SET_CLEAR_COLOR_RGB.r,
+                                               WINDOW_SET_CLEAR_COLOR_RGB.g,
+                                               WINDOW_SET_CLEAR_COLOR_RGB.b,
+                                               0xFF);
+                        SDL_RenderClear(REN);
+                        SDL_SetRenderDrawColor(REN,
+                                               GRAPHICS_SET_CLEAR_COLOR_RGB.r,
+                                               GRAPHICS_SET_CLEAR_COLOR_RGB.g,
+                                               GRAPHICS_SET_CLEAR_COLOR_RGB.b,
+                                               0xFF);
+                        WINDOW_Present();
+                        break;
+                    }
+
 
                     case CEU_OUTPUT_FRAMES_SET: {
                         bool* on = (bool*) p2.ptr;
@@ -224,6 +258,10 @@ native/pos do
 
                     case CEU_OUTPUT_GRAPHICS_SET_COLOR_RGB: {
                         tceu_output_GRAPHICS_SET_COLOR_RGB* clr = (tceu_output_GRAPHICS_SET_COLOR_RGB*) p2.ptr;
+                        GRAPHICS_SET_CLEAR_COLOR_RGB.r = clr->_1;
+                        GRAPHICS_SET_CLEAR_COLOR_RGB.g = clr->_2;
+                        GRAPHICS_SET_CLEAR_COLOR_RGB.b = clr->_3;
+                        GRAPHICS_SET_CLEAR_COLOR_RGB.a = 0xFF;
                         SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
                         break;
                     }
@@ -250,19 +288,6 @@ native/pos do
                         tceu_output_GRAPHICS_SET_WRITE_CURSOR* pt = (tceu_output_GRAPHICS_SET_WRITE_CURSOR*) p2.ptr;
                         GRAPHICS_WRITE_CURSOR_X = pt->_1;
                         GRAPHICS_WRITE_CURSOR_Y = pt->_2;
-                        break;
-                    }
-
-                    case CEU_OUTPUT_GRAPHICS_SET_GRID: {
-                        bool* on = (bool*) p2.ptr;
-                        GRAPHICS_SET_GRID = *on;
-
-                        int win_w,win_h, log_w,log_h;
-                        SDL_GetWindowSize(WIN, &win_w, &win_h);
-                        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
-                        ceu_dbg_assert(win_w/log_w>1 && win_h/log_h>1);
-
-                        GRAPHICS_Present();
                         break;
                     }
 
@@ -304,21 +329,11 @@ native/pos do
                         break;
                     }
 
-                    case CEU_OUTPUT_WINDOW_CLEAR: {
-                        u8 r, g, b;
-                        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
-                        SDL_SetRenderDrawColor(REN, 0,0,0, 0xFF);
-                        SDL_RenderClear(REN);
-                        SDL_SetRenderDrawColor(REN, r,g,b, 0xFF);
-                        GRAPHICS_Present();
-                        break;
-                    }
-
                     case CEU_OUTPUT_GRAPHICS_DRAW_PIXEL: {
                         tceu_output_GRAPHICS_DRAW_PIXEL* pt = (tceu_output_GRAPHICS_DRAW_PIXEL*) p2.ptr;
                         SDL_Rect rct = { X(pt->_1), Y(pt->_2), 1, 1 };
                         SDL_RenderFillRect(REN, &rct);
-                        GRAPHICS_Present();
+                        WINDOW_Present();
                         break;
                     }
                     case CEU_OUTPUT_GRAPHICS_DRAW_LINE: {
@@ -329,14 +344,14 @@ native/pos do
 //SDL_RenderSetScale(REN, 10,10);
                         SDL_RenderDrawLine(REN, X(ps->_1), Y(ps->_2), X(ps->_3), Y(ps->_4));
 //SDL_RenderSetScale(REN, 1, 1);
-                        GRAPHICS_Present();
+                        WINDOW_Present();
                         break;
                     }
                     case CEU_OUTPUT_GRAPHICS_DRAW_RECT: {
                         tceu_output_GRAPHICS_DRAW_RECT* ps = (tceu_output_GRAPHICS_DRAW_RECT*) p2.ptr;
                         SDL_Rect rct = { X(ps->_1), X(ps->_2), ps->_3, ps->_4 };
                         SDL_RenderFillRect(REN, &rct);
-                        GRAPHICS_Present();
+                        WINDOW_Present();
                         break;
                     }
                     case CEU_OUTPUT_GRAPHICS_DRAW_BMP: {     // TODO: cache
@@ -352,7 +367,7 @@ native/pos do
 
                         SDL_Rect rct = { X(ps->_1),Y(ps->_2), sfc->w,sfc->h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
-                        GRAPHICS_Present();
+                        WINDOW_Present();
 
                         SDL_DestroyTexture(tex);
                         SDL_FreeSurface(sfc);
@@ -372,7 +387,7 @@ native/pos do
                         TTF_SizeText(FNT, ps->_3, &w,&h);
                         SDL_Rect rct = { X(ps->_1),Y(ps->_2), w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
-                        GRAPHICS_Present();
+                        WINDOW_Present();
 
                         break;
                     }
@@ -392,7 +407,7 @@ native/pos do
                         TTF_SizeText(FNT, *str, &w,&h);
                         SDL_Rect rct = { X(GRAPHICS_WRITE_CURSOR_X),Y(GRAPHICS_WRITE_CURSOR_Y), w,h };
                         SDL_RenderCopy(REN, tex, NULL, &rct);
-                        GRAPHICS_Present();
+                        WINDOW_Present();
 
                         GRAPHICS_WRITE_CURSOR_X += w;
 
@@ -479,14 +494,12 @@ watching sdl do
         {SDLNet_FreePacket(NET_send_pkt);}
     end
 
+    emit WINDOW_SET_CLEAR_COLOR_RGB(0x00,0x00,0x00);
     emit WINDOW_SET_SIZE(WIN_DIM,WIN_DIM,WIN_DIM/10,WIN_DIM/10);
+    emit WINDOW_SET_GRID(yes);
     //{SDL_SetWindowResizable(WIN, SDL_FALSE);}
 
-    emit WINDOW_SET_CLEAR_COLOR_RGB(0x00,0x00,0x00);
-    emit GRAPHICS_SET_GRID(yes);
-    emit WINDOW_CLEAR();
     emit GRAPHICS_SET_COLOR_RGB(0xFF,0xFF,0xFF);
-
     emit GRAPHICS_SET_FONT("res/tiny.ttf", WIN_DIM/50);
     do finalize with
         {
@@ -524,7 +537,7 @@ watching sdl do
             every FRAMES_REDRAW do
                 if {FRAMES_SET} as bool then
                     emit WINDOW_CLEAR();
-                    {GRAPHICS_Show_Grid();}
+                    {WINDOW_Show_Grid();}
                 end
             end
         end

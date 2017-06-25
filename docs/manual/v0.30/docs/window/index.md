@@ -54,6 +54,24 @@ output (integer,integer,integer) WINDOW_SET_CLEAR_COLOR_RGB
 
 The default color is black.
 
+### WINDOW_SET_GRID
+
+Enables or disables a visual grid delimiting the screen pixels.
+
+```ceu
+output (yesno) WINDOW_SET_GRID
+```
+
+- Parameters:
+    - `yesno`: new state
+        - `yes`: enables the grid
+        - `no`: disables the grid
+
+The ratio between the real and logical dimensions set with
+[`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
+
+The window is automatically cleared with [`WINDOW_CLEAR`](#window_clear).
+
 ### WINDOW_SET_SIZE
 
 Changes the real and logical sizes of the window.

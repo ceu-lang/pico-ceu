@@ -57,22 +57,6 @@ output (integer,integer,integer) GRAPHICS_SET_COLOR_RGB
 
 The default color is white.
 
-### GRAPHICS_SET_GRID
-
-Enables or disables a visual grid delimiting the screen pixels.
-
-```ceu
-output (yesno) GRAPHICS_SET_GRID
-```
-
-- Parameters:
-    - `yesno`: new state
-        - `yes`: enables the grid
-        - `no`: disables the grid
-
-The ratio between the real and logical dimensions set with
-[`WINDOW_SET_SIZE`](../window/#window_set_size) must be greater then one.
-
 ### GRAPHICS_SET_FONT
 
 Changes the font for drawing and writing text.
