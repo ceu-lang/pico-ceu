@@ -25,6 +25,9 @@ end
 #define X(x) ((x)+LOG_W/2)
 #define Y(y) (LOG_H/2-(y))
 
+#define _X(x) ((x)-{LOG_W}/2)
+#define _Y(y) ({LOG_H}/2-(y))
+
 data Color with
     var integer r;
     var integer g;
@@ -593,7 +596,7 @@ watching sdl do
             // DOWN -> CLICK
             code/await SDL_MouseDown (var int x, var int y) -> void do
                 await async (x,y) do
-                    emit MOUSE_CLICK(0,x,y);
+                    emit MOUSE_CLICK(0,_X(x),_Y(y));
                 end
             end
             pool[] SDL_MouseDown mses;
@@ -605,7 +608,7 @@ watching sdl do
             // UP -> UNCLICK
             code/await SDL_MouseUp (var int x, var int y) -> void do
                 await async (x,y) do
-                    emit MOUSE_UNCLICK(0,x,y);
+                    emit MOUSE_UNCLICK(0,_X(x),_Y(y));
                 end
             end
             pool[] SDL_MouseUp mses;
@@ -617,7 +620,7 @@ watching sdl do
             // MOTION -> MOVE
             code/await SDL_MouseMotion (var int x, var int y) -> void do
                 await async (x,y) do
-                    emit MOUSE_MOVE(x,y);
+                    emit MOUSE_MOVE(_X(x),_Y(y));
                 end
             end
             var int x = {U16_MAX};
