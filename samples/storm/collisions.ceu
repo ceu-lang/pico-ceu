@@ -15,7 +15,7 @@ do
                         var Vector2D pst =
                             val Vector2D(
                                 ((cloud1.physics.x.pst + cloud2.physics.x.pst + cloud2.physics.x.len)/2) as integer,
-                                ((cloud1.physics.y.pst + cloud1.physics.y.len + cloud2.physics.y.pst + cloud2.physics.y.len)/2) as integer,
+                                ((cloud1.physics.y.pst - cloud1.physics.y.len + cloud2.physics.y.pst - cloud2.physics.y.len)/2) as integer,
                             );
                         spawn Light(&outer.lights,pst,_,_,_) in outer.lights;
                     end
@@ -58,14 +58,14 @@ do
 
                 // drop vs car
                 if (call Intersects(&drop1!.physics, &outer.car.physics)) then
-                    if drop1!.physics.y.pst < outer.car.physics.y.pst then
-                        drop1!.physics.y.pst = outer.car.physics.y.pst - drop1!.physics.y.len;
+                    if drop1!.physics.y.pst > outer.car.physics.y.pst then
+                        drop1!.physics.y.pst = outer.car.physics.y.pst + drop1!.physics.y.len;
                         drop1!.physics.y.vel = -(drop1!.physics.y.vel/3);
                         drop1!.physics.x.vel = outer.car.physics.x.vel / 2;
                         drop1!.has_collided = yes;
                     else
                         drop1!.physics.x.vel = outer.car.physics.x.vel * 2;
-                        drop1!.physics.y.vel = -(_abs(outer.car.physics.x.vel));
+                        drop1!.physics.y.vel = (_abs(outer.car.physics.x.vel));
                     end
                 end
 

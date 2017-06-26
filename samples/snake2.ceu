@@ -1,4 +1,4 @@
-#define DIM 31
+#define DIM 30
 
 emit WINDOW_SET_TITLE("Snake");
 emit WINDOW_SET_SIZE(DIM*10,DIM*10,DIM,DIM);
@@ -9,7 +9,7 @@ data Direction.Right;
 data Direction.Up;
 data Direction.Down;
 
-code/await Snake (none) -> (event void grow) -> void do
+code/await Snake (var bool one) -> (event void grow) -> void do
     vector[DIM*DIM] Point body;
 
     var Point pt_ = val Point(-9999,-9999);
@@ -19,6 +19,10 @@ code/await Snake (none) -> (event void grow) -> void do
     end
 
     var Point pt = val Point(0,0);
+    if not one then
+        pt.x = pt.x - 1;
+        pt.y = pt.y - 1;
+    end
     body[0] = pt;
 
     var integer len  = 1;
@@ -40,6 +44,11 @@ code/await Snake (none) -> (event void grow) -> void do
     var Direction dir = val Direction.Right();
     var Direction nxt = val Direction.Right();
 
+    if not one then
+        dir = val Direction.Left();
+        nxt = val Direction.Left();
+    end
+
     var bool to_grow = false;
     spawn do
         every grow do
@@ -49,6 +58,7 @@ code/await Snake (none) -> (event void grow) -> void do
 
     par do
         var integer key;
+if one then
         every key in KEY_PRESS do
             if      key==KEY_LEFT  and
                     not ((dir is Direction.Left)  or (dir is Direction.Right))
@@ -68,6 +78,27 @@ code/await Snake (none) -> (event void grow) -> void do
                 nxt = val Direction.Down();
             end
         end
+else
+        every key in KEY_PRESS do
+            if      key==KEY_a  and
+                    not ((dir is Direction.Left)  or (dir is Direction.Right))
+            then
+                nxt = val Direction.Left();
+            else/if key==KEY_d and
+                    not ((dir is Direction.Right) or (dir is Direction.Left))
+            then
+                nxt = val Direction.Right();
+            else/if key==KEY_w    and
+                    not ((dir is Direction.Up)    or (dir is Direction.Down))
+            then
+                nxt = val Direction.Up();
+            else/if key==KEY_s  and
+                    not ((dir is Direction.Down)  or (dir is Direction.Up))
+            then
+                nxt = val Direction.Down();
+            end
+        end
+end
     with
         every 250ms do
             dir = nxt;
@@ -121,10 +152,10 @@ code/await Snake (none) -> (event void grow) -> void do
     end
 end
 
-code/await Food (var&? Snake snake) -> (var Point pt) -> FOREVER do
+code/await Food (var&? Snake snake1, var&? Snake snake2) -> (var Point pt) -> FOREVER do
     loop do
         pt = val Point(-DIM/2 + (_rand()%(DIM+1)), -DIM/2 + (_rand()%(DIM+1)));
-        if call snake!.Is_Free(&pt) then
+        if call snake1!.Is_Free(&pt) and call snake2!.Is_Free(&pt) then
             break;
         end
     end
@@ -148,21 +179,29 @@ loop do
 
     emit FRAMES_SET(yes);
 
-    var&? Snake snake = spawn Snake();
+    var&? Snake snake1 = spawn Snake(true);
+    var&? Snake snake2 = spawn Snake(false);
 
     pool[] Food foods;
     par/or do
-        await snake;
+        await snake1;
+    with
+        await snake2;
     with
         every 5s do
-            spawn Food(&snake) in foods;
+            spawn Food(&snake1,&snake2) in foods;
         end
     with
         every FRAMES_UPDATE do
             var&? Food food;
             loop food in foods do
-                if not call snake!.Is_Free(&food!.pt) then
-                    emit snake!.grow;
+                if not call snake1!.Is_Free(&food!.pt) then
+                    emit snake1!.grow;
+                    kill food;
+                    break;
+                end
+                if not call snake2!.Is_Free(&food!.pt) then
+                    emit snake2!.grow;
                     kill food;
                     break;
                 end

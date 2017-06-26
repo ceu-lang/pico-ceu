@@ -1,5 +1,5 @@
 emit WINDOW_SET_TITLE("Moving Around");
-emit WINDOW_SET_SIZE(300,300,30,30);
+emit WINDOW_SET_SIZE(310,310,31,31);
 
 var integer x = 0;
 var integer y = 0;
