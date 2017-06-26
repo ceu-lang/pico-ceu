@@ -1,0 +1,23 @@
+- cd pico-ceu.git/windows/
+- right click pico-ceu-windows/
+    - Add to archive...
+        - [X] create SFX archive
+        - Advanced
+            - SFX options...
+                - Setup
+                    - Run after extraction
+                        - pico-ceu-windows\start.bat
+                - Advanced
+                    - Add shortcut...
+                        - [x] Desktop
+                        - Source file name
+                            - pico-ceu-windows\run\make.bat
+                        - Shortcut name
+                            - Céu-SDL
+                        - Shortcut icon
+                            - pico-ceu-windows\star_16.ico
+                - Text and icon
+                    - Load SFX icon from the file
+                        - Browse...
+                            - pico-ceu-windows/star_16.ico
+- move pico-ceu-windows.exe to releases/pico-ceu-windows-vX.XX-XXX
