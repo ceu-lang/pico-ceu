@@ -16,11 +16,11 @@ emit SOUND_PLAY("click.wav");       // plays a terminating sound
 await KEY_PRESS;                    // waits for a key press (any key)
 -->
 
-<img src="across.gif" width="200" align="right"/>
+<img src="seq.gif" width="200" align="right"/>
 
 ```ceu
 var integer i;
-loop i in [0 -> 49] do              // executes 50 times, varying i from 0 to 49
+loop i in [-25 -> 25] do            // executes 51 times, varying i from -25 to 25
     emit GRAPHICS_DRAW_PIXEL(i,i);  //   draws a pixel at (i,i)
     await 100ms;                    //   waits for 100 milliseconds
 end
@@ -29,19 +29,19 @@ end
 The next example draws, at the same time, an additional line from the top-right
 towards the bottom-left of the screen:
 
-<img src="across-par.gif" width="200" align="right"/>
+<img src="par.gif" width="200" align="right"/>
 
 ```ceu
 par/and do  // executes the next five indented lines in parallel...
     var integer i;
-    loop i in [0 -> 49] do
-        emit GRAPHICS_DRAW_PIXEL(i,i);      // draws from (0,0) to (49,49)
+    loop i in [-25 -> 25] do
+        emit GRAPHICS_DRAW_PIXEL(i,i);    // draws from (-25,-25) to (25,25)
         await 100ms;
     end
 with        // ...with the next five indented lines...
     var integer i;
-    loop i in [0 -> 49] do
-        emit GRAPHICS_DRAW_PIXEL(49-i,i);   // draws from (49,0) to (0,49)
+    loop i in [-25 -> 25] do
+        emit GRAPHICS_DRAW_PIXEL(i,-i);   // draws from (-25,25) to (25,-25)
         await 100ms;
     end
 end         // ...and terminates when they both terminate (par/and)
