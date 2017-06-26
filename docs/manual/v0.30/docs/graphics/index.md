@@ -3,7 +3,7 @@
 Provides graphics operations, such as for drawing pixels and images on the
 screen.
 
-`TODO: axis, anchor, etc`
+`TODO: axis`
 
 ## Configuration
 

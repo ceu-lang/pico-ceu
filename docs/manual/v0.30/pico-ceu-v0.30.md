@@ -14,7 +14,7 @@ minimalist libraries for input, graphics, network, and sound.
 Provides graphics operations, such as for drawing pixels and images on the
 screen.
 
-`TODO: axis, anchor, etc`
+`TODO: axis`
 
 ### Configuration
 
