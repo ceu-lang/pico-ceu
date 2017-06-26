@@ -2,7 +2,8 @@
 #include <sys/types.h>
 
 #ifndef __cplusplus
-typedef unsigned char bool;
+//typedef unsigned char bool;
+typedef int bool;
 #endif
 typedef unsigned char byte;
 typedef unsigned int  uint;

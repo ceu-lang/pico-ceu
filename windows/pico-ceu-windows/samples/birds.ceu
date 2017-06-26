@@ -1,7 +1,7 @@
 emit WINDOW_SET_TITLE("Birds");
 emit WINDOW_SET_SIZE(640,480,640,480);
+emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
 emit FRAMES_SET(yes);
-emit FRAMES_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
 
 code/tight Intersects (var& Rect rct1, var& Rect rct2) -> yesno
 do
@@ -15,7 +15,7 @@ code/await Bird (var integer y, var integer speed)
                     -> (var Rect rct, event none go_collided)
                         -> none
 do
-    rct = val Rect(20,y, 50,45);
+    rct = val Rect(-320+20,y, 50,45);
 
     #define PI 3.14
 
@@ -32,9 +32,9 @@ do
                     var real v = dt*speed;
                     x = x + v/1000;
                     rct.x = x as integer;
-                    rct.y = yy + speed/5*_sin(sin);
+                    rct.y = yy - speed/5*_sin(sin);
                     sin = sin + PI*v/100000;
-                    if rct.x > 580 then
+                    if rct.x > 320 then
                         escape/out;
                     end
                 end
@@ -43,10 +43,10 @@ do
             var real yy = rct.y;
             var integer dt;
             every dt in FRAMES_UPDATE do
-                yy = yy + dt*0.5;
+                yy = yy - dt*0.5;
                 rct.y = yy as integer;
-                if rct.y >= 400 then
-                    rct.y = 400;
+                if rct.y <= -240+20 then
+                    rct.y = -240+20;
                     break;
                 end
             end
@@ -79,7 +79,7 @@ par do
         pool[] Bird birds;
         par do
             every 500ms do
-                spawn Bird(20+_rand()%350, 100+_rand()%100) in birds;
+                spawn Bird(20+_rand()%350-200, 100+_rand()%100) in birds;
             end
         with
             every FRAMES_UPDATE do
@@ -114,7 +114,7 @@ par do
                 watching bird do
                     every FRAMES_REDRAW do
                         emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
-                        emit GRAPHICS_DRAW_LINE(320,480, bird!.rct.x+20,bird!.rct.y+20);
+                        emit GRAPHICS_DRAW_LINE(0,-240, bird!.rct.x,bird!.rct.y);
                     end
                 end
             end

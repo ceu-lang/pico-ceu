@@ -34,11 +34,11 @@ end
 
 code/await Car (none) -> (var& IPhysics physics) -> FOREVER
 do
-    var& Physics car = spawn Physics(Rect(320,430, 60,30), Color(0x3B,0xBC,0x48));
+    var& Physics car = spawn Physics(Rect(0,-240+50, 60,30), Color(0x3B,0xBC,0x48));
     physics = &car.physics;
 
-    spawn Wheel(&physics, Vector2D(            0, physics.y.len));
-    spawn Wheel(&physics, Vector2D(physics.x.len, physics.y.len));
+    spawn Wheel(&physics, Vector2D(            0, -physics.y.len));
+    spawn Wheel(&physics, Vector2D(physics.x.len, -physics.y.len));
 
     physics.x.drag = 0.95;
     physics.y.drag = 0.95;

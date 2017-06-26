@@ -17,8 +17,9 @@ end
 
 emit WINDOW_SET_TITLE("Storm");
 emit WINDOW_SET_SIZE(WIN_W,WIN_H,WIN_W,WIN_H);
+emit WINDOW_SET_CLEAR_COLOR_RGB(0x21,0x2c,0x34);
 emit FRAMES_SET(yes);
-emit FRAMES_SET_CLEAR_COLOR_RGB(0x21,0x2c,0x34);
+emit GRAPHICS_SET_ANCHOR(HANCHOR_LEFT, VANCHOR_TOP);
 
 #include "physics.ceu"
 #include "car.ceu"
