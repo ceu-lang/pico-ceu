@@ -170,7 +170,7 @@ end
 loop do
     emit FRAMES_SET(no);
     emit WINDOW_CLEAR();
-    emit GRAPHICS_SET_FONT("res/tiny.ttf", 10);
+    emit GRAPHICS_SET_FONT("tiny.ttf", 10);
     emit GRAPHICS_SET_WRITE_CURSOR(-DIM/2+1, DIM/2);
     emit GRAPHICS_WRITELN("PRESS");
     emit GRAPHICS_WRITELN(" ANY ");

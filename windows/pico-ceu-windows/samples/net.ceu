@@ -1,5 +1,5 @@
 emit WINDOW_SET_SIZE(640,480,640,480);
-emit GRAPHICS_SET_FONT("res/tiny.ttf", 20);
+emit GRAPHICS_SET_FONT("tiny.ttf", 20);
 
 par do
     var integer n;

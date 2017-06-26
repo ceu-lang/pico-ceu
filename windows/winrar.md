@@ -13,7 +13,7 @@
                         - Source file name
                             - pico-ceu-windows\run\make.bat
                         - Shortcut name
-                            - CÃ©u-SDL
+                            - pico-Céu
                         - Shortcut icon
                             - pico-ceu-windows\star_16.ico
                 - Text and icon
