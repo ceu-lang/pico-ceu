@@ -33,7 +33,7 @@ SOFTWARE.
 PAK = {
     lua_exe = 'lua5.3',
     ceu_ver = '0.30-alpha',
-    ceu_git = '1d0db8b037936109f773abc552937166320ff490',
+    ceu_git = 'b9239368fcc5f2bcbcbeee9c83c1c300345ee29a',
     files = {
         ceu_c =
             [====[
@@ -2554,18 +2554,16 @@ local patt
 
 CEU.i2l = {}
 
-local CRLF = m.P'\r'^-1 * '\n'
-
-local line = m.Cmt(CRLF,
+local line = m.Cmt('\n',
     function (s,i)
         for i=#CEU.i2l, i do
-            CEU.i2l[i] = { FILE, LINE }
+            CEU.i2l[i] = { string.gsub(FILE,'\\','/'), LINE }
         end
         LINE = LINE + 1
         return true
     end )
 
-local S = (m.S'\t\r ' + m.P'\\'*(1-m.P'\n')^0*CRLF)
+local S = (m.S'\t\r ' + m.P'\\'*(1-m.P'\n')^0*'\n')
 local SS = S^0
 
 -- #line N "file" :: directive to set line/filename
@@ -2573,18 +2571,18 @@ local dir_lins = m.Cmt( m.P'#' *SS* m.P'line'^-1
                           *SS* m.C(m.R'09'^1)             -- line
                           *SS* ( m.P'"' * m.C((1-m.P'"')^0) * m.P'"'
                               + m.Cc(false) )            -- file
-                          * (S + (m.P(1)-CRLF))^0 * CRLF -- \n
+                          * (S + (m.P(1)-'\n'))^0 * '\n' -- \n
                  ,
     function (s,i, line, file)
         LINE = tonumber(line)
-        FILE = file
+        FILE = string.gsub(file,'\\','/')
         return true
     end )
 
 patt = (line + dir_lins + 1)^0
 
 local f = ASR(io.open(CEU.opts.ceu_input))
-CEU.source = '\n#line 1 "'..FILE..'"'..'\n'..f:read'*a'..'\n'
+CEU.source = '\n#line 1 "'..string.gsub(FILE,'\\','/')..'"'..'\n'..f:read'*a'..'\n'
 f:close()
 patt:match(CEU.source)
 
@@ -5309,6 +5307,30 @@ EXPS.F = {
         }
     end,
 
+    ID_int__POS = function (me)
+        local alias = unpack(me.info.dcl)
+        if alias ~= '&?' then
+            return
+        end
+        if me.__exps_ok then
+            return
+        end
+
+        for watching in AST.iter'Watching' do
+            local loc = AST.get(watching,'',1,'Par_Or',1,'Block',1,'Stmts',1,'Await_Int',1,'Loc',1,'')
+                    or  AST.get(watching,'',1,'Par_Or',1,'Block',1,'Stmts',1,'Set_Await_many',1,'Await_Int',1,'Loc',1,'')
+            if AST.is_par(loc,me) then
+                break
+            end
+            if loc and loc.info.dcl==me.info.dcl then
+                ASR(me.__par.tag~='Exp_!', me, 'invalid operand to `!´ : found enclosing matching `watching´')
+                me.__exps_ok = true
+                return AST.node('Exp_!', me.ln, '!', me)
+                    -- TODO: inneficient: could access directly
+            end
+        end
+    end,
+
 -- PRIMITIVES
 
     NULL = function (me)
@@ -7414,20 +7436,10 @@ STMTS.F = {
         AST.asr(fr, 'Vec_Cons')
 
         -- ctx
-        for _, e in ipairs(fr) do
-            if e.tag=='Vec_Tup' or e.tag=='STRING' or
-               e.tag=='Exp_as'  or e.tag=='Lua' or
-               AST.get(e,'Loc',1,'Exp_as')
-            then
-                -- ok
-            else
-                INFO.asr_tag(e, {'Vec'}, 'invalid constructor')
-            end
-        end
-
-        -- tp
         for i, e in ipairs(fr) do
+            local is_vec = (e.info and e.info.tag=='Vec')
             if e.tag == 'Vec_Tup' then
+                -- tp
                 local ps = unpack(e)
                 if ps then
                     AST.asr(ps,'List_Exp')
@@ -7437,14 +7449,14 @@ STMTS.F = {
                             'invalid expression list : item #'..j)
                     end
                 end
-            elseif e.tag == 'STRING' then
-                local tp = TYPES.new(e, 'byte')
-                EXPS.check_tp(fr, to_info.tp, tp,
-                    'invalid constructor : item #'..i)
             elseif e.tag == 'Lua' then
-            elseif e.tag=='Exp_as' or AST.get(e,'Loc',1,'Exp_as') then
+                -- TODO
+            elseif TYPES.check(to_info.tp,'byte') and (not is_vec) then
+                ASR(TYPES.check(e.info.tp,'_char','&&'), fr,
+                    'invalid constructor : item #'..i..' : expected "_char&&"')
             else
-                assert(e.info and e.info.tag == 'Vec')
+                INFO.asr_tag(e, {'Vec'}, 'invalid constructor')
+                assert(is_vec)
                 EXPS.check_tp(fr, to_info.tp, e.info.tp,
                     'invalid constructor : item #'..i)
             end
@@ -7541,7 +7553,7 @@ STMTS.F = {
                 'invalid binding : unexpected native identifier')
 
             if fr.info.dcl[1] then
-                ASR(to.info.dcl[1] == fr.info.dcl[1], me,
+                ASR(to.info.dcl[1]=='&?' or to.info.dcl[1]==fr.info.dcl[1], me,
                     'invalid binding : unmatching alias `&` declaration')
             end
         end
@@ -7983,7 +7995,7 @@ STMTS.F = {
         -- ctx
         for _, var in ipairs(me) do
             if var.tag ~= 'ID_any' then
-                INFO.asr_tag(var, {'Nat','Var'}, 'invalid variable')
+                INFO.asr_tag(var, {'Nat','Var','Vec'}, 'invalid variable')
             end
         end
 
@@ -8098,7 +8110,8 @@ local function run_inits (par, i, Dcl, stop, dont_await)
         end
 
     elseif me.tag == 'Break' then
-        local blk = AST.asr(me.outer,'',2,'Block')
+        local blk = AST.get(me.outer,'',2,'Block')
+                or  AST.asr(me.outer,'',4,'Block')
         if AST.depth(blk) <= AST.depth(Dcl.blk) then
             return 'Break', me
         else
@@ -8767,7 +8780,7 @@ F = {
             'invalid `finalize` : expected `varlist`')
 
         for _, v1 in ipairs(me.__fin_vars) do
-            ASR(v1.tag=='Nat' or v1.tag=='Var', Stmt,
+            ASR(v1.tag=='Nat' or v1.tag=='Var' or v1.tag=='Vec', Stmt,
                 'invalid `finalize` : expected identifier : got "'..v1.id..'"')
 
             local ok = false
