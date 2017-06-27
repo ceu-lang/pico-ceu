@@ -376,9 +376,9 @@ native/pos do
                         SDL_Texture* dst_tex = SDL_CreateTexture(REN, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, log_w, log_h);
                         SDL_SetRenderTarget(REN, dst_tex);
 
-                        // TODO: why flipping?
-                        //SDL_RenderCopy(REN, src_tex, NULL, NULL);
-                        SDL_RenderCopyEx(REN, src_tex, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
+                        // TODO: linux requires flipping (why?)
+                        SDL_RenderCopy(REN, src_tex, NULL, NULL);
+                        //SDL_RenderCopyEx(REN, src_tex, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
 
                         SDL_DestroyTexture(src_tex);
 
@@ -575,8 +575,16 @@ watching sdl do
         ceu_dbg_assert(NET_send_pkt != NULL);
     }
     do finalize with
-        {SDLNet_FreePacket(NET_recv_pkt);}
-        {SDLNet_FreePacket(NET_send_pkt);}
+        {
+            // TODO: there's no SDLNet_WasInit(), so I try to open it
+            if (SDLNet_Init() >= 0) {
+                SDLNet_Quit();
+            } else {
+                SDLNet_FreePacket(NET_recv_pkt);
+                SDLNet_FreePacket(NET_send_pkt);
+                SDLNet_Quit();
+            }
+        }
     end
 
     emit WINDOW_SET_CLEAR_COLOR_RGB(0x00,0x00,0x00);

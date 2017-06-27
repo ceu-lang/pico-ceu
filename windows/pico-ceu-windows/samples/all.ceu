@@ -257,7 +257,7 @@ await 1s;
     emit GRAPHICS_DRAW_PIXEL(24,-24);
 
     await 1s;
-    emit GRAPHICS_SCREENSHOT("res/screen.bmp");
+    emit GRAPHICS_SCREENSHOT("res/screenshot.bmp");
 
     await 1s;
     emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
@@ -265,6 +265,7 @@ await 1s;
     emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER,VANCHOR_CENTER);
     emit WINDOW_CLEAR();
     emit GRAPHICS_DRAW_TEXT(0,0,"screenshot");
+    await 1s;
 #endif
 
 #if 1
