@@ -114,7 +114,7 @@ par do
                 watching bird do
                     every FRAMES_REDRAW do
                         emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
-                        emit GRAPHICS_DRAW_LINE(0,-240, bird!.rct.x,bird!.rct.y);
+                        emit GRAPHICS_DRAW_LINE(0,-240, bird.rct.x,bird.rct.y);
                     end
                 end
             end

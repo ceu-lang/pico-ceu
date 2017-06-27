@@ -148,6 +148,7 @@ await 1s;
 
     // PIXEL
     emit WINDOW_CLEAR();
+    emit GRAPHICS_SET_WRITE_CURSOR(-25,25);
     emit GRAPHICS_WRITELN("X pixels");
     emit GRAPHICS_WRITELN("red/blue");
     await 1s;

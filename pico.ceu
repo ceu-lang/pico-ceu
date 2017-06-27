@@ -559,7 +559,7 @@ end
 var&? SDL_Init sdl = spawn SDL_Init("pico-Ceu", WIN_DIM,WIN_DIM, _);
 watching sdl do
     {
-        WIN = @(&&sdl!.win);
+        WIN = @(&&sdl.win);
         Mix_ChannelFinished(SOUND_Wav_Done);
 
         ceu_dbg_assert(SDLNet_Init() >= 0);
