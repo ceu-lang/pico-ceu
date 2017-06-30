@@ -565,8 +565,12 @@ watching sdl do
         ceu_dbg_assert(SDLNet_Init() >= 0);
 
         NET_recv = SDLNet_UDP_Open(NET_SET_UDP_PORT_RECV);
+        for (int i=1; !NET_recv; i++) {
+            NET_recv = SDLNet_UDP_Open(NET_SET_UDP_PORT_RECV+i);
+        }
+
         NET_recv_pkt = SDLNet_AllocPacket(512);
-        ceu_dbg_assert(NET_recv != 0);
+        ceu_dbg_assert(NET_recv != NULL);
         ceu_dbg_assert(NET_recv_pkt != NULL);
 
         NET_send = SDLNet_UDP_Open(0);
