@@ -65,7 +65,7 @@ pool[] Drop  drops;
 
 code/await Cloud (var integer dps_)
                     -> (var& IPhysics physics, var& integer dps, event none go_blink)
-                        -> FOREVER
+                        -> NEVER
 do
     dps = &dps_;
 

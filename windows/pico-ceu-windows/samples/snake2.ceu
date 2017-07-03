@@ -10,7 +10,7 @@ data Direction.Up;
 data Direction.Down;
 
 code/await Snake (var bool one) -> (event void grow) -> void do
-    vector[DIM*DIM] Point body;
+    var[DIM*DIM] Point body;
 
     var Point pt_ = val Point(-9999,-9999);
     var integer i;
@@ -152,7 +152,7 @@ end
     end
 end
 
-code/await Food (var&? Snake snake1, var&? Snake snake2) -> (var Point pt) -> FOREVER do
+code/await Food (var&? Snake snake1, var&? Snake snake2) -> (var Point pt) -> void do
     loop do
         pt = val Point(-DIM/2 + (_rand()%(DIM+1)), -DIM/2 + (_rand()%(DIM+1)));
         if call snake1!.Is_Free(&pt) and call snake2!.Is_Free(&pt) then

@@ -33,7 +33,7 @@ SOFTWARE.
 PAK = {
     lua_exe = 'lua5.3',
     ceu_ver = '0.30-alpha',
-    ceu_git = 'b9239368fcc5f2bcbcbeee9c83c1c300345ee29a',
+    ceu_git = 'a4f9daa52191c0ba5b4db37dd6b06dd3a03bac2d',
     files = {
         ceu_c =
             [====[
@@ -391,7 +391,7 @@ CEU_API void ceu_start (tceu_callback* cb, int argc, char* argv[]);
 CEU_API void ceu_stop  (void);
 CEU_API void ceu_input (tceu_nevt evt_id, void* evt_params);
 CEU_API int  ceu_loop  (tceu_callback* cb, int argc, char* argv[]);
-CEU_API void ceu_callback_register (struct tceu_callback* cb);
+CEU_API void ceu_callback_register (tceu_callback* cb);
 
 struct tceu_stk;
 struct tceu_code_mem;
@@ -1232,8 +1232,6 @@ CEU_API void ceu_input (tceu_nevt evt_id, void* evt_params)
 }
 
 CEU_API void ceu_start (tceu_callback* cb, int argc, char* argv[]) {
-    ceu_callback_void_void(CEU_CALLBACK_START);
-
     CEU_APP.argc     = argc;
     CEU_APP.argv     = argv;
 
@@ -1265,6 +1263,8 @@ CEU_API void ceu_start (tceu_callback* cb, int argc, char* argv[]) {
      */
     CEU_THREADS_MUTEX_LOCK(&CEU_APP.threads_mutex);
 #endif
+
+    ceu_callback_void_void(CEU_CALLBACK_START);
 
     tceu_stk stk = { 1, 1, NULL,
                      { (tceu_code_mem*)&CEU_APP.root,
@@ -2677,16 +2677,15 @@ local T = {
     },
 
     {
-        --'`nothing` or `var` or `vector` or `pool` or `event` or `input` or `output` or `data` or `code` or `input/output` or `output/input` or `native` or `deterministic` or location or `{` or `%(` or `await` or `emit` or `call/recursive` or `call` or `request` or `spawn` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `do` or `if` or `loop` or `every` or `lock` or `par/or` or `par/and` or `watching` or `pause/if` or `atomic` or `pre` or `%[` or `lua` or `escape` or `break` or `continue` or `par` or end of file',
-        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `vector` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or end of file',
+        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or end of file',
         'statement'
     },
     {
-        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `vector` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or `with`',
+        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or `with`',
         'statement'
     },
     {
-        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `vector` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or `end`',
+        '`code` or `input/output` or `output/input` or `data` or `native` or `do` or `if` or `loop` or `every` or `lock` or `spawn` or `par/or` or `par/and` or `watching` or `pause/if` or `await` or `atomic` or `pre` or `{` or `%[` or `lua` or `var` or `nothing` or `pool` or `event` or `input` or `output` or `deterministic` or location or `%(` or `emit` or `call/recursive` or `call` or `request` or `kill` or `not` or `%-` or `%+` or `~` or `%$%$` or `&&` or `&` or `sizeof` or `null` or number or `false` or `true` or `"` or string literal or `escape` or `break` or `continue` or `par` or `end`',
         'statement'
     },
 }
@@ -2845,7 +2844,6 @@ local TYPES = P'bool' + 'byte'
 KEYS = P
 'with' +
 'watching' +
-'vector' +
 'var' +
 'val' +
 'until' +
@@ -3068,8 +3066,8 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
 
     -- TYPEPARS
 
-    , Code_Pars = #KK'(' * (PARENS(P'void') + PARENS(LIST(V'__Dcls')))
-    , _Code_Pars = #KK'(' * (PARENS(P'void') + PARENS(LIST(V'__Dcls')))
+    , Code_Pars  = #KK'(' * PARENS(P'void' + LIST(V'__Dcls'))
+    , _Code_Pars = #KK'(' * PARENS(P'void' + LIST(V'__Dcls'))
     , Code_Ret = (V'Type' + CK'FOREVER')
 
 -- DATA
@@ -3121,10 +3119,9 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
 
     , __var_set = V'__ID_int' * OPT(Ct(V'__Sets_one'+V'__Sets_many'))
 
-    , _Var_set  = K'var'    * OPT(V'__ALS')
+    , _Var_set  = K'var'    * OPT(V'__ALS') * OPT(V'__Dim')
                             * Ct((Cg(K'/dynamic','dynamic') + Cg(K'/nohold','nohold'))^-1)
                                                      * V'Type'             * V'__var_set'
-    , _Vec_set  = K'vector' * OPT(CKK'&') * V'__Dim' * V'Type'             * V'__var_set'
     , _Pool_set = K'pool'   * OPT(CKK'&') * V'__Dim' * V'Type'             * V'__var_set'
     , _Evt_set  = K'event'  * OPT(CKK'&') * (PARENS(V'_Typelist')+V'Type') * V'__var_set'
 
@@ -3133,7 +3130,7 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
     , _Typelist     = LIST(V'Type')
     , _Typelist_amp = LIST(OPT(CKK'&') * V'Type')
 
-    , __Dcls    = V'_Var_set' + V'_Vec_set' + V'_Pool_set' + V'_Evt_set'
+    , __Dcls    = V'_Var_set' + V'_Pool_set' + V'_Evt_set'
 -- AWAIT, EMIT
 
     , __Awaits_one  = K'await' * (V'Await_Wclock' + V'_Abs_Await')
@@ -3191,8 +3188,6 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
     , Abs_Val    = CK'val' * V'Abs_Cons'
     , Abs_New    = CK'new' * V'Abs_Cons'
     , _Abs_Await = V'__Abs_Cons_Code' * V'Y'
-        -- TODO: "await Abs_Await" should not accept "-> (...)"
-        --       but "watching Abs_Await" does
 
     , Abs_Spawn      = K'spawn' * V'__Abs_Cons_Code' * -(KK'in' * V'Loc')
     , Abs_Spawn_Pool = K'spawn' * V'__Abs_Cons_Code' * KK'in' * V'Loc'
@@ -3201,7 +3196,6 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
     , Abs_Cons   = OPT(V'Loc'*KK'.') * V'ID_abs' * PARENS(OPT(V'Abslist'))
     , Abslist    = LIST(V'__abs_item')^-1
     , __abs_item = (V'Abs_Cons' + V'Vec_Cons' + V'__Exp' + V'ID_any' + V'NIL')
-
 
 -- SETS
 
@@ -4036,6 +4030,7 @@ F = {
                             node('Stmts', me.ln,
                                 node('_Var_set', me.ln,
                                     false,
+                                    false,
                                     {},
                                     node('Type', me.ln,
                                         node('ID_prim', me.ln, 'bool')),
@@ -4692,6 +4687,20 @@ error'TODO: luacov never executes this?'
     __dcl_set__PRE = function (me)
         local is_alias, mods, dim, tp, id, set
         local tag = string.sub(me.tag,2,-5)
+
+        -- convert from 'Var' to 'Vec'
+        if tag == 'Var' then
+            local _,dim,mods = unpack(me)
+            if dim then
+                --ASR(not mods, me, 'TODO')
+                AST.remove(me, 3)
+                me.tag = 'Vec'
+                tag    = 'Vec'
+            else
+                AST.remove(me, 2)
+            end
+        end
+
         if tag=='Var' or tag=='Pool' or tag=='Vec' then
             is_alias, dim_or_mods, tp, id, set = unpack(me)
             AST.set(me, 2, tp)
@@ -4715,7 +4724,6 @@ error'TODO: luacov never executes this?'
     end,
 
     _Var_set__PRE = '__dcl_set__PRE',
-    _Vec_set__PRE = '__dcl_set__PRE',
     _Pool_set__PRE = '__dcl_set__PRE',
     _Evt_set__PRE = function (me)
         local _,tp = unpack(me)
@@ -5319,14 +5327,16 @@ EXPS.F = {
         for watching in AST.iter'Watching' do
             local loc = AST.get(watching,'',1,'Par_Or',1,'Block',1,'Stmts',1,'Await_Int',1,'Loc',1,'')
                     or  AST.get(watching,'',1,'Par_Or',1,'Block',1,'Stmts',1,'Set_Await_many',1,'Await_Int',1,'Loc',1,'')
-            if AST.is_par(loc,me) then
-                break
-            end
-            if loc and loc.info.dcl==me.info.dcl then
-                ASR(me.__par.tag~='Exp_!', me, 'invalid operand to `!` : found enclosing matching `watching`')
-                me.__exps_ok = true
-                return AST.node('Exp_!', me.ln, '!', me)
-                    -- TODO: inneficient: could access directly
+            if loc then
+                if loc.tag=='ID_int' and AST.is_par(loc,me) then
+                    break
+                end
+                if loc.info and loc.info.dcl==me.info.dcl then
+                    ASR(me.__par.tag~='Exp_!', me, 'invalid operand to `!` : found enclosing matching `watching`')
+                    me.__exps_ok = true
+                    return AST.node('Exp_!', me.ln, '!', me)
+                        -- TODO: inneficient: could access directly
+                end
             end
         end
     end,
@@ -5680,6 +5690,33 @@ error'TODO: remove below'
             else
                 ASR(TYPES.is_nat(e.info.tp), me,
                     'invalid operand to `.` : expected native or data type')
+            end
+        end
+    end,
+
+    ['Exp_.__POS'] = function (me)
+        if not me.info then
+            return
+        end
+        local alias = unpack(me.info.dcl)
+        if alias ~= '&?' then
+            return
+        end
+        if me.__exps_ok then
+            return
+        end
+
+        for watching in AST.iter'Watching' do
+            local loc = AST.get(watching,'',1,'Par_Or',1,'Block',1,'Stmts',1,'Await_Int',1,'Loc',1,'')
+                    or  AST.get(watching,'',1,'Par_Or',1,'Block',1,'Stmts',1,'Set_Await_many',1,'Await_Int',1,'Loc',1,'')
+            if AST.is_par(loc,me) then
+                break
+            end
+            if loc and loc.info.dcl==me.info.dcl then
+                ASR(me.__par.tag~='Exp_!', me, 'invalid operand to `!` : found enclosing matching `watching`')
+                me.__exps_ok = true
+                return AST.node('Exp_!', me.ln, '!', me)
+                    -- TODO: inneficient: could access directly
             end
         end
     end,
@@ -6406,7 +6443,6 @@ DCLS.F = {
                 AST.set(set, 2, AST.copy(base))
                 AST.insert(t.stmts, #t.stmts+1, set)
             end
-
         end
 
         return t.stmts
@@ -6517,13 +6553,18 @@ DCLS.F = {
         local mods = unpack(Code)
 
         -- check types only
+--[[
         do
+AST.dump(me)
             local tps = node('Typelist',me.ln)
             for i, dcl in ipairs(me) do
+DBG('>>>', dcl[2])
                 tps[i] = dcl[2]
             end
             DCLS.F.Typelist(tps)
+error'oi'
         end
+]]
 
         -- multi-methods: changes "me.id" on Code
         me.ids_dyn = ''
@@ -6549,7 +6590,7 @@ DCLS.F = {
 
     -- detect "base" dynamic multimethod: create dummy copy with plain "id"
     Code__PRE = function (me)
-        local _,mods,id = unpack(me)
+        local mods,id = unpack(me)
         if not mods.dynamic then
             return  -- not dynamic code
         end
@@ -6571,7 +6612,7 @@ DCLS.F = {
             return
         end
 
-        local proto_body = AST.asr(me,'', 4,'Block', 1,'Stmts', 2,'Do', 3,'Block', 1,'Stmts', 2,'Block',1,'Stmts')
+        local proto_body = AST.asr(me,'', 3,'Block', 1,'Stmts', 2,'Do', 3,'Block', 1,'Stmts', 2,'Block',1,'Stmts')
         local orig = proto_body[2]
         AST.set(proto_body, 2, node('Stmts', me.ln))
         local new = AST.copy(me)
@@ -6580,6 +6621,7 @@ DCLS.F = {
         -- "base" method with plain "id"
         new.id = id
         new.is_dyn_base = true
+        new.dyns = {}
 
         local s = node('Stmts', me.ln, new, me)
         return s
@@ -6604,7 +6646,12 @@ DCLS.F = {
         if (not me.is_dyn_base) and mods1.dynamic and me.is_impl then
             me.id = id..proto1.ids_dyn
             me.dyn_base = DCLS.asr(me,blk,id)
+-- TODO: check if both are still needed
             me.dyn_base.dyn_last = me
+            me.dyn_base.dyn_first = me.dyn_base.dyn_first or me
+            if me.dyn_base.dyns then
+                me.dyn_base.dyns[#me.dyn_base.dyns+1] = me
+            end
         else
             me.id = id
         end
@@ -7825,7 +7872,7 @@ STMTS.F = {
         ASR(alias=='&?', me, 'invalid `kill` : expected `&?` alias')
         local tp = AST.get(abs,'Code', 3,'Block', 1,'Stmts',
                                        1,'Code_Ret', 1,'', 2,'Type')
-        --ASR(tp, me, 'invalid kill : `code/await` executes forever')
+        ASR(tp, me, 'invalid kill : `code/await` executes forever')
         -- TODO: check e vs tp
     end,
 
@@ -8267,6 +8314,7 @@ F = {
         if me.is_implicit                   or      -- compiler defined
            AST.get(me.blk,4,'Code')         or      -- "code" parameter
            AST.par(me,'Data')               or      -- "data" member
+           code and code.is_dyn_base        or      -- base dynamic class
            alias == '&?'                    or      -- option alias
            TYPES.check(tp,'?') and (not alias)      -- optional initialization
         then
@@ -8951,7 +8999,7 @@ G = {
         local Par = AST.par(me,'Code')
 
         -- calling known Code (or not calling from a tight)
-        if impls[Code] or (not (Par and Par[1].tight)) then
+        if impls[Code] then --or (not (Par and Par[1].tight)) then
             if mods_call.recursive then
                 ASR(mods_dcl.recursive, me,
                     'invalid `call` : unexpected `/recursive`')
@@ -9128,9 +9176,8 @@ PROPS_.F = {
     Code = function (me)
         local mods1,_,body = unpack(me)
         if mods1.dynamic and body then
-error'oi'
-            local Code_Pars = AST.asr(body,'Block', 1,'Stmts', 2,'Do', 3,'Block', 1,'Stmts', 1,'Code_Pars', 1,'Stmts')
-            for i, dcl in ipairs(Code_Pars) do
+            local Pars_Block = AST.asr(body,'Block', 1,'Stmts', 2,'Do', 3,'Block')
+            for i, dcl in ipairs(Pars_Block.dcls) do
                 local _,_,_,mods2 = unpack(dcl)
                 if mods2.dynamic then
                     local _,Type,id = unpack(dcl)
@@ -9237,6 +9284,13 @@ TRAILS.F = {
         me.trails_n = 0
         for _, sub in ipairs(me) do
             me.trails_n = me.trails_n + sub.trails_n
+        end
+    end,
+
+    Code = function (me)
+        MAX_all(me)
+        if me.dyn_base then
+            me.dyn_base.max_trails_n = MAX(me.dyn_base.max_trails_n or 0, me.trails_n)
         end
     end,
 }
@@ -9571,13 +9625,14 @@ F = {
 
         local mem do
             if obj then
-                mem = '((tceu_code_mem*)&'..V(obj)..')'
+                mem = '(&'..V(obj)..')'
             else
                 mem = '_ceu_mem'
             end
         end
         assert(mem)
 
+        mem = '((tceu_code_mem*)'..mem..')'
         if CEU.opts.ceu_features_lua then
             return [[
 CEU_CODE_]]..ID_abs.dcl.id_..'('..V(Abs_Cons)..','..mem..','..LUA(me)..[[)
@@ -9634,6 +9689,7 @@ CEU_CODE_]]..ID_abs.dcl.id_..'('..V(Abs_Cons)..','..mem..[[)
                     op = '.'
                 end
 
+--[[
                 if mods and mods.dynamic and var_tp[1].dcl.hier then
                     if val.tag == 'Exp_as' then
                         ps[#ps+1] = { '_data_'..i, 'CEU_DATA_'..val.info.tp[1].dcl.id }
@@ -9641,6 +9697,7 @@ CEU_CODE_]]..ID_abs.dcl.id_..'('..V(Abs_Cons)..','..mem..[[)
                         ps[#ps+1] = { '_data_'..i, V(val,ctx)..op..'_enum' }
                     end
                 end
+]]
             end
 
             local var_is_opt = TYPES.check(var_tp,'?')
@@ -9742,7 +9799,7 @@ CEU_CODE_]]..ID_abs.dcl.id_..'('..V(Abs_Cons)..','..mem..[[)
 ({]]..id_struct..' __ceu_'..me.n..';'..ps2..'; __ceu_'..me.n..[[;})
 
 #else
-(struct ]]..id_struct..') { '..ps1..[[ }
+(]]..id_struct..') { '..ps1..[[ }
 
 #endif
 ]]
@@ -10265,29 +10322,24 @@ typedef struct tceu_code_mem_ROOT {
         me.mems = { me=me, mem='' }
     end,
     Code__POS = function (me)
-        local _,mods,id = unpack(me)
+        local mods,_,id = unpack(me)
 
-        if me.is_dyn_base then
-            me.dyns = {}
-        else
-            if not me.is_impl then
-                return
-            end
-            if mods.dynamic then
-                local t = me.dyn_base.dyns
-                t[#t+1] = me.id_
-            end
+        if me.is_dyn_base or me.is_impl then
+            MEMS.codes[#MEMS.codes+1] = me.mems
+        end
 
-            me.mems.mem = [[
+        if not me.is_impl then
+            return
+        end
+
+        me.mems.mem = [[
 typedef struct tceu_code_mem_]]..me.id_..[[ {
     tceu_code_mem _mem;
-    tceu_trl      _trails[]]..me.trails_n..[[];
+    tceu_trl      _trails[]]..(me.dyn_base and me.dyn_base.max_trails_n or me.trails_n)..[[];
     byte          _params[0];
     ]]..me.mems.mem..[[
 } tceu_code_mem_]]..me.id_..[[;
 ]]
-        end
-        MEMS.codes[#MEMS.codes+1] = me.mems
     end,
 
     Code = function (me)
@@ -10303,7 +10355,6 @@ typedef struct tceu_code_mem_]]..me.id_..[[ {
 
         local multis = {}
         if mods.dynamic then
-error'oi'
             local Code_Pars = AST.asr(body,'', 1,'Stmts', 2,'Do', 3,'Block', 1,'Stmts', 1,'Code_Pars')
             for i, dcl in ipairs(AST.par(Code_Pars,'Block').dcls) do
                 local _,_,_,dcl_mods = unpack(dcl)
@@ -10323,7 +10374,8 @@ tceu_ndata _data_]]..i..[[;     /* force multimethod arg data id */
                         base = data.dcl,    -- datatype for the argument
                         dyn  = dcl.id_dyn,  -- identifier considering the "base" value
                         id   = id,          -- argument identifier
-                        i    = i,           -- position in the parameter list
+                        dcl  = dcl,
+                        --i    = i,           -- position in the parameter list
                     }
                 end
             end
@@ -10340,12 +10392,15 @@ static tceu_ndata multis_lbl]]..dims..[[ = {
 tceu_nlbl lbl = multis_lbl
 ]]
                 for _, t in ipairs(multis) do
-                    multis.lbl = multis.lbl..'[ ps._data_'..t.i..' ]'
+                    local is_alias, tp = unpack(t.dcl)
+                    local op = ((is_alias or TYPES.check(tp,'&&')) and '->') or '.'
+                    multis.lbl = multis.lbl..'[ mem->'..t.dcl.id_..op..'_enum ]'
                 end
                 multis.lbl = multis.lbl..';\n'
             end
 
             -- WATCH
+--[=[
             do
                 multis.params = [[
 static tceu_ndata multis_params]]..dims..[[ = {
@@ -10358,6 +10413,7 @@ usize params = multis_params
                 end
                 multis.params = multis.params..';\n'
             end
+]=]
         end
 
         --me.mems.args = me.mems.args..'} tceu_code_args_'..me.id_..';\n'
@@ -10368,17 +10424,18 @@ usize params = multis_params
         if mods.tight then
             me.mems.wrapper = me.mems.wrapper .. [[
 static ]]..TYPES.toc(assert(Type))..[[ /* space */
-CEU_CODE_]]..me.id_..[[ (tceu_code_mem_]]..me.id_..[[ mem,
+CEU_CODE_]]..me.id_..[[ (tceu_code_mem_]]..me.id_..[[ mem_,
                         tceu_code_mem* up_mem
 #ifdef CEU_FEATURES_LUA
                       , lua_State* lua
 #endif
                         )
 {
-    mem._mem.up_mem = up_mem;
-    mem._mem.depth  = ]]..me.depth..[[;
+    tceu_code_mem_]]..me.id_..[[* mem = &mem_;
+    mem_._mem.up_mem = up_mem;
+    mem_._mem.depth  = ]]..me.depth..[[;
 #ifdef CEU_FEATURES_LUA
-    mem._mem.lua = lua;
+    mem_._mem.lua = lua;
 #endif
 ]]
             if mods.dynamic then
@@ -10389,11 +10446,11 @@ CEU_CODE_]]..me.id_..[[ (tceu_code_mem_]]..me.id_..[[ mem,
 ]]
             end
             me.mems.wrapper = me.mems.wrapper .. [[
-    ceu_lbl(NULL, NULL, (tceu_code_mem*)&mem, 0, lbl);
+    ceu_lbl(NULL, NULL, (tceu_code_mem*)mem, 0, lbl);
 ]]
             if Type and (not TYPES.check(Type,'void')) then
                 me.mems.wrapper = me.mems.wrapper..[[
-    return mem._ret;
+    return mem_._ret;
 ]]
             end
             me.mems.wrapper = me.mems.wrapper..[[
@@ -10402,7 +10459,7 @@ CEU_CODE_]]..me.id_..[[ (tceu_code_mem_]]..me.id_..[[ mem,
         else
             me.mems.wrapper = me.mems.wrapper .. [[
 static void CEU_CODE_]]..me.id_..[[ (tceu_stk* stk, tceu_ntrl trlK,
-                                       tceu_code_mem* mem)
+                                     tceu_code_mem_]]..me.id_..[[* mem)
 {
 ]]
             if mods.dynamic then
@@ -10413,8 +10470,8 @@ static void CEU_CODE_]]..me.id_..[[ (tceu_stk* stk, tceu_ntrl trlK,
 ]]
             end
             me.mems.wrapper = me.mems.wrapper .. [[
-    tceu_stk __ceu_stk = { 1, 0, stk, {mem,]]..me.trails[1]..','..me.trails[2]..[[} };
-    ceu_lbl(NULL, &__ceu_stk, mem, trlK, lbl);
+    tceu_stk __ceu_stk = { 1, 0, stk, {(tceu_code_mem*)mem,]]..me.trails[1]..','..me.trails[2]..[[} };
+    ceu_lbl(NULL, &__ceu_stk, (tceu_code_mem*)mem, trlK, lbl);
 #ifdef CEU_FEATURES_LONGJMP
     CEU_LONGJMP_JMP_((&__ceu_stk));
 #else
@@ -10509,6 +10566,66 @@ static ]]..cc..'* CEU_OPTION_'..cc..' ('..cc..[[* opt, char* file, int line) {
 
     ---------------------------------------------------------------------------
 
+    __dcl2c = function (dcl)
+        if dcl.tag == 'Var' then
+            local alias, tp = unpack(dcl)
+            if alias then
+                if TYPES.abs_dcl(tp) then
+                    -- because of recursive definitions
+                    return 'struct '..TYPES.toc(tp)..'* '..dcl.id_..';\n'
+                else
+                    return TYPES.toc(tp)..'* '..dcl.id_..';\n'
+                end
+            else
+                return TYPES.toc(tp)..'  '..dcl.id_..';\n'
+            end
+
+        -- EVT
+        elseif dcl.tag == 'Evt' then
+            local alias = unpack(dcl)
+            if alias then
+                return 'tceu_evt '..dcl.id_..';\n'
+            end
+
+        -- VEC
+        elseif dcl.tag == 'Vec' then
+            local is_alias, tp, _, dim = unpack(dcl)
+            local ptr = (is_alias and '*' or '')
+            if TYPES.is_nat(TYPES.get(tp,1)) then
+                return [[
+]]..TYPES.toc(tp)..' ('..ptr..dcl.id_..')['..V(dim)..[[];
+]]
+            else
+                local ret = ''
+                if dim.is_const and (not is_alias) then
+                    ret = ret .. [[
+]]..TYPES.toc(tp)..' '..dcl.id_..'_buf['..V(dim)..[[];
+]]
+                end
+                return ret .. [[
+tceu_vector]]..ptr..' '..dcl.id_..[[;
+]]
+            end
+
+        -- POOL
+        elseif dcl.tag == 'Pool' then
+            local is_alias, tp, _, dim = unpack(dcl)
+            local ptr = (is_alias and '*' or '')
+            ret = ''
+            if dim.is_const and (not is_alias) then
+                ret = ret .. [[
+tceu_code_mem_dyn* ]]..dcl.id_..'_queue['..V(dim)..[[];
+byte ]]..dcl.id_..[[_buf[
+(sizeof(tceu_code_mem_dyn)+sizeof(]]..TYPES.toc(tp)..')) * '..V(dim)..[[
+];
+]]
+            end
+            return ret .. [[
+tceu_pool_pak]]..ptr..' '..dcl.id_..[[;
+]]
+        end
+    end,
+
     Block__PRE = function (me)
         local mem = {}
 
@@ -10560,17 +10677,7 @@ if dcl.tag ~= 'Prim' then
                 --if dcl.id == '_ret' then
                     --dcl.id_ = dcl.id
                 --else
-                    local alias, tp = unpack(dcl)
-                    if alias then
-                        if TYPES.abs_dcl(tp) then
-                            -- because of recursive definitions
-                            mem[#mem+1] = 'struct '..TYPES.toc(tp)..'* '..dcl.id_..';\n'
-                        else
-                            mem[#mem+1] = TYPES.toc(tp)..'* '..dcl.id_..';\n'
-                        end
-                    else
-                        mem[#mem+1] = TYPES.toc(tp)..'  '..dcl.id_..';\n'
-                    end
+                    mem[#mem+1] = F.__dcl2c(dcl)
                 --end
 
             -- EVT
@@ -10579,7 +10686,7 @@ if dcl.tag ~= 'Prim' then
 -- TODO: per Code evts
                     MEMS.evts[#MEMS.evts+1] = dcl
                     dcl.id_ = dcl.id
-                    mem[#mem+1] = 'tceu_evt '..dcl.id_..';\n'
+                    mem[#mem+1] = F.__dcl2c(dcl)
                 else
                     local data = AST.par(me,'Data')
                     if data then
@@ -10606,20 +10713,7 @@ if dcl.tag ~= 'Prim' then
                 if not toplevel then
                     dcl.id_ = dcl.id..'_'..dcl.n
                 end
-                if TYPES.is_nat(TYPES.get(tp,1)) then
-                    mem[#mem+1] = [[
-]]..TYPES.toc(tp)..' ('..ptr..dcl.id_..')['..V(dim)..[[];
-]]
-                else
-                    if dim.is_const and (not is_alias) then
-                        mem[#mem+1] = [[
-]]..TYPES.toc(tp)..' '..dcl.id_..'_buf['..V(dim)..[[];
-]]
-                    end
-                    mem[#mem+1] = [[
-tceu_vector]]..ptr..' '..dcl.id_..[[;
-]]
-                end
+                mem[#mem+1] = F.__dcl2c(dcl)
 
             -- POOL
             elseif dcl.tag == 'Pool' then
@@ -10629,17 +10723,7 @@ tceu_vector]]..ptr..' '..dcl.id_..[[;
                 if not toplevel then
                     dcl.id_ = dcl.id..'_'..dcl.n
                 end
-                if dim.is_const and (not is_alias) then
-                    mem[#mem+1] = [[
-tceu_code_mem_dyn* ]]..dcl.id_..'_queue['..V(dim)..[[];
-byte ]]..dcl.id_..[[_buf[
-    (sizeof(tceu_code_mem_dyn)+sizeof(]]..TYPES.toc(tp)..')) * '..V(dim)..[[
-];
-]]
-                end
-                mem[#mem+1] = [[
-tceu_pool_pak]]..ptr..' '..dcl.id_..[[;
-]]
+                mem[#mem+1] = F.__dcl2c(dcl)
 
             -- EXT
             elseif dcl.tag == 'Ext' then
@@ -10835,24 +10919,14 @@ for i, code in ipairs(MEMS.codes) do
     end
 
     if me and me.dyn_base and me.dyn_base.dyn_last==me then
-        MEMS.codes.mems = MEMS.codes.mems..[[
-typedef union {
-    tceu_code_mem _mem;
-
-    /* only to compare params offsets */
-    struct {
-        byte _params[0];
-        ]]..me.dyn_base.mems.mem..[[
-    };
-]]
-        for i, id2 in ipairs(me.dyn_base.dyns) do
-            MEMS.codes.mems = MEMS.codes.mems..[[
-    struct tceu_code_mem_]]..id2..' _'..i..[[;
-]]
-        end
-        MEMS.codes.mems = MEMS.codes.mems..[[
-} tceu_code_mem_]]..me.dyn_base.id_..[[;
-]]
+        local first = me.dyn_base.dyn_first
+        local mem = string.gsub(first.mems.mem,
+                                'typedef struct tceu_code_mem_'..first.id_,
+                                'typedef struct tceu_code_mem_'..me.dyn_base.id_)
+              mem = string.gsub(mem,
+                                '} tceu_code_mem_'..first.id_..';',
+                                '} tceu_code_mem_'..me.dyn_base.id_..';')
+        MEMS.codes.mems = MEMS.codes.mems..mem
     end
 end
 
@@ -11341,19 +11415,19 @@ assert(not obj, 'not implemented')
         local ret = [[
 {
     *((tceu_code_mem_]]..ID_abs.dcl.id_..'*)'..mem..') = '..V(Abs_Cons)..[[;
-    ]]..mem..[[->pak     = ]]..pak..[[;
-    ]]..mem..[[->up_mem  = ]]..((pak=='NULL' and '_ceu_mem')   or (pak..'->up_mem'))..[[;
-    ]]..mem..[[->up_trl  = ]]..((pak=='NULL' and me.trails[1]) or (pak..'->up_trl'))..[[;
-    ]]..mem..[[->depth   = ]]..ID_abs.dcl.depth..[[;
+    ]]..mem..[[->_mem.pak     = ]]..pak..[[;
+    ]]..mem..[[->_mem.up_mem  = ]]..((pak=='NULL' and '_ceu_mem')   or (pak..'->up_mem'))..[[;
+    ]]..mem..[[->_mem.up_trl  = ]]..((pak=='NULL' and me.trails[1]) or (pak..'->up_trl'))..[[;
+    ]]..mem..[[->_mem.depth   = ]]..ID_abs.dcl.depth..[[;
 ]]
         if CEU.opts.ceu_features_lua then
             ret = ret .. [[
-    ]]..mem..[[->lua    = ]]..LUA(me)..[[;
+    ]]..mem..[[->_mem.lua    = ]]..LUA(me)..[[;
 ]]
         end
         ret = ret .. [[
     tceu_stk __ceu_stk  = { 1, 0, _ceu_stk, {_ceu_mem,_ceu_trlK,_ceu_trlK} };
-    CEU_CODE_]]..ID_abs.dcl.id_..[[(&__ceu_stk, 0, (tceu_code_mem*)]]..mem..[[);
+    CEU_CODE_]]..ID_abs.dcl.id_..[[(&__ceu_stk, 0, ]]..mem..[[);
 #ifdef CEU_FEATURES_LONGJMP
     CEU_LONGJMP_JMP((&__ceu_stk));
 #else
@@ -11385,7 +11459,7 @@ _ceu_mem->_trails[]]..(to.dcl.trails[1])..[[].evt.mem =  &]]..CUR('__mem_'..me.n
             { ['evt.mem'] = '(tceu_code_mem*) &'..CUR('__mem_'..me.n) },
             { lbl = me.lbl_out.id },
             lbl = me.lbl_out.id,
-            exec = CODES.F.__abs(me, '(&'..CUR(' __mem_'..me.n)..'._mem)', 'NULL'),
+            exec = CODES.F.__abs(me, '(&'..CUR(' __mem_'..me.n)..')', 'NULL'),
         })
     end,
 
@@ -11447,7 +11521,8 @@ assert(not obj, 'not implemented')
         __ceu_new->prv = ]]..V(pool)..[[.first.prv;
         ]]..V(pool)..[[.first.prv = __ceu_new;
 
-        tceu_code_mem* __ceu_new_mem = &__ceu_new->mem[0];
+        tceu_code_mem_]]..ID_abs.dcl.id_..[[* __ceu_new_mem =
+            (tceu_code_mem_]]..ID_abs.dcl.id_..[[*) &__ceu_new->mem[0];
         ]]..CODES.F.__abs(me, '__ceu_new_mem', '(&'..V(pool)..')')..[[
     } else {
 ]])

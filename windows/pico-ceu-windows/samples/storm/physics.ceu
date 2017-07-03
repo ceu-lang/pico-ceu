@@ -14,7 +14,7 @@ end
 
 code/await Physics (var Rect rct, var Color? clr)
                     -> (var IPhysics physics)
-                        -> FOREVER
+                        -> NEVER
 do
     physics = val IPhysics(Axis(rct.x, rct.w, 0, 0, 0),
                            Axis(rct.y, rct.h, 0, 0, 0),

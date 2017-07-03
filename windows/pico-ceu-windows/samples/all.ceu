@@ -54,7 +54,7 @@ await 1s;
     var int vol;
     loop vol in [0 -> 100], 10 do
         emit WINDOW_CLEAR();
-        vector[10] byte str;
+        var[10] byte str;
         _snprintf(&&str[0],10, "%d", vol);
         emit GRAPHICS_DRAW_TEXT(0,0,&&str[0]);
         emit SOUND_SET_VOLUME(vol);
@@ -92,7 +92,7 @@ await 1s;
     var int size;
     loop size in [1 -> 50], 1 do
         emit WINDOW_CLEAR();
-        vector[10] byte str;
+        var[10] byte str;
         _snprintf(&&str[0],10, "%d", size);
         emit GRAPHICS_SET_FONT("tiny.ttf", size);
         emit GRAPHICS_DRAW_TEXT(0,0,&&str[0]);
@@ -277,7 +277,7 @@ await 1s;
     par do
         var integer key;
         every key in KEY_PRESS do
-            vector[25] byte str;
+            var[25] byte str;
             emit WINDOW_CLEAR();
             _snprintf(&&str[0],25, "press: %d", key);
             emit GRAPHICS_DRAW_TEXT(0,0,&&str[0]);
@@ -285,7 +285,7 @@ await 1s;
     with
         var integer key;
         every key in KEY_UNPRESS do
-            vector[25] byte str;
+            var[25] byte str;
             _snprintf(&&str[0],25, "unpress: %d", key);
             emit WINDOW_CLEAR();
             emit GRAPHICS_DRAW_TEXT(0,0,&&str[0]);
@@ -294,7 +294,7 @@ await 1s;
         var integer x;
         var integer y;
         every (x,y) in MOUSE_MOVE do
-            vector[25] byte str;
+            var[25] byte str;
             _snprintf(&&str[0],25, "move: %d,%d", x,y);
             emit WINDOW_CLEAR();
             emit GRAPHICS_DRAW_TEXT(0,0,&&str[0]);
@@ -303,7 +303,7 @@ await 1s;
         var integer x;
         var integer y;
         every (_,x,y) in MOUSE_CLICK do
-            vector[25] byte str;
+            var[25] byte str;
             _snprintf(&&str[0],25, "click: %d,%d", x,y);
             emit WINDOW_CLEAR();
             emit GRAPHICS_DRAW_TEXT(0,0,&&str[0]);
@@ -312,7 +312,7 @@ await 1s;
         var integer x;
         var integer y;
         every (_,x,y) in MOUSE_UNCLICK do
-            vector[25] byte str;
+            var[25] byte str;
             _snprintf(&&str[0],25, "unclick: %d,%d", x,y);
             emit WINDOW_CLEAR();
             emit GRAPHICS_DRAW_TEXT(0,0,&&str[0]);

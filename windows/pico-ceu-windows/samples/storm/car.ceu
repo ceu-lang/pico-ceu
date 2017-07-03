@@ -32,7 +32,7 @@ do
     end
 end
 
-code/await Car (none) -> (var& IPhysics physics) -> FOREVER
+code/await Car (none) -> (var& IPhysics physics) -> NEVER
 do
     var& Physics car = spawn Physics(Rect(0,-240+50, 60,30), Color(0x3B,0xBC,0x48));
     physics = &car.physics;

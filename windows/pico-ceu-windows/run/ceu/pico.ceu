@@ -21,6 +21,7 @@ end
 #define text    _text
 #define yes     true
 #define no      false
+#define NEVER   FOREVER
 
 #define X(x) ((x)+LOG_W/2)
 #define Y(y) (LOG_H/2-(y))
@@ -92,6 +93,7 @@ output (int)             SOUND_SET_VOLUME;
 output (text)            SOUND_PLAY;
 
 //output (&int)            NET_GET_ID;
+//input  &[255]byte        NET_RECEIVE;
 input  (int,byte&&)      NET_RECEIVE;
 output (int,byte&&)      NET_SEND;
 
@@ -565,8 +567,12 @@ watching sdl do
         ceu_dbg_assert(SDLNet_Init() >= 0);
 
         NET_recv = SDLNet_UDP_Open(NET_SET_UDP_PORT_RECV);
+        for (int i=1; !NET_recv; i++) {
+            NET_recv = SDLNet_UDP_Open(NET_SET_UDP_PORT_RECV+i);
+        }
+
         NET_recv_pkt = SDLNet_AllocPacket(512);
-        ceu_dbg_assert(NET_recv != 0);
+        ceu_dbg_assert(NET_recv != NULL);
         ceu_dbg_assert(NET_recv_pkt != NULL);
 
         NET_send = SDLNet_UDP_Open(0);
