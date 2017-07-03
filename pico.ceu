@@ -21,6 +21,7 @@ end
 #define text    _text
 #define yes     true
 #define no      false
+#define NEVER   FOREVER
 
 #define X(x) ((x)+LOG_W/2)
 #define Y(y) (LOG_H/2-(y))
@@ -92,6 +93,7 @@ output (int)             SOUND_SET_VOLUME;
 output (text)            SOUND_PLAY;
 
 //output (&int)            NET_GET_ID;
+//input  &[255]byte        NET_RECEIVE;
 input  (int,byte&&)      NET_RECEIVE;
 output (int,byte&&)      NET_SEND;
 
