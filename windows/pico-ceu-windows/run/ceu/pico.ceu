@@ -75,6 +75,7 @@ input (int,int)          MOUSE_MOVE;
 input (int)              KEY_PRESS;
 input (int)              KEY_UNPRESS;
 
+//output (&int,&int)       GRAPHICS_GET_BMP_DIMENSIONS;
 output (HAnchor,VAnchor) GRAPHICS_SET_ANCHOR;
 output (int,int,int)     GRAPHICS_SET_COLOR_RGB;
 output (Color)           GRAPHICS_SET_COLOR_NAME;
@@ -518,8 +519,11 @@ native/pos do
                         }
                         Mix_VolumeChunk(snd, MIX_MAX_VOLUME*SOUND_SET_VOLUME/100);
                         int channel = Mix_PlayChannel(-1, snd, 0);
-                        ceu_dbg_assert(channel>=0 && channel<5);
-                        SOUND_VEC[channel] = snd;
+// TODO: print warning?
+                        //ceu_dbg_assert(channel>=0 && channel<5);
+                        if (!(channel>=0 && channel<5)) {
+                            SOUND_VEC[channel] = snd;
+                        }
                         break;
                     }
 

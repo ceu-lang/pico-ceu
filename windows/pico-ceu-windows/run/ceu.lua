@@ -33,7 +33,7 @@ SOFTWARE.
 PAK = {
     lua_exe = 'lua5.3',
     ceu_ver = '0.30-alpha',
-    ceu_git = 'a4f9daa52191c0ba5b4db37dd6b06dd3a03bac2d',
+    ceu_git = '6fc383b8d0caf1dc634eb887110a28b1b224e99a',
     files = {
         ceu_c =
             [====[
@@ -136,48 +136,54 @@ enum {
 typedef struct {
     usize max;
     usize len;
+    usize ini;
     usize unit;
+    u8    is_ring:    1;
     u8    is_dyn:     1;
     u8    is_freezed: 1;
-    byte* buf;
+    byte* buf;              /* [STRING] buf must have max+1 bytes */
 } tceu_vector;
 
-#define ceu_vector_buf_len(vec)           ((vec)->len * (vec)->unit)
-#define ceu_vector_buf_get(vec,idx)       (&(vec)->buf[(idx)*(vec)->unit])
-#define ceu_vector_buf_set(vec,idx,buf,n) {                             \
-    ceu_callback_assert_msg_ex(((vec)->len*(vec)->unit) >= ((idx)+(n)), \
-                               "ccess out of bounds",                   \
-                               __FILE__, __LINE__);                     \
-    memcpy(ceu_vector_buf_get((vec),(idx)),(buf),(n));                  \
-}
+#define ceu_vector_idx(vec,idx)            ((vec)->is_ring ? (((vec)->ini + idx) % (vec)->max) : idx)
+#define ceu_vector_buf_get(vec,idx)        (&(vec)->buf[ceu_vector_idx(vec,idx)*(vec)->unit])
+#define ceu_vector_buf_set(vec,idx,buf,nu) ceu_vector_buf_set_ex(vec,idx,buf,nu,__FILE__,__LINE__)
+#define ceu_vector_concat(dst,idx,src)     ceu_vector_concat_ex(dst,idx,src,__FILE__,__LINE__)
 
 #define ceu_vector_setlen(a,b,c) ceu_vector_setlen_ex(a,b,c,__FILE__,__LINE__)
 #define ceu_vector_geti(a,b)     ceu_vector_geti_ex(a,b,__FILE__,__LINE__)
+#define ceu_vector_ptr(vec)      (vec)
 
-void  ceu_vector_init         (tceu_vector* vector, usize max, bool is_dyn,
-                               usize unit, byte* buf);
+void  ceu_vector_init         (tceu_vector* vector, usize max, bool is_ring,
+                               bool is_dyn, usize unit, byte* buf);
 byte* ceu_vector_setmax       (tceu_vector* vector, usize len, bool freeze);
 int   ceu_vector_setlen_could (tceu_vector* vector, usize len, bool grow);
 void  ceu_vector_setlen_ex    (tceu_vector* vector, usize len, bool grow,
                                const char* file, u32 line);
 byte* ceu_vector_geti_ex      (tceu_vector* vector, usize idx,
                                const char* file, u32 line);
+void  ceu_vector_buf_set_ex   (tceu_vector* vector, usize idx, byte* buf, usize nu,
+                               const char* file, u32 line);
+void  ceu_vector_concat_ex    (tceu_vector* dst, usize idx, tceu_vector* src,
+                               const char* file, u32 line);
 
 #if 0
 char* ceu_vector_tochar (tceu_vector* vector);
 #endif
 
-void ceu_vector_init (tceu_vector* vector, usize max, bool is_dyn, usize unit, byte* buf) {
+void ceu_vector_init (tceu_vector* vector, usize max, bool is_ring,
+                      bool is_dyn, usize unit, byte* buf) {
     vector->len        = 0;
     vector->max        = max;
+    vector->ini        = 0;
     vector->unit       = unit;
     vector->is_dyn     = is_dyn;
+    vector->is_ring    = is_ring;
     vector->is_freezed = 0;
     vector->buf        = buf;
 
     /* [STRING] */
     if (vector->buf != NULL) {
-        vector->buf[0] = '\0';
+        vector->buf[vector->max] = '\0';
     }
 }
 
@@ -245,13 +251,13 @@ void ceu_vector_setlen_ex (tceu_vector* vector, usize len, bool grow,
     /* must fit w/o growing */
     if (!grow) {
         ceu_callback_assert_msg_ex(len <= vector->len, "access out of bounds",
-                             file, line);
+                                   file, line);
     }
 
     /* fixed size */
     if (!vector->is_dyn || vector->is_freezed) {
         ceu_callback_assert_msg_ex(len <= vector->max, "access out of bounds",
-                             file, line);
+                                   file, line);
 
     /* variable size */
     } else {
@@ -262,32 +268,58 @@ void ceu_vector_setlen_ex (tceu_vector* vector, usize len, bool grow,
             /* grow vector */
             if (ceu_vector_setmax(vector,len,0) == NULL) {
                 ceu_callback_assert_msg_ex(len==0, "access out of bounds",
-                                     file, line);
+                                           file, line);
             }
+        }
+        /* [STRING] */
+        if (vector->buf != NULL) {
+            vector->buf[vector->max] = '\0';
         }
     }
 
-    /* [STRING] */
-    if (vector->buf != NULL) {
-        vector->buf[len*vector->unit] = '\0';
+    if (vector->is_ring && len<vector->len) {
+        vector->ini = (vector->ini + (vector->len - len)) % vector->max;
     }
+
     vector->len = len;
 }
 
 byte* ceu_vector_geti_ex (tceu_vector* vector, usize idx, const char* file, u32 line) {
-    ceu_callback_assert_msg_ex(idx < vector->len, "access out of bounds", file, line);
+    ceu_callback_assert_msg_ex(idx < vector->len,
+                               "access out of bounds", file, line);
     return ceu_vector_buf_get(vector, idx);
 }
 
-#if 0
-char* ceu_vector_tochar (tceu_vector* vector) {
-    if (vector->buf == NULL) {
-        return "";
+void ceu_vector_buf_set_ex (tceu_vector* vector, usize idx, byte* buf, usize nu,
+                            const char* file, u32 line)
+{
+    usize n = ((nu % vector->unit) == 0) ? nu/vector->unit : nu/vector->unit+1;
+    ceu_callback_assert_msg_ex((vector->len >= idx+n),
+                               "access out of bounds", file, line);
+
+    usize k  = (vector->len - ceu_vector_idx(vector,idx));
+    usize ku = k * vector->unit;
+
+    if (vector->is_ring && ku<nu) {
+        memcpy(ceu_vector_buf_get(vector,idx),   buf,    ku);
+        memcpy(ceu_vector_buf_get(vector,idx+k), buf+ku, nu-ku);
     } else {
-        return (char*)vector->buf;
+        memcpy(ceu_vector_buf_get(vector,idx), buf, nu);
     }
 }
-#endif
+
+#include <stdio.h>
+void ceu_vector_concat_ex (tceu_vector* dst, usize idx, tceu_vector* src,
+                           const char* file, u32 line)
+{
+    if (src->is_ring && ceu_vector_idx(src,src->len-1)<ceu_vector_idx(src,0)) {
+        usize n = (src->len - src->ini);
+        ceu_vector_buf_set_ex(dst, idx,   ceu_vector_buf_get(src,0), n*src->unit,            file, line);
+        ceu_vector_buf_set_ex(dst, idx+n, ceu_vector_buf_get(src,n), (src->len-n)*src->unit, file, line);
+    } else {
+        ceu_vector_buf_set_ex(dst, idx, ceu_vector_buf_get(src,0), (src->len*src->unit), file, line);
+    }
+}
 ]====]..
             [====[
 #include <stdlib.h>     /* NULL */
@@ -3119,7 +3151,7 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
 
     , __var_set = V'__ID_int' * OPT(Ct(V'__Sets_one'+V'__Sets_many'))
 
-    , _Var_set  = K'var'    * OPT(V'__ALS') * OPT(V'__Dim')
+    , _Var_set  = K'var'    * OPT(V'__ALS') * OPT(V'__Dim_Ring')
                             * Ct((Cg(K'/dynamic','dynamic') + Cg(K'/nohold','nohold'))^-1)
                                                      * V'Type'             * V'__var_set'
     , _Pool_set = K'pool'   * OPT(CKK'&') * V'__Dim' * V'Type'             * V'__var_set'
@@ -3282,7 +3314,8 @@ GG = { [1] = x * V'_Stmts' * V'Y' * (P(-1) + E('end of file'))
 
 -- MODS
 
-    , __Dim = KK'[' * (V'__Exp'+Cc('[]')) * KK']'
+    , __Dim      = KK'[' * (V'__Exp'+Cc('[]')) * KK']'
+    , __Dim_Ring = KK'[' * (V'__Exp'*OPT(CK'*')+Cc('[]')*Cc(false)) * KK']'
 
 -- LISTS
 
@@ -4690,12 +4723,14 @@ error'TODO: luacov never executes this?'
 
         -- convert from 'Var' to 'Vec'
         if tag == 'Var' then
-            local _,dim,mods = unpack(me)
+            local _,dim,is_ring,mods = unpack(me)
             if dim then
                 --ASR(not mods, me, 'TODO')
+                AST.remove(me, 4)
                 AST.remove(me, 3)
                 me.tag = 'Vec'
                 tag    = 'Vec'
+                me.is_ring = is_ring
             else
                 AST.remove(me, 2)
             end
@@ -10060,9 +10095,7 @@ ceu_data_as(CEU_DATA_SUPERS_]]..base.id_..[[,
 ))
 ]]
             else
-                ret = [[
-((]]..TYPES.toc(Type)..')('..V(e)..[[))
-]]
+                ret = '(('..TYPES.toc(Type)..')('..V(e)..'))'
             end
         end
         if TYPES.check(Type,'bool') then
@@ -10593,13 +10626,13 @@ static ]]..cc..'* CEU_OPTION_'..cc..' ('..cc..[[* opt, char* file, int line) {
             local ptr = (is_alias and '*' or '')
             if TYPES.is_nat(TYPES.get(tp,1)) then
                 return [[
-]]..TYPES.toc(tp)..' ('..ptr..dcl.id_..')['..V(dim)..[[];
+]]..TYPES.toc(tp)..' ('..ptr..dcl.id_..')['..V(dim)..[[+1]; /* [STRING] +1 */
 ]]
             else
                 local ret = ''
                 if dim.is_const and (not is_alias) then
                     ret = ret .. [[
-]]..TYPES.toc(tp)..' '..dcl.id_..'_buf['..V(dim)..[[];
+]]..TYPES.toc(tp)..' '..dcl.id_..'_buf['..V(dim)..[[+1];    /* [STRING] +1 */
 ]]
                 end
                 return ret .. [[
@@ -11260,14 +11293,15 @@ if (]]..V(c)..[[) {
     Vec_Init = function (me)
         local vec = unpack(me)
         local _, tp, _, dim = unpack(vec.info.dcl)
+        local is_ring = (vec.info.dcl.is_ring and '1') or '0'
         if dim.is_const then
             LINE(me, [[
-ceu_vector_init(&]]..V(vec)..','..V(dim)..', 0, sizeof('..TYPES.toc(tp)..[[),
+ceu_vector_init(&]]..V(vec)..','..V(dim)..', '..is_ring..', 0, sizeof('..TYPES.toc(tp)..[[),
                 (byte*)&]]..V(vec,{id_suf='_buf'})..[[);
 ]])
         else
             LINE(me, [[
-ceu_vector_init(&]]..V(vec)..', 0, 1, sizeof('..TYPES.toc(tp)..[[), NULL);
+ceu_vector_init(&]]..V(vec)..', 0, '..is_ring..', 1, sizeof('..TYPES.toc(tp)..[[), NULL);
 ]])
             if dim ~= '[]' then
                 LINE(me, [[
@@ -11818,9 +11852,15 @@ while (1) {
 
 
         if to.tag ~= 'ID_any' then
+            local op = (dir=='->' and '<' or '>')
             LINE(me, [[
 ]]..CUR('__lim_'..me.n)..' = '..V(to)..' + ('..V(step)..'*'..to.__adj_step_mul..[[*-1);
 ]])
+            if to.__adj_step_mul ~= 0 then
+                LINE(me, [[
+ceu_callback_assert_msg(]]..CUR('__lim_'..me.n)..' '..op..' '..V(to)..[[, "`loop` limit underflow/overflow");
+]])
+            end
         end
 
         local sig = (dir=='->' and '' or '-')
@@ -12175,7 +12215,7 @@ if (_ceu_occ!=NULL && _ceu_occ->evt.id==CEU_INPUT__CODE_TERMINATED) {
         ceu_vector_setlen(&]]..V(to)..', ('..V(to)..[[.len + __ceu_len), 1);
         ceu_vector_buf_set(&]]..V(to)..[[,
                            __ceu_nxt,
-                           __ceu_str,
+                           (byte*)__ceu_str,
                            __ceu_len);
         __ceu_nxt += __ceu_len;
     }
@@ -12209,7 +12249,7 @@ if (_ceu_occ!=NULL && _ceu_occ->evt.id==CEU_INPUT__CODE_TERMINATED) {
                              __FILE__, __LINE__-4);
         ceu_vector_buf_set(&]]..V(to)..[[,
                            __ceu_nxt,
-                           __ceu_str,
+                           (byte*)__ceu_str,
                            __ceu_len);
         __ceu_nxt += __ceu_len;
     } else {
@@ -12232,10 +12272,7 @@ if (_ceu_occ!=NULL && _ceu_occ->evt.id==CEU_INPUT__CODE_TERMINATED) {
                     LINE_DIRECTIVE(me)
                     LINE(me, [[
     ceu_vector_setlen(&]]..V(to)..', ('..V(to)..'.len + '..V(fr)..[[.len), 1);
-    ceu_vector_buf_set(&]]..V(to)..[[,
-                       __ceu_nxt,
-                       ]]..V(fr)..[[.buf,
-                       ceu_vector_buf_len(&]]..V(fr)..[[));
+    ceu_vector_concat_ex(&]]..V(to)..', __ceu_nxt, &'..V(fr)..[[, __FILE__, __LINE__-1);
 ]])
                 else
                     -- v1 = v1....
