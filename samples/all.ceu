@@ -146,6 +146,65 @@ await 1s;
     emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
     await 1s;
 
+    // BMP / FRAME / SIZE / SCALE
+    var int scale;
+    loop scale in [1->3] do
+        emit GRAPHICS_SET_SCALE(scale*0.5,scale*0.5);
+
+        var int y;
+        loop y in [0 -> 10[ do
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_SET_BMP_FRAME(1, 4);
+            emit GRAPHICS_SET_BMP_SIZE(_,10);
+            emit GRAPHICS_DRAW_BMP(0,y, "res/ship.bmp");
+            await 100ms;
+        end
+        var int i;
+        loop i in [0 <- 10[ do
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_SET_BMP_FRAME(3, 4);
+            emit GRAPHICS_SET_BMP_SIZE(10,_);
+            emit GRAPHICS_DRAW_BMP(10-i,i, "res/ship.bmp");
+            await 100ms;
+        end
+        var int x;
+        loop x in ]-10 <- 10[ do
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_SET_BMP_FRAME(2, 4);
+            emit GRAPHICS_SET_BMP_SIZE(0,10);
+            emit GRAPHICS_DRAW_BMP(x,0, "res/ship.bmp");
+            await 100ms;
+        end
+        var int j;
+        loop j in ]-10 -> 0] do
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_SET_BMP_FRAME(3, 4);
+            emit GRAPHICS_SET_BMP_SIZE(10,0);
+            emit GRAPHICS_DRAW_BMP(j,j+10, "res/ship.bmp");
+            await 100ms;
+        end
+        loop y in [0 <- 10[ do
+            emit WINDOW_CLEAR();
+            emit GRAPHICS_SET_BMP_FRAME(0, 4);
+            emit GRAPHICS_SET_BMP_SIZE(10,0);
+            emit GRAPHICS_DRAW_BMP(0,y, "res/ship.bmp");
+            await 100ms;
+        end
+    end
+
+    await 1s;
+    emit GRAPHICS_SET_BMP_SIZE(_,_);
+    emit GRAPHICS_DRAW_BMP(0,0, "res/ship.bmp");
+
+    await 1s;
+    emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_WHITE);
+    emit WINDOW_CLEAR();
+    emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
+    emit GRAPHICS_SET_BMP_FRAME(_,_);
+    emit GRAPHICS_SET_BMP_SIZE(_,_);
+    emit GRAPHICS_DRAW_BMP(0,0, "res/star.bmp");
+    await 1s;
+
     // PIXEL
     emit WINDOW_CLEAR();
     emit GRAPHICS_SET_WRITE_CURSOR(-25,25);

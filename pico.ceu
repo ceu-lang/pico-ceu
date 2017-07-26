@@ -69,26 +69,29 @@ output (bool)            FRAMES_SET;
 input  (int)             FRAMES_UPDATE;
 input  (void)            FRAMES_REDRAW;
 
+input (int)              KEY_PRESS;
+input (int)              KEY_UNPRESS;
 input (int,int,int)      MOUSE_CLICK;
 input (int,int,int)      MOUSE_UNCLICK;
 input (int,int)          MOUSE_MOVE;
-input (int)              KEY_PRESS;
-input (int)              KEY_UNPRESS;
 
 //output (&int,&int)       GRAPHICS_GET_BMP_DIMENSIONS;
-output (HAnchor,VAnchor) GRAPHICS_SET_ANCHOR;
-output (int,int,int)     GRAPHICS_SET_COLOR_RGB;
-output (Color)           GRAPHICS_SET_COLOR_NAME;
-output (text,int)        GRAPHICS_SET_FONT;
-output (int,int)         GRAPHICS_SET_WRITE_CURSOR;
-output (text)            GRAPHICS_SCREENSHOT;
-output (int,int)         GRAPHICS_DRAW_PIXEL;
-output (int,int,int,int) GRAPHICS_DRAW_LINE;
-output (int,int,int,int) GRAPHICS_DRAW_RECT;
-output (int,int,text)    GRAPHICS_DRAW_BMP;
-output (int,int,text)    GRAPHICS_DRAW_TEXT;
-output (text)            GRAPHICS_WRITE;
-output (text)            GRAPHICS_WRITELN;
+output (HAnchor,VAnchor)      GRAPHICS_SET_ANCHOR;
+output (int?,int?)            GRAPHICS_SET_BMP_FRAME;
+output (int?,int?)            GRAPHICS_SET_BMP_SIZE;
+output (Color)                GRAPHICS_SET_COLOR_NAME;
+output (int,int,int)          GRAPHICS_SET_COLOR_RGB;
+output (text,int)             GRAPHICS_SET_FONT;
+output (real,real)            GRAPHICS_SET_SCALE;
+output (int,int)              GRAPHICS_SET_WRITE_CURSOR;
+output (int,int,text)         GRAPHICS_DRAW_BMP;
+output (int,int)              GRAPHICS_DRAW_PIXEL;
+output (int,int,int,int)      GRAPHICS_DRAW_LINE;
+output (int,int,int,int)      GRAPHICS_DRAW_RECT;
+output (int,int,text)         GRAPHICS_DRAW_TEXT;
+output (text)                 GRAPHICS_WRITE;
+output (text)                 GRAPHICS_WRITELN;
+output (text)                 GRAPHICS_SCREENSHOT;
 
 output (int)             SOUND_SET_VOLUME;
 output (text)            SOUND_PLAY;
@@ -123,6 +126,12 @@ native/pos do
     tceu_data_HAnchor GRAPHICS_SET_ANCHOR_X;
     tceu_data_VAnchor GRAPHICS_SET_ANCHOR_Y;
 
+    bool GRAPHICS_SET_BMP_FRAME = 0;
+    int GRAPHICS_SET_BMP_FRAME_N=0, GRAPHICS_SET_BMP_FRAME_DIV=1;
+
+    tceu_output_GRAPHICS_SET_BMP_SIZE GRAPHICS_SET_BMP_SIZE = { ._1={.is_set=0}, ._2={.is_set=0} };
+
+    real GRAPHICS_SET_SCALE_W=1, GRAPHICS_SET_SCALE_H=1;
     SDL_Color GRAPHICS_SET_CLEAR_COLOR_RGB;
     int GRAPHICS_SET_WRITE_CURSOR = 0;
     int GRAPHICS_SET_WRITE_CURSOR_X, GRAPHICS_SET_WRITE_CURSOR_Y;
@@ -319,6 +328,25 @@ native/pos do
                         GRAPHICS_SET_ANCHOR_Y = ps->_2;
                         break;
                     }
+                    case CEU_OUTPUT_GRAPHICS_SET_BMP_FRAME: {
+                        tceu_output_GRAPHICS_SET_BMP_FRAME* ps = (tceu_output_GRAPHICS_SET_BMP_FRAME*) p2.ptr;
+                        ceu_dbg_assert( ps->_1.is_set &&  ps->_2.is_set ||
+                                       !ps->_1.is_set && !ps->_2.is_set);
+                        GRAPHICS_SET_BMP_FRAME = ps->_1.is_set;
+                        if (GRAPHICS_SET_BMP_FRAME) {
+                            GRAPHICS_SET_BMP_FRAME_N   = ps->_1.value;
+                            GRAPHICS_SET_BMP_FRAME_DIV = ps->_2.value;
+                        } else {
+                            GRAPHICS_SET_BMP_FRAME_N   = 0;
+                            GRAPHICS_SET_BMP_FRAME_DIV = 1;
+                        }
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_SET_BMP_SIZE: {
+                        tceu_output_GRAPHICS_SET_BMP_SIZE* ps = (tceu_output_GRAPHICS_SET_BMP_SIZE*) p2.ptr;
+                        GRAPHICS_SET_BMP_SIZE = *ps;
+                        break;
+                    }
                     case CEU_OUTPUT_GRAPHICS_SET_COLOR_RGB: {
                         tceu_output_GRAPHICS_SET_COLOR_RGB* clr = (tceu_output_GRAPHICS_SET_COLOR_RGB*) p2.ptr;
                         GRAPHICS_SET_CLEAR_COLOR_RGB.r = clr->_1;
@@ -349,6 +377,12 @@ native/pos do
                             snprintf(msg, 255, "file not found: \"%s\"", fnt->_1);
                             ceu_callback_assert_msg_ex(0, msg, file, line);
                         }
+                        break;
+                    }
+                    case CEU_OUTPUT_GRAPHICS_SET_SCALE: {
+                        tceu_output_GRAPHICS_SET_SCALE* ps = (tceu_output_GRAPHICS_SET_SCALE*) p2.ptr;
+                        GRAPHICS_SET_SCALE_W = ps->_1;
+                        GRAPHICS_SET_SCALE_H = ps->_2;
                         break;
                     }
                     case CEU_OUTPUT_GRAPHICS_SET_WRITE_CURSOR: {
@@ -421,9 +455,16 @@ native/pos do
                     }
                     case CEU_OUTPUT_GRAPHICS_DRAW_RECT: {
                         tceu_output_GRAPHICS_DRAW_RECT* ps = (tceu_output_GRAPHICS_DRAW_RECT*) p2.ptr;
-                        SDL_Rect rct = { GRAPHICS_ANCHOR_X(X(ps->_1),ps->_3),
-                                         GRAPHICS_ANCHOR_Y(Y(ps->_2),ps->_4),
-                                         ps->_3, ps->_4 };
+                        SDL_Rect rct;
+
+                        // SCALE
+                        rct.w = ps->_3 * GRAPHICS_SET_SCALE_W;
+                        rct.h = ps->_4 * GRAPHICS_SET_SCALE_H;
+
+                        // ANCHOR
+                        rct.x = GRAPHICS_ANCHOR_X(X(ps->_1),rct.w);
+                        rct.y = GRAPHICS_ANCHOR_Y(Y(ps->_2),rct.h);
+
                         SDL_RenderFillRect(REN, &rct);
                         WINDOW_Present();
                         break;
@@ -439,10 +480,40 @@ native/pos do
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
                         ceu_dbg_assert(tex != NULL);
 
-                        SDL_Rect rct = { GRAPHICS_ANCHOR_X(X(ps->_1),sfc->w),
-                                         GRAPHICS_ANCHOR_Y(Y(ps->_2),sfc->h),
-                                         sfc->w, sfc->h };
-                        SDL_RenderCopy(REN, tex, NULL, &rct);
+                        SDL_Rect rct;
+                                 rct.h = sfc->h;
+                        SDL_Rect clip = { 0, 0, sfc->w, sfc->h };
+                        int frame_w = sfc->w/GRAPHICS_SET_BMP_FRAME_DIV;
+
+                        // FRAME
+                        rct.w  = frame_w;
+                        clip.x = GRAPHICS_SET_BMP_FRAME_N * frame_w;
+                        clip.w = frame_w;
+                        ceu_dbg_assert(sfc->w%GRAPHICS_SET_BMP_FRAME_DIV == 0);
+                        ceu_dbg_assert(sfc->w > clip.x);
+
+                        // SIZE
+                        tceu_output_GRAPHICS_SET_BMP_SIZE* sz = &GRAPHICS_SET_BMP_SIZE;
+                        if (sz->_1.is_set || sz->_2.is_set) {
+                            rct.w = sz->_1.value;
+                            rct.h = sz->_2.value;
+                            if (!sz->_1.is_set) {
+                                rct.w = frame_w*rct.h/sfc->h;
+                            }
+                            if (!sz->_2.is_set) {
+                                rct.h = sfc->h*rct.w/frame_w;
+                            }
+                        }
+
+                        // SCALE
+                        rct.w = rct.w * GRAPHICS_SET_SCALE_W;
+                        rct.h = rct.h * GRAPHICS_SET_SCALE_H;
+
+                        // ANCHOR
+                        rct.x = GRAPHICS_ANCHOR_X(X(ps->_1),rct.w);
+                        rct.y = GRAPHICS_ANCHOR_Y(Y(ps->_2),rct.h);
+
+                        SDL_RenderCopy(REN, tex, &clip, &rct);
                         WINDOW_Present();
 
                         SDL_DestroyTexture(tex);
@@ -459,11 +530,16 @@ native/pos do
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
                         ceu_dbg_assert(tex != NULL);
 
-                        //int w, h;
-                        //TTF_SizeText(FNT, ps->_3, &w,&h);
-                        SDL_Rect rct = { GRAPHICS_ANCHOR_X(X(ps->_1),sfc->w),
-                                         GRAPHICS_ANCHOR_Y(Y(ps->_2),sfc->h),
-                                         sfc->w, sfc->h };
+                        SDL_Rect rct;
+
+                        // SCALE
+                        rct.w = sfc->w * GRAPHICS_SET_SCALE_W;
+                        rct.h = sfc->h * GRAPHICS_SET_SCALE_H;
+
+                        // ANCHOR
+                        rct.x = GRAPHICS_ANCHOR_X(X(ps->_1),rct.w);
+                        rct.y = GRAPHICS_ANCHOR_Y(Y(ps->_2),rct.h);
+
                         SDL_RenderCopy(REN, tex, NULL, &rct);
                         WINDOW_Present();
 
