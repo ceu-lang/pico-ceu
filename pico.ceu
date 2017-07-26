@@ -2,8 +2,8 @@
 
 #include "c.ceu"
 #include "sdl/sdl.ceu"
-#include "keys.ceu"
-#include "colors.ceu"
+#include "pico/keys.ceu"
+#include "pico/colors.ceu"
 
 native/plain _none, _yesno, _integer, _real, _text;
 native/pre do
