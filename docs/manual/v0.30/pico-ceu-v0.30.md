@@ -37,11 +37,42 @@ the drawing operation.
 
 The possible values for `HAnchor` are `HANCHOR_LEFT`, `HANCHOR_CENTER`,
 and `HANCHOR_RIGHT`.
-The default value is `HANCHOR_CENTER`.
+The initial value is `HANCHOR_CENTER`.
 
 The possible values for `HVnchor` are `VANCHOR_TOP`, `VANCHOR_CENTER`,
 and `VANCHOR_BOTTOM`.
-The default value is `VANCHOR_CENTER`.
+The initial value is `VANCHOR_CENTER`.
+
+#### GRAPHICS_SET_BMP_FRAME
+
+Changes the drawing frame of all subsequent
+[`GRAPHICS_DRAW_BMP`](#graphics_draw_bmp) operations.
+
+```ceu
+output (int?,int?) GRAPHICS_SET_BMP_FRAME;
+```
+- Parameters:
+    - `int?`: new frame index to show (default: `0`)
+    - `int?`: new number of frames in the image (default: `1`)
+
+The initial frame index is `0` and number of frames is `1`.
+
+#### GRAPHICS_SET_BMP_SIZE
+
+Changes the drawing size of all subsequent
+[`GRAPHICS_DRAW_BMP`](#graphics_draw_bmp) operations.
+
+```ceu
+output (int?,int?) GRAPHICS_SET_BMP_SIZE;
+```
+- Parameters:
+    - `int?`: new width (default: proportional to new height)
+    - `int?`: new height (default: proportional to new width)
+
+If both width and height are set to default, the new size is the original image
+size.
+
+The initial size is the original image size.
 
 #### GRAPHICS_SET_COLOR_NAME
 
@@ -76,7 +107,7 @@ The possible values are
     `COLOR_FUCHSIA`,
     `COLOR_PURPLE`.
 
-The default color is white.
+The initial color is white.
 
 #### GRAPHICS_SET_COLOR_RGB
 
@@ -91,7 +122,7 @@ output (integer,integer,integer) GRAPHICS_SET_COLOR_RGB
     - `integer`: new green component
     - `integer`: new blue component
 
-The default color is white.
+The initial color is white.
 
 #### GRAPHICS_SET_FONT
 
@@ -104,6 +135,22 @@ output (text,integer) GRAPHICS_SET_FONT
 - Parameters:
     - `text`: path for the `.ttf` font filename
     - `integer`: height of the new font in pixels
+
+#### GRAPHICS_SET_SCALE
+
+Changes the drawing scale of all subsequent drawing operations
+[`GRAPHICS_DRAW_BMP`](#graphics_draw_bmp),
+[`GRAPHICS_DRAW_RECT`](#graphics_draw_rect), and
+[`GRAPHICS_DRAW_TEXT`](#graphics_draw_text).
+
+```ceu
+output (real,real) GRAPHICS_SET_SCALE;
+```
+- Parameters:
+    - `real`: new horizontal scale
+    - `real`: new vertical scale
+
+The initial scale is `1.0 x 1.0`.
 
 #### GRAPHICS_SET_WRITE_CURSOR
 
@@ -119,7 +166,7 @@ output (integer,integer) GRAPHICS_SET_WRITE_CURSOR
     - `integer`: new position in the `x-axis`
     - `integer`: new position in the `y-axis`
 
-The default starting position is the top-left of the screen.
+The initial starting position is the top-left of the screen.
 
 The current position is reset on every
 [`WINDOW_CLEAR`](../window/#window_clear) operation.

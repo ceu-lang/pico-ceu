@@ -181,10 +181,40 @@ screen.</p>
 the drawing operation.</p>
 <p>The possible values for <code>HAnchor</code> are <code>HANCHOR_LEFT</code>, <code>HANCHOR_CENTER</code>,
 and <code>HANCHOR_RIGHT</code>.
-The default value is <code>HANCHOR_CENTER</code>.</p>
+The initial value is <code>HANCHOR_CENTER</code>.</p>
 <p>The possible values for <code>HVnchor</code> are <code>VANCHOR_TOP</code>, <code>VANCHOR_CENTER</code>,
 and <code>VANCHOR_BOTTOM</code>.
-The default value is <code>VANCHOR_CENTER</code>.</p>
+The initial value is <code>VANCHOR_CENTER</code>.</p>
+<h3 id="graphics_set_bmp_frame">GRAPHICS_SET_BMP_FRAME<a class="headerlink" href="#graphics_set_bmp_frame" title="Permanent link">&para;</a></h3>
+<p>Changes the drawing frame of all subsequent
+<a href="#graphics_draw_bmp"><code>GRAPHICS_DRAW_BMP</code></a> operations.</p>
+<pre><code class="ceu">output (int?,int?) GRAPHICS_SET_BMP_FRAME;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>int?</code>: new frame index to show (default: <code>0</code>)</li>
+<li><code>int?</code>: new number of frames in the image (default: <code>1</code>)</li>
+</ul>
+</li>
+</ul>
+<p>The initial frame index is <code>0</code> and number of frames is <code>1</code>.</p>
+<h3 id="graphics_set_bmp_size">GRAPHICS_SET_BMP_SIZE<a class="headerlink" href="#graphics_set_bmp_size" title="Permanent link">&para;</a></h3>
+<p>Changes the drawing size of all subsequent
+<a href="#graphics_draw_bmp"><code>GRAPHICS_DRAW_BMP</code></a> operations.</p>
+<pre><code class="ceu">output (int?,int?) GRAPHICS_SET_BMP_SIZE;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>int?</code>: new width (default: proportional to new height)</li>
+<li><code>int?</code>: new height (default: proportional to new width)</li>
+</ul>
+</li>
+</ul>
+<p>If both width and height are set to default, the new size is the original image
+size.</p>
+<p>The initial size is the original image size.</p>
 <h3 id="graphics_set_color_name">GRAPHICS_SET_COLOR_NAME<a class="headerlink" href="#graphics_set_color_name" title="Permanent link">&para;</a></h3>
 <p>Changes the color of all subsequent drawing operations.</p>
 <pre><code class="ceu">output (Color) GRAPHICS_SET_COLOR_NAME
@@ -215,7 +245,7 @@ The default value is <code>VANCHOR_CENTER</code>.</p>
     <code>COLOR_NAVY</code>,
     <code>COLOR_FUCHSIA</code>,
     <code>COLOR_PURPLE</code>.</p>
-<p>The default color is white.</p>
+<p>The initial color is white.</p>
 <h3 id="graphics_set_color_rgb">GRAPHICS_SET_COLOR_RGB<a class="headerlink" href="#graphics_set_color_rgb" title="Permanent link">&para;</a></h3>
 <p>Changes the color in RGB of all subsequent drawing operations.</p>
 <pre><code class="ceu">output (integer,integer,integer) GRAPHICS_SET_COLOR_RGB
@@ -229,7 +259,7 @@ The default value is <code>VANCHOR_CENTER</code>.</p>
 </ul>
 </li>
 </ul>
-<p>The default color is white.</p>
+<p>The initial color is white.</p>
 <h3 id="graphics_set_font">GRAPHICS_SET_FONT<a class="headerlink" href="#graphics_set_font" title="Permanent link">&para;</a></h3>
 <p>Changes the font for drawing and writing text.</p>
 <pre><code class="ceu">output (text,integer) GRAPHICS_SET_FONT
@@ -242,6 +272,22 @@ The default value is <code>VANCHOR_CENTER</code>.</p>
 </ul>
 </li>
 </ul>
+<h3 id="graphics_set_scale">GRAPHICS_SET_SCALE<a class="headerlink" href="#graphics_set_scale" title="Permanent link">&para;</a></h3>
+<p>Changes the drawing scale of all subsequent drawing operations
+<a href="#graphics_draw_bmp"><code>GRAPHICS_DRAW_BMP</code></a>,
+<a href="#graphics_draw_rect"><code>GRAPHICS_DRAW_RECT</code></a>, and
+<a href="#graphics_draw_text"><code>GRAPHICS_DRAW_TEXT</code></a>.</p>
+<pre><code class="ceu">output (real,real) GRAPHICS_SET_SCALE;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>real</code>: new horizontal scale</li>
+<li><code>real</code>: new vertical scale</li>
+</ul>
+</li>
+</ul>
+<p>The initial scale is <code>1.0 x 1.0</code>.</p>
 <h3 id="graphics_set_write_cursor">GRAPHICS_SET_WRITE_CURSOR<a class="headerlink" href="#graphics_set_write_cursor" title="Permanent link">&para;</a></h3>
 <p>Changes the cursor starting position for writing text with
 <a href="#graphics_write"><code>GRAPHICS_WRITE</code></a> and
@@ -256,7 +302,7 @@ The default value is <code>VANCHOR_CENTER</code>.</p>
 </ul>
 </li>
 </ul>
-<p>The default starting position is the top-left of the screen.</p>
+<p>The initial starting position is the top-left of the screen.</p>
 <p>The current position is reset on every
 <a href="./../window/#window_clear"><code>WINDOW_CLEAR</code></a> operation.</p>
 <h2 id="drawing">Drawing<a class="headerlink" href="#drawing" title="Permanent link">&para;</a></h2>
