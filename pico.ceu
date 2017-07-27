@@ -680,7 +680,7 @@ watching sdl do
 
     emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
     emit GRAPHICS_SET_COLOR_RGB(0xFF,0xFF,0xFF);
-    emit GRAPHICS_SET_FONT("tiny.ttf", WIN_DIM/50);
+    emit GRAPHICS_SET_FONT("res/tiny.ttf", WIN_DIM/50);
     do finalize with
         {
             if (TTF_WasInit() != 0 ) {
