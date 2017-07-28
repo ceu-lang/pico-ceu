@@ -101,6 +101,10 @@ output (text)            SOUND_PLAY;
 input  (int,byte&&)      NET_RECEIVE;
 output (int,byte&&)      NET_SEND;
 
+input  (byte)            SERIAL_RECEIVE_BYTE;
+input  (int,byte&&)      SERIAL_RECEIVE;
+output (int,byte&&)      SERIAL_SEND;
+
 #ifndef NET_SET_UDP_PORT_RECV
 #define NET_SET_UDP_PORT_RECV 2000
 #endif
@@ -804,6 +808,33 @@ watching sdl do
                 end
             end
         end
+    with
+#if defined(_POSIX)
+        native/pre do
+            ##include <fcntl.h>
+        end
+
+        var int fd = _open("/dev/ttyACM0", _O_RDONLY);
+        _ceu_dbg_assert(fd != -1);
+        do finalize with
+            _close(fd);
+        end
+        var int flags = _fcntl(fd, _F_GETFL, 0);
+        var int ok    = _fcntl(fd, _F_SETFL, flags|_O_NONBLOCK);
+        _ceu_dbg_assert(ok == 0);
+
+        await async (fd) do
+            loop do
+                var byte c = _;
+                var int ret = _read(fd,&&c,1);
+                if ret == 1 then
+                    emit SERIAL_RECEIVE_BYTE(c);
+                end
+            end
+        end
+#else
+        await FOREVER;
+#endif
     with
         do/_
             #define _STRINGIFY(X) #X
