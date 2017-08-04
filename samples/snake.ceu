@@ -9,12 +9,12 @@ data Direction.Right;
 data Direction.Up;
 data Direction.Down;
 
-code/await Snake (none) -> (event void grow) -> void do
+code/await Snake (none) -> (event none grow) -> none do
     var Point head = val Point(0,0);
 
     var[(DIM*DIM)*] Point body = [head];
 
-    code/tight Is_Free (var& Point pt1) -> yesno do
+    code/tight Is_Free (var& Point pt1) -> yes/no do
         var usize i;
         loop i in [0 -> $outer.body[ do
             var Point pt2 = outer.body[i];
@@ -104,7 +104,7 @@ code/await Snake (none) -> (event void grow) -> void do
     end
 end
 
-code/await Food (var&? Snake snake) -> (var Point pt) -> void do
+code/await Food (var&? Snake snake) -> (var Point pt) -> none do
     loop do
         pt = val Point(-DIM/2 + (_rand()%(DIM+1)), -DIM/2 + (_rand()%(DIM+1)));
         if call snake!.Is_Free(&pt) then

@@ -59,11 +59,11 @@ The default color is black.
 Enables or disables a visual grid delimiting the screen pixels.
 
 ```ceu
-output (yesno) WINDOW_SET_GRID
+output (yes/no) WINDOW_SET_GRID
 ```
 
 - Parameters:
-    - `yesno`: new state
+    - `yes/no`: new state
         - `yes`: enables the grid
         - `no`: disables the grid
 

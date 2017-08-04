@@ -4,17 +4,17 @@
 #define DROPS_LEN 2
 
 code/await Drop (var IPhysics&& cloud)
-                    -> (var& IPhysics physics, var& yesno has_collided)
+                    -> (var& IPhysics physics, var& yes/no has_collided)
                         -> none
 do
-    var yesno has_collided_ = no;
+    var yes/no has_collided_ = no;
     has_collided = &has_collided_;
 
     var Rect rct = val Rect((_rand()%cloud:x.len + cloud:x.pst) as integer,
                             (cloud:y.pst - cloud:y.len) as integer,
                             DROPS_LEN,
                             5);
-    var float vx = cloud:x.vel;
+    var real vx = cloud:x.vel;
 
     var& Physics drop = spawn Physics(rct, Color(0x98,0xC1,0xE4));
 

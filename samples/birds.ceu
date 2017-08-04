@@ -3,7 +3,7 @@ emit WINDOW_SET_SIZE(640,480,640,480);
 emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
 emit FRAMES_SET(yes);
 
-code/tight Intersects (var& Rect rct1, var& Rect rct2) -> yesno
+code/tight Intersects (var& Rect rct1, var& Rect rct2) -> yes/no
 do
     escape rct1.x+rct1.w/2 >= rct2.x-rct2.w/2 and
            rct1.x-rct1.w/2 <= rct2.x+rct2.w/2 and
@@ -19,7 +19,7 @@ do
 
     #define PI 3.14
 
-    event yesno go_invisible;
+    event yes/no go_invisible;
     var real sin = 0;
     par/or do
         var integer out = _;
@@ -73,7 +73,7 @@ do
     end
 end
 
-event yesno go_pause;
+event yes/no go_pause;
 par do
     pause/if go_pause do
         pool[] Bird birds;

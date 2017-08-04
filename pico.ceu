@@ -5,23 +5,12 @@
 #include "pico/keys.ceu"
 #include "pico/colors.ceu"
 
-native/plain _none, _yesno, _integer, _real, _text;
+native/plain _text;
 native/pre do
     ##include <time.h>
-    typedef void  none;
-    typedef bool  yesno;
-    typedef int   integer;
-    typedef float real;
     typedef char* text;
 end
-#define none    void
-#define yesno   bool
-#define integer int
-#define real    float
 #define text    _text
-#define yes     true
-#define no      false
-#define NEVER   FOREVER
 
 #define X(x) ((x)+LOG_W/2)
 #define Y(y) (LOG_H/2-(y))
@@ -62,12 +51,12 @@ output (int,int,int)     WINDOW_SET_CLEAR_COLOR_RGB;
 output (bool)            WINDOW_SET_GRID;
 output (int,int,int,int) WINDOW_SET_SIZE;
 output (text)            WINDOW_SET_TITLE;
-output (void)            WINDOW_CLEAR;
-//output (yesno)           WINDOW_SET_FULLSCREEN;
+output (none)            WINDOW_CLEAR;
+//output (yes/no)           WINDOW_SET_FULLSCREEN;
 
 output (bool)            FRAMES_SET;
 input  (int)             FRAMES_UPDATE;
-input  (void)            FRAMES_REDRAW;
+input  (none)            FRAMES_REDRAW;
 
 input (int)              KEY_PRESS;
 input (int)              KEY_UNPRESS;
@@ -259,7 +248,7 @@ native/pos do
                     }
 #if 0
                     case CEU_OUTPUT_WINDOW_SET_FULLSCREEN: {
-                        yesno* full = (yesno*) p2.ptr;
+                        bool* full = (bool*) p2.ptr;
                         SDL_SetWindowFullscreen(WIN, (full ? SDL_WINDOW_FULLSCREEN : 0));
                         {
                             int win_w, win_h;
@@ -729,7 +718,7 @@ watching sdl do
         /* KEY */
         par do
             // PRESS -> PRESS
-            code/await SDL_KeyDown (var int key) -> void do
+            code/await SDL_KeyDown (var int key) -> none do
                 await async (key) do
                     emit KEY_PRESS(key);
                 end
@@ -741,7 +730,7 @@ watching sdl do
             end
         with
             // RELEASE -> UNPRESS
-            code/await SDL_KeyUp (var int key) -> void do
+            code/await SDL_KeyUp (var int key) -> none do
                 await async (key) do
                     emit KEY_UNPRESS(key);
                 end
@@ -756,7 +745,7 @@ watching sdl do
         /* MOUSE */
         par do
             // DOWN -> CLICK
-            code/await SDL_MouseDown (var int x, var int y) -> void do
+            code/await SDL_MouseDown (var int x, var int y) -> none do
                 await async (x,y) do
                     emit MOUSE_CLICK(0,_X(x),_Y(y));
                 end
@@ -768,7 +757,7 @@ watching sdl do
             end
         with
             // UP -> UNCLICK
-            code/await SDL_MouseUp (var int x, var int y) -> void do
+            code/await SDL_MouseUp (var int x, var int y) -> none do
                 await async (x,y) do
                     emit MOUSE_UNCLICK(0,_X(x),_Y(y));
                 end
@@ -780,7 +769,7 @@ watching sdl do
             end
         with
             // MOTION -> MOVE
-            code/await SDL_MouseMotion (var int x, var int y) -> void do
+            code/await SDL_MouseMotion (var int x, var int y) -> none do
                 await async (x,y) do
                     emit MOUSE_MOVE(_X(x),_Y(y));
                 end
@@ -809,7 +798,8 @@ watching sdl do
             end
         end
     with
-#if defined(_POSIX)
+//#if defined(_POSIX)
+#if defined(_XXX)
         native/pre do
             ##include <fcntl.h>
         end

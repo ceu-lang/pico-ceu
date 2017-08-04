@@ -12,11 +12,11 @@ Enables or disables the generation of periodic
 inputs to the application.
 
 ```ceu
-output (yesno) FRAMES_SET
+output (yes/no) FRAMES_SET
 ```
 
 - Parameters:
-    - `yesno`: new state
+    - `yes/no`: new state
         - `yes`: enables the generation of frames
         - `no`: disables the generation of frames
 
