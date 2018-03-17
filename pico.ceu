@@ -191,8 +191,8 @@ native/pos do
         Mix_FreeChunk(SOUND_VEC[channel]);
     }
 
-    tceu_callback_ret ceu_callback_sdl_pico (int cmd, tceu_callback_arg p1, tceu_callback_arg p2, const char* file, u32 line) {
-        tceu_callback_ret ret = { .is_handled=0 };
+    int ceu_callback_sdl_pico (int cmd, tceu_callback_val p1, tceu_callback_val p2, tceu_trace trace)
+    {
         switch (cmd) {
             case CEU_CALLBACK_OUTPUT:
                 switch (p1.num) {
@@ -207,8 +207,8 @@ native/pos do
                         int win_h = ps->_2;
                         int log_w = ps->_3;
                         int log_h = ps->_4;
-                        ceu_callback_assert_msg_ex(win_w%log_w == 0, "invalid dimensions", file, line);
-                        ceu_callback_assert_msg_ex(win_h%log_h == 0, "invalid dimensions", file, line);
+                        ceu_assert_ex(win_w%log_w == 0, "invalid dimensions", trace);
+                        ceu_assert_ex(win_h%log_h == 0, "invalid dimensions", trace);
 
                         SDL_SetWindowSize(WIN, win_w, win_h);
                         SDL_RenderSetLogicalSize(REN, log_w, log_h);
@@ -225,7 +225,7 @@ native/pos do
 
                         { // clears the window
                             p1.num = CEU_OUTPUT_WINDOW_CLEAR;
-                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, file, line);
+                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, trace);
                         }
 
                         break;
@@ -273,11 +273,11 @@ native/pos do
                         int win_w,win_h, log_w,log_h;
                         SDL_GetWindowSize(WIN, &win_w, &win_h);
                         SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
-                        ceu_dbg_assert(win_w/log_w>1 && win_h/log_h>1);
+                        ceu_assert_ex(win_w/log_w>1 && win_h/log_h>1, "invalid dimensions", trace);
 
                         { // clears the window
                             p1.num = CEU_OUTPUT_WINDOW_CLEAR;
-                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, file, line);
+                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, trace);
                         }
 
                         break;
@@ -323,8 +323,8 @@ native/pos do
                     }
                     case CEU_OUTPUT_GRAPHICS_SET_BMP_FRAME: {
                         tceu_output_GRAPHICS_SET_BMP_FRAME* ps = (tceu_output_GRAPHICS_SET_BMP_FRAME*) p2.ptr;
-                        ceu_dbg_assert( ps->_1.is_set &&  ps->_2.is_set ||
-                                       !ps->_1.is_set && !ps->_2.is_set);
+                        ceu_assert_ex( ps->_1.is_set  &&  ps->_2.is_set ||
+                                    !ps->_1.is_set && !ps->_2.is_set, "invalid arguments", trace);
                         GRAPHICS_SET_BMP_FRAME = ps->_1.is_set;
                         if (GRAPHICS_SET_BMP_FRAME) {
                             GRAPHICS_SET_BMP_FRAME_N   = ps->_1.value;
@@ -368,7 +368,7 @@ native/pos do
                         if (FNT == NULL) {
                             char msg[255];
                             snprintf(msg, 255, "file not found: \"%s\"", fnt->_1);
-                            ceu_callback_assert_msg_ex(0, msg, file, line);
+                            ceu_assert_ex(0, msg, trace);
                         }
                         break;
                     }
@@ -419,7 +419,7 @@ native/pos do
                         if (ret != 0) {
                             char msg[255];
                             snprintf(msg, 255, "cannot save screenshot to \"%s\"", *path);
-                            ceu_callback_assert_msg_ex(0, msg, file, line);
+                            ceu_assert_ex(0, msg, trace);
                         }
                         SDL_FreeSurface(sav_sfc);
 
@@ -468,10 +468,10 @@ native/pos do
                         if (sfc == NULL) {
                             char msg[255];
                             snprintf(msg, 255, "file not found: \"%s\"", ps->_3);
-                            ceu_callback_assert_msg_ex(0, msg, file, line);
+                            ceu_assert_ex(0, msg, trace);
                         }
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
-                        ceu_dbg_assert(tex != NULL);
+                        ceu_assert_ex(tex != NULL, "draw error", trace);
 
                         SDL_Rect rct;
                                  rct.h = sfc->h;
@@ -482,8 +482,8 @@ native/pos do
                         rct.w  = frame_w;
                         clip.x = GRAPHICS_SET_BMP_FRAME_N * frame_w;
                         clip.w = frame_w;
-                        ceu_dbg_assert(sfc->w%GRAPHICS_SET_BMP_FRAME_DIV == 0);
-                        ceu_dbg_assert(sfc->w > clip.x);
+                        ceu_assert_ex(sfc->w%GRAPHICS_SET_BMP_FRAME_DIV == 0, "invalid arguments", trace);
+                        ceu_assert_ex(sfc->w > clip.x, "invalid arguments", trace);
 
                         // SIZE
                         tceu_output_GRAPHICS_SET_BMP_SIZE* sz = &GRAPHICS_SET_BMP_SIZE;
@@ -519,9 +519,9 @@ native/pos do
                         u8 r, g, b;
                         SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
                         SDL_Surface* sfc = TTF_RenderText_Blended(FNT, ps->_3, (SDL_Color){r,g,b,0xFF});
-                        ceu_dbg_assert(sfc != NULL);
+                        ceu_assert_ex(sfc != NULL, "draw error", trace);
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
-                        ceu_dbg_assert(tex != NULL);
+                        ceu_assert_ex(tex != NULL, "draw error", trace);
 
                         SDL_Rect rct;
 
@@ -543,14 +543,14 @@ native/pos do
 
                     case CEU_OUTPUT_GRAPHICS_WRITE: {        // TODO: cache
                         char** str = (char**) p2.ptr;
-                        ceu_dbg_assert(FNT != NULL);
+                        ceu_assert_ex(FNT != NULL, "font error", trace);
 
                         u8 r, g, b;
                         SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
                         SDL_Surface* sfc = TTF_RenderText_Blended(FNT, *str, (SDL_Color){r,g,b,0xFF});
-                        ceu_dbg_assert(sfc != NULL);
+                        ceu_assert_ex(sfc != NULL, "font error", trace);
                         SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
-                        ceu_dbg_assert(tex != NULL);
+                        ceu_assert_ex(tex != NULL, "font error", trace);
 
                         int w, h;
                         TTF_SizeText(FNT, *str, &w,&h);
@@ -567,7 +567,7 @@ native/pos do
                     case CEU_OUTPUT_GRAPHICS_WRITELN: {
                         int cursor_x = GRAPHICS_CUR_WRITE_CURSOR_X;
                         p1.num = CEU_OUTPUT_GRAPHICS_WRITE;
-                        ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, file, line);
+                        ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, trace);
                         GRAPHICS_CUR_WRITE_CURSOR_X = (GRAPHICS_SET_WRITE_CURSOR ? GRAPHICS_SET_WRITE_CURSOR_X : -LOG_W/2);
                         GRAPHICS_CUR_WRITE_CURSOR_Y -= FNT_H;
                         break;
@@ -584,12 +584,12 @@ native/pos do
                         if (snd == NULL) {
                             char msg[255];
                             snprintf(msg, 255, "file not found: \"%s\"", *path);
-                            ceu_callback_assert_msg_ex(0, msg, file, line);
+                            ceu_assert_ex(0, msg, trace);
                         }
                         Mix_VolumeChunk(snd, MIX_MAX_VOLUME*SOUND_SET_VOLUME/100);
                         int channel = Mix_PlayChannel(-1, snd, 0);
 // TODO: print warning?
-                        //ceu_dbg_assert(channel>=0 && channel<5);
+                        //ceu_assert_ex(channel>=0 && channel<5);
                         if (!(channel>=0 && channel<5)) {
                             SOUND_VEC[channel] = snd;
                         }
@@ -608,13 +608,18 @@ native/pos do
                             NET_send_pkt->address.port = addr.port;
                             SDLNet_UDP_Send(NET_send, -1, NET_send_pkt);
                         }
+                        break;
                     }
+
+                    default:
+                        return 0;
                 }
                 break;
+
             default:
-                ret.is_handled = 0;
+                return 0;
         }
-        return ret;
+        return 1;
     }
     static tceu_callback CEU_CALLBACK_PICO = { &ceu_callback_sdl_pico, NULL };
 end
@@ -637,7 +642,7 @@ watching sdl do
         WIN = @(&&sdl.win);
         Mix_ChannelFinished(SOUND_Wav_Done);
 
-        ceu_dbg_assert(SDLNet_Init() >= 0);
+        ceu_assert(SDLNet_Init() >= 0, "network error");
 
         NET_recv = SDLNet_UDP_Open(NET_SET_UDP_PORT_RECV);
         for (int i=1; !NET_recv; i++) {
@@ -645,13 +650,13 @@ watching sdl do
         }
 
         NET_recv_pkt = SDLNet_AllocPacket(512);
-        ceu_dbg_assert(NET_recv != NULL);
-        ceu_dbg_assert(NET_recv_pkt != NULL);
+        ceu_assert(NET_recv != NULL, "network error");
+        ceu_assert(NET_recv_pkt != NULL, "network error");
 
         NET_send = SDLNet_UDP_Open(0);
         NET_send_pkt = SDLNet_AllocPacket(512);
-        ceu_dbg_assert(NET_send != 0);
-        ceu_dbg_assert(NET_send_pkt != NULL);
+        ceu_assert(NET_send != 0, "network error");
+        ceu_assert(NET_send_pkt != NULL, "network error");
     }
     do finalize with
         {
@@ -798,20 +803,19 @@ watching sdl do
             end
         end
     with
-//#if defined(_POSIX)
-#if defined(_XXX)
+#ifdef PICOCEU_SERIAL
         native/pre do
             ##include <fcntl.h>
         end
 
-        var int fd = _open("/dev/ttyACM0", _O_RDONLY);
-        _ceu_dbg_assert(fd != -1);
+        var int fd = _open("/dev/ttyUSB0", _O_RDONLY);
+        _ceu_assert(fd != -1, "serial error");
         do finalize with
             _close(fd);
         end
         var int flags = _fcntl(fd, _F_GETFL, 0);
         var int ok    = _fcntl(fd, _F_SETFL, flags|_O_NONBLOCK);
-        _ceu_dbg_assert(ok == 0);
+        _ceu_assert(ok == 0, "serial error");
 
         await async (fd) do
             loop do
