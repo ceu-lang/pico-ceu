@@ -94,7 +94,7 @@ await 1s;
         emit WINDOW_CLEAR();
         var[10] byte str;
         _snprintf(&&str[0],10, "%d", size);
-        emit GRAPHICS_SET_FONT("tiny.ttf", size);
+        emit GRAPHICS_SET_FONT("res/tiny.ttf", size);
         emit GRAPHICS_DRAW_TEXT(0,0,&&str[0]);
         await 250ms;
     end
@@ -106,7 +106,7 @@ await 1s;
     await 1s;
 
     // Tiny 10
-    emit GRAPHICS_SET_FONT("tiny.ttf", 10);
+    emit GRAPHICS_SET_FONT("res/tiny.ttf", 10);
     await 1s;
 
     // CURSOR
@@ -332,7 +332,7 @@ emit WINDOW_CLEAR();
 emit GRAPHICS_DRAW_TEXT(0,0,"= INPUT =");
 await 1s;
 
-    emit GRAPHICS_SET_FONT("tiny.ttf", 8);
+    emit GRAPHICS_SET_FONT("res/tiny.ttf", 8);
     par do
         var integer key;
         every key in KEY_PRESS do
