@@ -171,7 +171,7 @@ await 1s;
         loop x in ]-10 <- 10[ do
             emit WINDOW_CLEAR();
             emit GRAPHICS_SET_BMP_FRAME(2, 4);
-            emit GRAPHICS_SET_BMP_SIZE(0,10);
+            emit GRAPHICS_SET_BMP_SIZE(10,10);
             emit GRAPHICS_DRAW_BMP(x,0, "res/ship.bmp");
             await 100ms;
         end
@@ -179,14 +179,14 @@ await 1s;
         loop j in ]-10 -> 0] do
             emit WINDOW_CLEAR();
             emit GRAPHICS_SET_BMP_FRAME(3, 4);
-            emit GRAPHICS_SET_BMP_SIZE(10,0);
+            emit GRAPHICS_SET_BMP_SIZE(10,10);
             emit GRAPHICS_DRAW_BMP(j,j+10, "res/ship.bmp");
             await 100ms;
         end
         loop y in [0 <- 10[ do
             emit WINDOW_CLEAR();
             emit GRAPHICS_SET_BMP_FRAME(0, 4);
-            emit GRAPHICS_SET_BMP_SIZE(10,0);
+            emit GRAPHICS_SET_BMP_SIZE(10,_);
             emit GRAPHICS_DRAW_BMP(0,y, "res/ship.bmp");
             await 100ms;
         end

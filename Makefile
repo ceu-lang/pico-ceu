@@ -18,6 +18,8 @@ all:
 	          --ceu-features-dynamic=true \
 	          --ceu-features-pool=true \
 	          --ceu-features-pause=true \
+	          --ceu-features-os=true \
+	          --ceu-features-async=true \
 	    --env --env-types=$(CEU_DIR)/env/types.h                            \
 	          --env-threads=$(CEU_DIR)/env/threads.h                        \
 	          --env-main=$(CEU_DIR)/env/main.c								\
