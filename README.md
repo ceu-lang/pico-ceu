@@ -82,4 +82,4 @@ end         // ...and terminates when they both terminate (par/and)
 
 ## API Manual:
 
-<https://fsantanna.github.io/pico-ceu/out/manual/v0.30/>
+<https://ceu-lang.github.io/pico-ceu/out/manual/v0.30/>
