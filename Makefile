@@ -26,6 +26,5 @@ all:
 	          --env-output=/tmp/_ceu.c \
 	    --cc --cc-args="-g -lm -llua5.3 -lpthread -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2_net -lSDL2_gfx" \
 	         --cc-output=/tmp/$$(basename $(CEU_SRC) .ceu)
-	mkdir -p $(dir $(CEU_SRC))/res/
-	cp tiny.ttf $(dir $(CEU_SRC))/res/
+	cp tiny.ttf $(dir $(CEU_SRC))/
 	cd $(dir $(CEU_SRC)) && /tmp/$$(basename $(CEU_SRC) .ceu)
