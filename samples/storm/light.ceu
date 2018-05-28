@@ -1,4 +1,4 @@
-code/tight Boom_Vel (var& IPhysics boom, var& IPhysics other) -> Vector2D
+code/call Boom_Vel (var& IPhysics boom, var& IPhysics other) -> Vector2D
 do
     var integer radius    = 80;
     var integer magnitude = 20;

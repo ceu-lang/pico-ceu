@@ -45,7 +45,7 @@ do
     end
 end
 
-code/tight Intersects (var& IPhysics phy1, var& IPhysics phy2) -> bool
+code/call Intersects (var& IPhysics phy1, var& IPhysics phy2) -> bool
 do
     escape not (phy1.x.pst+phy1.x.len < phy2.x.pst or
                 phy1.y.pst-phy1.y.len > phy2.y.pst or
