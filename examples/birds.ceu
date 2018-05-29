@@ -3,7 +3,7 @@ emit WINDOW_SET_SIZE(640,480,640,480);
 emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_BLACK);
 emit FRAMES_SET(yes);
 
-code/tight Intersects (var& Rect rct1, var& Rect rct2) -> yes/no
+code/call Intersects (var& Rect rct1, var& Rect rct2) -> yes/no
 do
     escape rct1.x+rct1.w/2 >= rct2.x-rct2.w/2 and
            rct1.x-rct1.w/2 <= rct2.x+rct2.w/2 and

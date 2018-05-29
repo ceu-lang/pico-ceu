@@ -14,7 +14,7 @@ code/await Snake (none) -> (event none grow) -> none do
 
     var[(DIM*DIM)*] Point body = [head];
 
-    code/tight Is_Free (var& Point pt1) -> yes/no do
+    code/call Is_Free (var& Point pt1) -> yes/no do
         var usize i;
         loop i in [0 -> $outer.body[ do
             var Point pt2 = outer.body[i];
