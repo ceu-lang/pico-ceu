@@ -12,17 +12,18 @@ ifeq ($(POSIX), true)
 	D_POSIX = -D_POSIX
 endif
 
-ifdef CEU_SRC
-CEU_SRC_ = $(CEU_SRC)
-ifneq ("$(wildcard "$(CEU_SRC)/main.ceu")","")
-	CEU_SRC_ = $(CEU_SRC)/main.ceu
-endif
-else
-$(error missing `CEU_SRC` path to compile)
-endif
-
 ifndef CEU_SRC_DIR
-     CEU_SRC_DIR = $(dir $(CEU_SRC_))
+	#if didn't execute from bat file	
+      CEU_SRC_DIR = $(dir $(CEU_SRC_))
+
+	ifdef CEU_SRC
+		CEU_SRC_ = $(CEU_SRC)
+	ifneq ("$(wildcard $(CEU_SRC)/main.ceu)","")
+		CEU_SRC_ = $(CEU_SRC)/main.ceu
+	endif
+	else
+	$(error missing `CEU_SRC` path to compile)
+	endif     
 endif
 
 all:
@@ -42,3 +43,4 @@ all:
 	         --cc-output="$(CEU_SRC_DIR)/$(OUT_SUB)/tmp.exe"
 	$(CP_EXE) tiny.ttf "$(CEU_SRC_DIR)/$(OUT_SUB)/"
 	cd "$(CEU_SRC_DIR)/$(OUT_SUB)/" && "$(CEU_SRC_DIR)/$(OUT_SUB)/tmp.exe"
+
