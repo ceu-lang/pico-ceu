@@ -628,10 +628,6 @@ code/await Pixel(none) -> none do
 
         //CHECK COLLISION
         if ( (y <= outer.car.top) and (y >= (outer.car.bottom-1)) and x <= outer.car.right and x >= outer.car.left) then
-            if (y < outer.car.top) then
-                emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
-                emit GRAPHICS_DRAW_PIXEL(x, y+1);       
-            end
             break;
         else
             //drawing a new pixel with updated y position
@@ -641,3 +637,36 @@ code/await Pixel(none) -> none do
     end
 end
 ```
+
+In this code, we first update the y value of the pixel. Next, we check if this new position will collide with the Car checking their public fields. If there was a collision, we use the command ```break``` to finalize the ```every``` loop and, consequently, the Pixel procedure. If there was no collision, we can draw the pixel with the color red.
+
+Note that to access the fields, was necessary to use the variable that holds the procedure spawn, in this case ```car```. We used ```outer``` because ```car``` variable was defined outside the ```Pixel``` procedure, globally.
+
+#### Solving a bug in Pixel procedure
+Every time an obstacle changes it's position, the last one is painted black, but sometimes the last position is inside the rectangle, producing a black square in it.
+ToDo: add the gif of the bug
+
+To solve this, substitute the check collision if with the code below:
+```c#
+//CHECK COLLISION
+if ( (y <= outer.car.top) and (y >= (outer.car.bottom-1)) and x <= outer.car.right and x >= outer.car.left) then
+    emit outer.lifeBar.decreaseLife;
+
+    if (y < outer.car.top) then
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+        emit GRAPHICS_DRAW_PIXEL(x, y+1);       
+    end
+    break;
+else
+    // <...>
+```
+
+When an obstacle colides with the car, we'll no longer paint the last position with black, but with blue. However, if an obstacle colide with the car top pixels, it will continues to have its last position painted black because its last position would be located outside the rectangle, more precisly, one pixel above it (this behavior is guaranteed by the ```if``` in line 5).
+
+ToDo: add gif
+
+## Creating a user life bar
+As a new feture, we want to implement a life bar to show how many times a user can colide with the obstacles before the Game Over.
+
+A life bar is an autonomous element that update itself and produces graphical feedback. We can, then, implement it using a code-await procedure.
+ToDo: remove "increase life" event from code
