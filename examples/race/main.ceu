@@ -93,9 +93,9 @@ loop do
         var integer x = {rand()%40 - 20};
 
         every 150ms do
+            
             emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
             emit GRAPHICS_DRAW_PIXEL(x, y);
-
             //updating the y postion
             if (y > -19) then
                 y = y - 1;
@@ -104,8 +104,13 @@ loop do
             end
 
             //CHECK COLLISION
-            if (y <= outer.car.top and y >= outer.car.bottom and x <= outer.car.right and x >= outer.car.left) then
+            if ( (y <= outer.car.top) and (y >= (outer.car.bottom-1)) and x <= outer.car.right and x >= outer.car.left) then
                 emit outer.lifeBar.decreaseLife;
+
+                if (y < outer.car.top) then
+                    emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+                    emit GRAPHICS_DRAW_PIXEL(x, y+1);       
+                end
                 break;
             else
                 //drawing a new pixel with updated y position

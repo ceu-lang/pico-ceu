@@ -11,7 +11,7 @@ First of all, you need to install pico-Céu. Simply download the last stable rel
 > Céu-Maker is a programming environment that integrates Céu-Arduino and pico-Céu in a single package for Windows.
 Although it supports Céu-Arduino, this tutorial will only cover programming with pico-Céu
 
-To test if everything worked fine, drag and drop a pico-ceu code example (```examples\pico-ceu\birds.ceu```, for example) to ```bin\pico-Céu.exe```. The result must be similar to the gif bellow.  
+To test if everything worked fine, drag and drop a pico-ceu code example (```examples\pico-ceu\birds.ceu```, for example) to ```bin\pico-Céu.exe```. The result must be similar to the gif below.  
 
 ![birds.ceu execution](images/birds.gif)
 
@@ -21,7 +21,7 @@ Create a file anywhere in your computer and name it ```race.ceu```. Just pay att
 ## Drawing pixels and rectangles
 
 ### Draw a pixel
-To start coding our game, we need to figure out how to draw the car and the obstacles. Let's start with a pixel. The bellow code draw a pixel in the 0,0 position, witch, by default, correspond to the middle of the window. 
+To start coding our game, we need to figure out how to draw the car and the obstacles. Let's start with a pixel. The below code draw a pixel in the 0,0 position, witch, by default, correspond to the middle of the window. 
 
 ```c#
 emit GRAPHICS_DRAW_PIXEL(0,0);
@@ -97,7 +97,7 @@ The first line of the above code define where the reference cordinates should be
 ## Styling the window
 As we already saw, pico-Céu displays a Window with a grid system. We can customize its name, with the  ```WINDOW_SET_TITLE("New Name")```, define if the grid will be displayed or not, with the ```WINDOW_SET_GRID(yes or no)```, and set the width and height of the window and how many pixels will be displayed in the x-axis and y-axis, with the ```WINDOW_SET_SIZE(width, height, pixels in x-axis, pixels in y-axis)```.
 
-The code bellow shows how we customize our window.
+The code below shows how we customize our window.
 ```c#
 emit WINDOW_SET_TITLE("Race game");
 emit WINDOW_SET_SIZE(40*20, 40*20, 40, 40);
@@ -181,7 +181,7 @@ emit GRAPHICS_DRAW_PIXEL(-10, 20);
 
 A second problem is that the pixels that are drawn after ```every``` construct are not showing up. This occurs because ```every``` works as an infinite loop, that executes every 150 milliseconds. So, our code are stuck in this loop and never reaches the line 16 from the above code.
 
-To solve this, we can enclose everything in a ```par``` composition, which executes two or more trails concurrently. In the code bellow we defined two trails, one between ```par do``` and ```with```, and another between ```with``` and ```end```, giving the sensation that both trails (one animating the red pixel and other drawing the green one) are executing at the same time.
+To solve this, we can enclose everything in a ```par``` composition, which executes two or more trails concurrently. In the code below we defined two trails, one between ```par do``` and ```with```, and another between ```with``` and ```end```, giving the sensation that both trails (one animating the red pixel and other drawing the green one) are executing at the same time.
 
 ```c#
 par do
@@ -432,7 +432,7 @@ We can increase the size of the pool (a pool of 6 positions should be enough) or
 ## Creating a Car procedure abstraction
 We can also enclose the car in a code/await abstraction. Even don't having multiple cars in our application, we can take advantage from a procedure abstraction enclosing all behaviour related to the car in a single place.
 
-The Car procedure abstration has some similarities with the Pixel. The code bellow also have the definition of the integer variables x and y, in this case carring the default values of the car and an "every" loop that enclose the clean, update and draw code, but in this case the "every" runs every time a keyboard key is pressed by the user. The pressed key is stored in the integer variable ```key```, that is initiated with an empty value (```_```).
+The Car procedure abstration has some similarities with the Pixel. The code below also have the definition of the integer variables x and y, in this case carring the default values of the car and an "every" loop that enclose the clean, update and draw code, but in this case the "every" runs every time a keyboard key is pressed by the user. The pressed key is stored in the integer variable ```key```, that is initiated with an empty value (```_```).
 
 In the UPDATE, we check if the pressed key was the arrow left or the arrow right. All other keyboard keys are irrelevant to our application. If the user clicks a left key, the car should move left, so the x position is decremented. If the right key is clicked, the x position is incremented. The "ifs" in lines 14 and 18 ensures that the car do not move off the screen. Finally, as we did in the Pixel procedure, the x and y variables are used in the DRAW section to draw an updated graphic, in this case a rectangle.
 
@@ -468,5 +468,176 @@ end
 
 ```
 
+Now all you have to do is spawn the Car with the code bellow:
+```c#
+spawn Car();
+```
+
 ## Creating the colisions
-Finally, let's implement the collision between the pixels and the car rectangle. In Pixel procedure, let's 
+
+### The ideia 
+A way to identify the collisions between the obstacles (the pixels) and the car rectangle is identifying when an obstacle is inside the rectangle.
+
+ToDo: replace with a better image - unify in a single image
+![](images/collision_top_bottom.jpg)
+![](images/collision_left_right.jpg)
+In other words, defining the CarTop, CarBottom, CarLeft and CarRight as in the figure above, we can check if a collision occurs checking if:
+
+(CarLeft <= Pixel_X <= CarRight) and (CarBottom <= Pixel_Y <= CarTop)
+
+The image below illustrates four cases when a pixel do not collide with the car and two in which it collide.
+![](images/collision.jpg)
+ToDo: replace with a better image
+
+### The implementation
+Until now we have two procedures abstractions in our code, the Pixel and the Car, and we want to include the collision detection. Where should we add code for that?
+
+If we include this detection in the Car procedure, we should verify if the rectangle are colliding with each obstacle and then, if collision occurs, make the obstacle disappear. It's possible to do that, but everytime a obstacle moves we will have to iterate over all the obstacles, check the collisions for each one and make it disappear if collided. We have two problems with this approach:
+- the car procedure is doing a lot of sequential work, by iterations over the positions of other elements;
+- the ostacles procedures are no longer autonomous. The Car procedure have to take care of the obstacles and finalize it when necessary.
+
+So, let's try to include the collision check in the Pixel procedure. This way, we do not need to change the lifecicle of other elements and each obstacle take care of itself, verifing if it collided or not and finalizing if collided. We'll only need to access some properties of the Car: the CarLeft, CarRight, CarBottom and CarTop (as explaned on the last section).
+
+#### Including the CarLeft, CarRight, CarBottom and CarTop in the Car procedure
+In a code/await statement, we can make a filed public like that:
+```c#
+code/await My_Procedure (none) -> (var int y) -> NEVER do
+    y = x; // "y" is a public field
+
+    await FOREVER;
+end
+
+var& My_Procedure p = spawn My_Procedure();
+_printf("y=%d\n", p.y);    // prints "y=10"
+```
+
+As we see in the code above, the ```y``` field can be accessed outside ```My_Procedure```. It is also important to mention the ```printf``` call. The ```printf```, as well as the ```random``` function already used in this tutorial, is a native C function. Céu allows the call of native functions using curly braces and the underscore character. This way, we could also call the ```printf``` function this way:
+```c#
+{printf("hello world");}
+```
+
+Returning to our game, let's make the CarLeft, CarRight, CarBottom and CarTop publics.
+```c#
+code/await Car(none) -> (var integer top, var integer bottom, var integer left, var integer right) -> NEVER do
+    var integer x =   0;
+    var integer y = -10;
+    var integer w =   3;
+    var integer h =   6;
+
+    //DIMENTIONS DEFAULT VALUES
+    bottom = y;
+    top    = y + h - 1;
+    left   = x - 1;
+    right  = x + 1;
+
+    //INITIAL DRAW <...>
+
+    var integer key = _;
+
+    every key in KEY_PRESS do
+        //CLEAN SECTION <...>
+
+        //UPDATE
+        if key == KEY_LEFT then
+            if (x > -19) then
+                x      = x - 1;
+                left   = x - 1;
+                right  = x + 1;
+            end
+        else/if key == KEY_RIGHT then
+            if (x < 18) then
+                x      = x + 1;
+                left   = x - 1;
+                right  = x + 1;                
+            end
+        end        
+
+        //DRAW SECTION <...>
+    end
+end
+```
+
+In the line 1 we defined the public fields, and in the lines 8, 9, 10 and 11 we set its initial values. Note that we didn't need to declare the variables, they were already declared in the first line of the procedure. The last modification was in the update section. When we move the car, the ```left``` and ```right``` fields should be also updated. Since the car only moves horizontaly, there is no need to update the ```top``` and the ```bottom``` fields.
+
+#### Accessing the Car public fields
+Before implement the collision verification, let's try to access the Car public fields from the Pixel procedure.
+
+At this phase, your code should look similar to this:
+```c#
+code/await Pixel(none) -> none do
+// <...>
+end
+
+code/await Car(none) -> (var integer top, var integer bottom, var integer left, var integer right) -> NEVER do
+// <...>
+end
+
+spawn Car();
+pool[3] Pixel pixels;
+
+every 1s do
+    spawn Pixel() in pixels;
+end
+```
+
+We need to have a reference to the Car procedure to access something from it. Until now, the is beeing spawned but not stored anywere. Let's store it in a variable. 
+```c#
+var& Car car = spawn Car();
+```
+
+The ```&``` means that the car variable is actually an alias. We don't need to understant this concept for now, so let's just assume that the alias is a simple variable.
+
+Until here, we didn't talk about code order, but now it is necessary.
+- The ```spawn Car();``` needs that the Car procedure has been defined. So this line of code should be located after the Car code/await definition. 
+- As we argued, the Pixel procedure will access the Car public fields. To do that, it needs to access the ```car variable```. So the ```spawn Car();``` must be located before the Pixel code/await definition.
+
+reordering the code, we get:
+```c#
+code/await Car(none) -> (var integer top, var integer bottom, var integer left, var integer right) -> NEVER do
+// <...>
+end
+
+spawn Car();
+
+code/await Pixel(none) -> none do
+// <...>
+end
+
+pool[] Pixel pixels;
+
+every 1s do
+    spawn Pixel() in pixels;
+end
+```
+
+Now, in the Pixel procedure we can access the car public fields to check the collision:
+```c#
+code/await Pixel(none) -> none do
+    var integer y = 19;
+    var integer x = {rand()%40 - 20};
+
+    every 150ms do
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+        emit GRAPHICS_DRAW_PIXEL(x, y);
+        //updating the y postion
+        if (y > -19) then
+            y = y - 1;
+        else
+            break;
+        end
+
+        //CHECK COLLISION
+        if ( (y <= outer.car.top) and (y >= (outer.car.bottom-1)) and x <= outer.car.right and x >= outer.car.left) then
+            if (y < outer.car.top) then
+                emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+                emit GRAPHICS_DRAW_PIXEL(x, y+1);       
+            end
+            break;
+        else
+            //drawing a new pixel with updated y position
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_RED);
+            emit GRAPHICS_DRAW_PIXEL(x, y);
+        end
+    end
+end
+```
