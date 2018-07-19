@@ -90,7 +90,7 @@ loop do
 
     code/await Pixel(none) -> none do
         var integer y = 19;
-        var integer x = {rand() % 30+1} - 15;
+        var integer x = {rand()%40 - 20};
 
         every 150ms do
             emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
