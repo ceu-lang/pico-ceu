@@ -1,8 +1,7 @@
 emit WINDOW_SET_TITLE("Race game");
 emit WINDOW_SET_GRID(no);
 
-code/await LifeBar(none) -> (event none decreaseLife, event none increaseLife, event none gameOver) -> NEVER do
-    event none redraw;
+code/await LifeBar(none) -> (event none decreaseLife, event none gameOver) -> NEVER do
     var integer maxLife = 5;
     var integer life = maxLife;
 
@@ -18,13 +17,8 @@ code/await LifeBar(none) -> (event none decreaseLife, event none increaseLife, e
         emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);
         emit GRAPHICS_DRAW_RECT(-20, 20, life, 1);
 
-        par/or do
-            await decreaseLife;
-            life = life - 1;
-        with
-            await increaseLife;
-            life = life + 1;
-        end
+        await decreaseLife;
+        life = life - 1;
 
         if (life <= 0) then
             emit gameOver;

@@ -665,8 +665,183 @@ When an obstacle colides with the car, we'll no longer paint the last position w
 
 ToDo: add gif
 
-## Creating a user life bar
+## Creating a life bar
 As a new feture, we want to implement a life bar to show how many times a user can colide with the obstacles before the Game Over.
 
+ToDo: gif da barra de vida
+
 A life bar is an autonomous element that update itself and produces graphical feedback. We can, then, implement it using a code-await procedure.
-ToDo: remove "increase life" event from code
+
+```c#
+code/await LifeBar(none) -> (event none decreaseLife, event none gameOver) -> NEVER do
+    var integer maxLife = 5;
+    var integer life = maxLife;
+
+    loop do
+        //ANCHOR
+        emit GRAPHICS_SET_ANCHOR(HANCHOR_LEFT, VANCHOR_TOP);
+
+        //CLEAN
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+        emit GRAPHICS_DRAW_RECT(-20, 20, maxLife, 1);
+
+        //REDRAW
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);
+        emit GRAPHICS_DRAW_RECT(-20, 20, life, 1);
+
+        await decreaseLife;
+        life = life - 1;
+
+        if (life <= 0) then
+            emit gameOver;
+        end
+    end
+end
+```
+
+The LifeBar procedure has two fields: the ```life```, that stores the currenty life points the user still have, and the ```maxLife```, that stores the maximum life points the user can have.
+In the line 3, we defined that the user initiate the game with the maximun life, that is set in line 2 with the value 5, which means the car can colide 5 times with the obstacles to finalize the game with a Game Over message. 
+
+On lines 13 to 15 we draw a green rectagle in top left corner of the window with height equals 1 and length equals to the ```life``` variable content, that will produce a bar in which every pixel simbolize a life point. But before we draw the bar, we need to clean the window space reserved fo the bar. This is done on lines 9 to 11, where we draw a black (the color of the window background) rectangle to clean all the bar. We used the ```maxLife``` to ensure that all the bar will be cleaned. Try to replace the ```maxLife``` in line 11 with ```life``` to see the behavior difference.
+
+On line 16 we are awaiting for an event. In Céu, we can use internal events as a signaling mechanism among trails. A program can ```await``` for internal events, which can be signaled through the ```emit``` statement.
+
+> Internal events, unlike external events, do not represent real devices and are defined by the programmer. Internal events serve as signalling and communication mechanisms among trails in a program.
+
+In the LifeBar procedure, we are awaiting for a ```decreseLife``` event and emiting a ```gameOver``` event. We didn't discussed yet from when the ```decreseLife``` event will be emitted, but is certainly from other trail. By the semantics of our game, we also know that the life should be decresed when the car collides with an obstacle.
+
+When the LifeBar receives the ```decreseLife``` event, the ```life``` variable is decremented. On line 20, we verify if the life points are over. If yes, we emit a ```gameOver``` event, that should be treated by other trail.
+
+It's important to mention that the events are declared as public fields (on the line 1) so that the rest of the application could emit or await then.
+
+## Emiting the decreseLife event
+Where should we emit the ```decreseLife``` event? As said, by the semantics of our game, we know that the life should be decresed when the car collides with an obstacle. So, the best place to emit this event is after verifing if a collision happened.
+
+Then, in the Pixel procedure, right after the collision check, add ```c# emit outer.lifeBar.decreaseLife; ```.
+
+```c#
+    code/await Pixel(none) -> none do
+        var integer y = 19;
+        var integer x = {rand()%40 - 20};
+
+        every 150ms do
+            // <...>
+
+            //CHECK COLLISION
+            if ( (y <= outer.car.top) and (y >= (outer.car.bottom-1)) and x <= outer.car.right and x >= outer.car.left) then
+                emit outer.lifeBar.decreaseLife;
+
+            // <...>
+        end
+    end
+```
+
+Note that we access and public event in the same way that we access a variable.
+
+## Awaiting for the gameOver event
+After receiving the gameOver event, we want that our game emits a "Game Over" message an then, after the user press any key, restart the game.
+
+When the gameOver event is received, the whole application should restart. So, we should await for this event in the application context, no inside any of the created procedures, because the application should take care of itself, not the car, the obstacle or even the life bar.
+
+```c#
+
+par/or do
+    pool[] Pixel pixels;
+
+    every 500ms do
+        spawn Pixel() in pixels;
+    end
+with
+    await lifeBar.gameOver;
+end
+```
+
+We can implement this, waiting for the gameOver event in parallel with the Pixel spawns. Now, the application ends right after receiving the gameOver event from a Pixel procedure.
+
+
+## Emiting the Game over message
+To show up the game over message, we'll use the ```GRAPHICS_DRAW_TEXT```. It receives as parameters, the position in the x-axis, in the y-axis and the text to draw.
+
+```c#
+par/or do
+    pool[] Pixel pixels;
+
+    every 500ms do
+        spawn Pixel() in pixels;
+    end
+with
+    await lifeBar.gameOver;
+end
+
+//GAME OVER
+emit WINDOW_CLEAR();
+emit WINDOW_SET_SIZE(190*5, 120*5, 190, 120);
+emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
+emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
+emit GRAPHICS_DRAW_TEXT(0, 20, "Game Over");
+emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
+await 2s;
+```
+
+Before drawing the text, we need to clean the window (line 2), and set the text color (line 4). Also, we changed the window size so the text could be well displayed. Try to comment the line 3 to see the changes.
+
+Now, the application will emit a gameover message before finallize. We added the last line ( ```c# await 2s;```) so that the user can have time to see the text before the application ends.
+
+## Awaiting for a key press
+Instead of waiting 2 seconds, we can await for a key press. To do that, simply replace the  ```c# await 2s;``` with  ```c# await KEY_PRESS;```. Now, when the game over message is displayed, the user has to press an key to the game finallize.
+
+## Restarting the application
+To restart the application we need to neast our code insude a loop, so that the application don't finalize.
+
+```c#
+emit WINDOW_SET_TITLE("Race game");
+emit WINDOW_SET_GRID(no);
+
+code/await LifeBar(none) -> (event none decreaseLife, event none gameOver) -> NEVER do
+    // <...>
+end
+
+code/await Car(none) -> (var integer top, var integer bottom, var integer left, var integer right) -> NEVER do
+    // <...>
+end
+
+loop do
+    emit WINDOW_SET_SIZE(40*20, 40*20, 40, 40);
+
+    var& LifeBar lifeBar = spawn LifeBar();
+    var& Car car = spawn Car();
+
+    code/await Pixel(none) -> none do
+        // <...>
+    end
+
+    par/or do
+        pool[] Pixel pixels;
+
+        every 500ms do
+            spawn Pixel() in pixels;
+        end
+    with
+        await lifeBar.gameOver;
+    end
+
+    //GAME OVER
+    emit WINDOW_CLEAR();
+    emit WINDOW_SET_SIZE(190*5, 120*5, 190, 120);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
+    emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
+    emit GRAPHICS_DRAW_TEXT(0, 20, "Game Over");
+    emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
+
+    //WAIT A KEY_PRESS TO RESTART
+    await KEY_PRESS; 
+end
+```
+
+The modifications were:
+- we moved the ```c# WINDOW_SET_SIZE``` from the top of the code to the beginning of the loop to redefine the window size every time the game restarts;
+- we need to restart all the application after an game over, so, intuitively, all the game elements (car, life bar and obstacles) must also restart. We could do that in 2 different ways:
+    - adding code to the procedure to restart the element (set the default values to the fields, for example) that we could call externally;
+    - kill the elements and spawn again.
+
+    The code/await abstraction are subsjects to the lexical scope just like local variables are. This means that when the scope in which the procedure were spawned terminates, the code/await also termintes.
