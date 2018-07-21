@@ -3,7 +3,7 @@ In [move.ceu](../move.ceu) example, the user can move a pixel around the window 
 
 This example is based on move.ceu, so, if you are starting programming with Céu, is recommended to that a look on it and understant its code.
 
-![](images/move-net-2-screen.gif)
+![](images/move-net-2-screens.gif)
 
 In this application, we use pico-Céu [Network features](https://ceu-lang.github.io/pico-ceu/out/manual/v0.30/net/#net_receive) to create a distributed version of move.ceu. It supports two users moving independent pixels and, as seen in the figure above, show the movement of the pixels in both instances of the example.
 
