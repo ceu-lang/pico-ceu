@@ -124,6 +124,7 @@ emit GRAPHICS_DRAW_PIXEL(x,y);
 We, then, simply have to replace ```COLOR_WHITE``` with ```MAIN_COLOR```.
 
 # Stopping the pixel from exiting through the window
+
 Currently, the pixel can movement outside the window. To stop that, we can verify if it can moves to the desirable position before modify its x-axis and y-axis position.
 
 ```c#
@@ -152,3 +153,104 @@ end
 ```
 
 The -15 and 14 (respectively located in lines 4 and 9) are the leftmost and the rightmost x-axis positions of the window. The -14 (in line 19), is, likely, the bottommost y-axis position, but the 13 (in line 14) isn't the topmost. Since we have the top bar, the pixel cannot move until the top.
+
+# Adding network 
+
+An instance of this example sends a broadcast message (i.e. sends a message to all peers in the network) every time the user clicks a keyboard arrow key. This message contains which instance is sending, the current location of the pixel and to where it is moving (the new x and y values).
+
+An instance also have to receive messages from all peers, including itself. When receive a message, it cleans the current location of the pixel and draw the new one. It also uses the instance identifier sent with the message to verify with which color it should draw the pixel.
+
+Our application must be resposive to keyboard clicks and incoming messages. Since we want our application to do two things at same time, let's use a parallel compositon.
+
+> The parallel statement ```par``` fork the running trail in multiple others.
+
+```c#
+par do
+    // WAIT A MESSAGE ARRIVES FROM ALL PEERS, INCLUDING ITSELF
+    // AND DRAW THE PIXEL DESCRIBED IN THE MESSAGE
+with
+    // REACTS TO KEYBOARD CLICKS BY CALCULATING NEW POSITIONS
+    // FOR A PIXEL AND SENDING THEM VIA BROADCAST
+end
+```
+
+Include the above code after the top bar draw. The rest of the code (from the ```var integer x = INITIAL_POSITION_X;``` will be reused inside the ```par``` composition).
+
+## Sending a message
+```c#
+with
+    var integer currentX = INITIAL_POSITION_X;
+    var integer currentY = INITIAL_POSITION_Y;
+    var integer nextX = currentX;
+    var integer nextY = currentY;    
+    var integer key;
+
+    //DRAW THE PIXEL IN THE INITIAL POSITION
+    emit GRAPHICS_DRAW_PIXEL(x,y);
+
+    //EXECUTE ON EVERY KEY PRESS
+    every key in KEY_PRESS do
+        currentX = x;
+        currentY = y;
+        
+        //MOVE IN FOUR DIRECTIONS
+        if key == KEY_LEFT then
+            //WINDOW COLLISION WITH LEFT SIDE
+            if nextX > -15 then
+                nextX = nextX - 1; 
+            end
+        else/if key == KEY_RIGHT then
+            //WINDOW COLLISION WITH RIGHT SIDE
+            if nextX < 14 then
+                nextX = nextX + 1;
+            end
+        else/if key == KEY_UP then
+            //WINDOW COLLISION WITH TOP SIDE
+            if (nextY < 13) then
+                nextY = nextY + 1;
+            end
+        else/if key == KEY_DOWN then
+            //WINDOW COLLISION WITH BOTTOM SIDE
+            if (nextY > -14) then
+                nextY = nextY - 1;
+            end
+        end
+
+        {
+            //GENERATE A STRING TO SEND VIA BROADCAST
+            char *send = (char*)malloc(18 * sizeof(char));
+            sprintf(send, "%d,%d,%d,%d,%d", @PLAYER, @nextX, @nextY, @currentX, @currentY);
+        }
+
+        //SEND A STRING VIA BROADCAST
+        emit NET_SEND(18, {send}); //0,-00,-00,-00,-00 + \0
+    end 
+end
+```
+
+We renamed the variable ```x``` and ```y``` to ```currentX``` and ```currentY``` to improve semantics. We also moved its definitions down to define its scope inside this parallel trail. We did that because we don't want to have access to these variables from the other trail. 
+
+Next, there is the definition of ```nextX``` and ```nextY```. That variables are responsable to store the updated position after a user click. Initialy (i.e. before the user clicks anything), the ```nextX``` and ```nextY``` are equal the ```currentX``` and ```currentY```.
+
+As sad before, this trails must react to keyboard clicks, so we included the "Move in four directions" section, but now its update the ```nextX``` and ```nextY``` variables.
+
+Next, we created the message string and send it via ```NET_SEND```. The code between curly braces is native C code. Basically, in Céu anything defined between ```{``` and ```}``` is a normal C code and can access Céu variables via ```@``` operator. [Learn more about C integration in the manual](https://ceu-lang.github.io/ceu/out/manual/v0.30/statements/#c-integration).
+
+In the section "generate a string to send via broadcast", we create the string ```send```, allocating memory using ```malloc```. In a simple way, we have created a string that can store text containing up to 18 characters.
+
+Then, we populated this string using the variables ```PLAYER```, ```nextX```, ```nextY```, ```currentX```, ```currentY``` with the ```@``` operator, since we are writing a C code and accessing Céu variables.
+The ```%d,%d,%d,%d,%d``` means that which variable will be located in one "%d", respectively, and all of them will be separated by a coma.
+
+> The string must supports 18 character because:
+- the ```PLAYER``` stores a integer that can assume the values 1 or 2. So, it only needs 1 character;
+- ```nextX```, ```nextY```, ```currentX``` and ```currentY``` needs 3 characters each because they can contain numbers with 2 decimal places, with or without negative sign;
+- each coma counts a character;
+- until now there is 17 characters. The last is a special character, the ```\0```, that is not printable and is used to indicate that the string ended.
+
+```
+0,-00,-00,-00,-00 + \0
+```
+
+Finally, we send the message via ```NET_SEND```. Since ```send``` is a C variable, we needed to use the curly braces.
+
+## Receiving and handling a message

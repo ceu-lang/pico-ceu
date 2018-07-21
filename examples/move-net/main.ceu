@@ -1,3 +1,5 @@
+#include "string.ceu"
+
 #define PLAYER 1
 
 //EACH PLAYER INITIATES WITH A DIFFERENT COLOR AND POSITION
@@ -90,10 +92,10 @@ par do
         emit GRAPHICS_DRAW_PIXEL(x,y);
     end
 with
-    var integer x = INITIAL_POSITION_X;
-    var integer y = INITIAL_POSITION_Y;
-    var integer xOld = x;
-    var integer yOld = y;
+    var integer nextX = INITIAL_POSITION_X;
+    var integer nextY = INITIAL_POSITION_Y;
+    var integer currentX = x;
+    var integer currentY = y;
     var integer key;
 
     //DRAW THE PIXEL IN THE INITIAL POSITION
@@ -101,8 +103,8 @@ with
 
     //EXECUTE ON EVERY KEY PRESS
     every key in KEY_PRESS do
-        xOld = x;
-        yOld = y;
+        currentX = x;
+        currentY = y;
         
         //MOVE IN FOUR DIRECTIONS
         if key == KEY_LEFT then
