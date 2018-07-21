@@ -1,9 +1,9 @@
 # Move around using NETWORK features
-In [move.ceu](../move.ceu) example, the user can movement a pixel around the window using the keyboard arrow keys. 
+In [move.ceu](../move.ceu) example, the user can move a pixel around the window using the keyboard arrow keys. 
 
 This example is based on move.ceu, so, if you are starting programming with Céu, is recommended to that a look on it and understant its code.
 
-![](images/move-net-2-screen)
+![](images/move-net-2-screen.gif)
 
 In this application, we use pico-Céu [Network features](https://ceu-lang.github.io/pico-ceu/out/manual/v0.30/net/#net_receive) to create a distributed version of move.ceu. It supports two users moving independent pixels and, as seen in the figure above, show the movement of the pixels in both instances of the example.
 
@@ -67,7 +67,7 @@ We use preprocessor directives to define which instance (white or green) will be
 #endif
 ```
 
-In the beggining of the code, we defined ```c# PLAYER``` with the value ```c# 1``` and then, the ```c# MAIN_COLOR``` (the color that will be used to draw the pixel and a top bar) and the pixel initial position depending on the value of ```PLAYER``` (```c# INITIAL_POSITION_X``` and ```c# INITIAL_POSITION_Y```).
+In the beggining of the code, we defined ```PLAYER``` with the value ```1``` and then, the ```MAIN_COLOR``` (the color that will be used to draw the pixel and a top bar) and the pixel initial position depending on the value of ```PLAYER``` (```INITIAL_POSITION_X``` and ```INITIAL_POSITION_Y```).
 
 With the value 1, the example will be compiled with the pixel located on the left side of the window and the color white. With the value 2, otherwise, the pixel will be green and located on the right side.
 
@@ -86,12 +86,12 @@ emit GRAPHICS_SET_COLOR_NAME(MAIN_COLOR);
 emit GRAPHICS_DRAW_RECT(0, 15, 30, 1);
 ```
 
-To set the color of the rectangle, we use the ```c# MAIN_COLOR``` defined above. Before compiling, the pre-processor will replace the ```c# MAIN_COLOR``` with ```c# COLOR_WHITE``` or ```c# COLOR_GREEN```, depending on the value of the ```c# PLAYER```.
+To set the color of the rectangle, we use the ```MAIN_COLOR``` defined above. Before compiling, the pre-processor will replace the ```MAIN_COLOR``` with ```COLOR_WHITE``` or ```COLOR_GREEN```, depending on the value of the ```PLAYER```.
 
-Add the above code after the window configuration and execute the example defining the ```c# PLAYER``` as 1, and, after, as 2.
+Add the above code after the window configuration and execute the example defining the ```PLAYER``` as 1, and, after, as 2.
 
 ## Defining the initial pixel position
-To each instance have a different initial pixel position, just use the ```c# INITIAL_POSITION_X``` and ```c# INITIAL_POSITION_Y``` to initialize the x and y variables.
+To each instance have a different initial pixel position, just use the ```INITIAL_POSITION_X``` and ```INITIAL_POSITION_Y``` to initialize the x and y variables.
 
 ```c#
 var integer x = INITIAL_POSITION_X;
@@ -99,7 +99,7 @@ var integer y = INITIAL_POSITION_Y;
 ```
 
 ## Changing the pixel color
-Compiling the code we can see that the pixel is already with the ```c# MAIN_COLOR```, but returns to color white after a movement. It initiates with the ```c# MAIN_COLOR``` because this is the last color defined before the initial pixel draw:
+Compiling the code we can see that the pixel is already with the ```MAIN_COLOR```, but returns to color white after a movement. It initiates with the ```MAIN_COLOR``` because this is the last color defined before the initial pixel draw:
 ```c#
 // <...>
 emit GRAPHICS_SET_COLOR_NAME(MAIN_COLOR);
@@ -121,7 +121,7 @@ emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
 emit GRAPHICS_DRAW_PIXEL(x,y);
 // <...>
 ```
-We, then, simply have to replace ```c# COLOR_WHITE``` with ```c# MAIN_COLOR```.
+We, then, simply have to replace ```COLOR_WHITE``` with ```MAIN_COLOR```.
 
 # Stopping the pixel from exiting through the window
 Currently, the pixel can movement outside the window. To stop that, we can verify if it can moves to the desirable position before modify its x-axis and y-axis position.
@@ -151,4 +151,4 @@ else/if key == KEY_DOWN then
 end
 ```
 
-The -15 and 14 (respectively located in lines 4 and 9) are the leftmost and the rightmost x-axis postions of the window. The -14 (in line 19), is, likely, the bottommost y-axis position, but the 13 (in line 14) isn't the topmost. Since we have the top bar, the pixel cannot move until the top.
+The -15 and 14 (respectively located in lines 4 and 9) are the leftmost and the rightmost x-axis positions of the window. The -14 (in line 19), is, likely, the bottommost y-axis position, but the 13 (in line 14) isn't the topmost. Since we have the top bar, the pixel cannot move until the top.
