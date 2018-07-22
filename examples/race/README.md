@@ -2,6 +2,8 @@
 
 This tutorial will explain how to develop a game using pico-Céu environment. The game is basead in old race games, where the player movement a car to deflect obstacles.
 
+> pico-Céu is a tiny programming environment for visual and interactive applications such as video games. It is composed of the programming language Céu and minimalist libraries for input, graphics, network, and sound.
+
 ![](images/race.gif)
 
 # Summary
@@ -30,8 +32,6 @@ This tutorial will explain how to develop a game using pico-Céu environment. Th
 17. Emiting the Game over message
 18. Awaiting for a key press
 19. Restarting the application
-
-> pico-Céu is a tiny programming environment for visual and interactive applications such as video games. It is composed of the programming language Céu and minimalist libraries for input, graphics, network, and sound.
 
 ## Installation
 First of all, you need to install pico-Céu. Simply download the last stable release of Céu-Maker from [https://github.com/ceu-lang/ceu-maker/releases](https://github.com/ceu-lang/ceu-maker/releases) and double click on the downloaded exe. Choose the destination folder in the installer window and click *Install*. When the installation complets, two folders, one containing the binary from pico-Céu and other the code examples will be opened. 
@@ -506,7 +506,6 @@ spawn Car();
 ### The ideia 
 A way to identify the collisions between the obstacles (the pixels) and the car rectangle is identifying when an obstacle is inside the rectangle.
 
-ToDo: replace with a better image - unify in a single image
 ![](images/CarColiision.png)
 In other words, defining the CarTop, CarBottom, CarLeft and CarRight as in the figure above, we can check if a collision occurs checking if:
 
