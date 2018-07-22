@@ -255,10 +255,9 @@ Finally, we send the message via ```NET_SEND```. Since ```send``` is a C variabl
 
 ## Receiving and handling a message
 In the code below, the first trail waits for a incoming message and stores it the ```buf``` variable. We want to iterate over the caracter of the received string and store each information in a variable (these variables are defined in lines 7 to 11).
-
 This iteration is done in a C code. 
--------------------------------------------------------------
-**C code explanation**  
+
+###C code explanation
 This code uses a control variable named ```controller``` to identify from which information the current character is. It's like the string was divided by a coma in 5 pieces, which one corresponding to an information/variable (in order, the instance, nextX, nextY and so on). The current character indicates in which place the character being analyzed in the loop is.
 
 Everytime the current character is a ",", the ```controller``` variable is incremented by 1, meanning our code will start to analyze other information, other piece of the string. 
@@ -274,6 +273,7 @@ Then, in lines 52 to 56, we apply the negative signals identified to the positio
 - If the number is negative, the signal variable is -1. The multiplication will result in a negative number;
 - If the number is positive, the signal variable is 1. The multiplication will result in a positive number;
 
+-------------------------------------------------------------
 -------------------------------------------------------------
 
 ```c#
