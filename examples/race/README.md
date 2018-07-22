@@ -506,7 +506,7 @@ spawn Car();
 ### The ideia 
 A way to identify the collisions between the obstacles (the pixels) and the car rectangle is identifying when an obstacle is inside the rectangle.
 
-![](images/CarColiision.png)
+![](images/CarCollision.png)
 In other words, defining the CarTop, CarBottom, CarLeft and CarRight as in the figure above, we can check if a collision occurs checking if:
 
 (CarLeft <= Pixel_X <= CarRight) and (CarBottom <= Pixel_Y <= CarTop)
