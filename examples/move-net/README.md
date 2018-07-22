@@ -11,7 +11,7 @@ In this application, we use pico-Céu [Network features](https://ceu-lang.github
 Let's start from the move.ceu example. Copy and paste the code to a new file and change the size of the window using the ```WINDOW_SET_SIZE```, and its title, using ```WINDOW_SET_TITLE```. Also, make sure to uncomment the lines responsible for clearing the old pixel position.
 
 ```c#
-#define PLAYER 1
+#define INSTANCE 1
 
 //CONFIG THE WINDOW
 emit WINDOW_SET_SIZE(30*20, 30*20, 30, 30);
@@ -53,21 +53,21 @@ end
 We use preprocessor directives to define which instance (white or green) will be compilled. Check [this tutorial to learn more about preprocessor directives](https://www.tutorialspoint.com/cprogramming/c_preprocessors.htm).
 
 ```c#
-#define PLAYER 1
+#define INSTANCE 1
 
-//EACH PLAYER INITIATES WITH A DIFFERENT COLOR AND POSITION
-#if PLAYER == 1
+//EACH INSTANCE INITIATES WITH A DIFFERENT COLOR AND POSITION
+#if INSTANCE == 1
     #define MAIN_COLOR COLOR_WHITE
     #define INITIAL_POSITION_X -10
     #define INITIAL_POSITION_Y 0
-#elif PLAYER == 2
+#elif INSTANCE == 2
     #define MAIN_COLOR COLOR_GREEN
     #define INITIAL_POSITION_X 10
     #define INITIAL_POSITION_Y 0    
 #endif
 ```
 
-In the beggining of the code, we defined ```PLAYER``` with the value ```1``` and then, the ```MAIN_COLOR``` (the color that will be used to draw the pixel and a top bar) and the pixel initial position depending on the value of ```PLAYER``` (```INITIAL_POSITION_X``` and ```INITIAL_POSITION_Y```).
+In the beggining of the code, we defined ```INSTANCE``` with the value ```1``` and then, the ```MAIN_COLOR``` (the color that will be used to draw the pixel and a top bar) and the pixel initial position depending on the value of ```INSTANCE``` (```INITIAL_POSITION_X``` and ```INITIAL_POSITION_Y```).
 
 With the value 1, the example will be compiled with the pixel located on the left side of the window and the color white. With the value 2, otherwise, the pixel will be green and located on the right side.
 
@@ -81,14 +81,14 @@ Its position in the y-axis is 15 so that the bar is located on the top. It's int
 Check [pico-Céu manual](https://ceu-lang.github.io/pico-ceu/out/manual/v0.30/graphics/#graphics_set_anchor) to learn more about anchors.
 
 ```c#
-//DISPLAY A RECTANGLE ON THE TOP OF THE SCREEN TO INDICATE WHICH PLAYER YOU ARE
+//DISPLAY A RECTANGLE ON THE TOP OF THE SCREEN TO INDICATE WHICH INSTANCE YOU ARE
 emit GRAPHICS_SET_COLOR_NAME(MAIN_COLOR);
 emit GRAPHICS_DRAW_RECT(0, 15, 30, 1);
 ```
 
-To set the color of the rectangle, we use the ```MAIN_COLOR``` defined above. Before compiling, the pre-processor will replace the ```MAIN_COLOR``` with ```COLOR_WHITE``` or ```COLOR_GREEN```, depending on the value of the ```PLAYER```.
+To set the color of the rectangle, we use the ```MAIN_COLOR``` defined above. Before compiling, the pre-processor will replace the ```MAIN_COLOR``` with ```COLOR_WHITE``` or ```COLOR_GREEN```, depending on the value of the ```INSTANCE```.
 
-Add the above code after the window configuration and execute the example defining the ```PLAYER``` as 1, and, after, as 2.
+Add the above code after the window configuration and execute the example defining the ```INSTANCE``` as 1, and, after, as 2.
 
 ## Defining the initial pixel position
 To each instance have a different initial pixel position, just use the ```INITIAL_POSITION_X``` and ```INITIAL_POSITION_Y``` to initialize the x and y variables.
@@ -186,12 +186,12 @@ with
     var integer key;
 
     //DRAW THE PIXEL IN THE INITIAL POSITION
-    emit GRAPHICS_DRAW_PIXEL(x,y);
+    emit GRAPHICS_DRAW_PIXEL(currentX, currentY);
 
     //EXECUTE ON EVERY KEY PRESS
     every key in KEY_PRESS do
-        currentX = x;
-        currentY = y;
+        currentX = nextX;
+        currentY = nextY;
         
         //MOVE IN FOUR DIRECTIONS
         if key == KEY_LEFT then
@@ -206,12 +206,12 @@ with
             end
         else/if key == KEY_UP then
             //WINDOW COLLISION WITH TOP SIDE
-            if (nextY < 13) then
+            if nextY < 13 then
                 nextY = nextY + 1;
             end
         else/if key == KEY_DOWN then
             //WINDOW COLLISION WITH BOTTOM SIDE
-            if (nextY > -14) then
+            if nextY > -14 then
                 nextY = nextY - 1;
             end
         end
@@ -219,7 +219,7 @@ with
         {
             //GENERATE A STRING TO SEND VIA BROADCAST
             char *send = (char*)malloc(18 * sizeof(char));
-            sprintf(send, "%d,%d,%d,%d,%d", @PLAYER, @nextX, @nextY, @currentX, @currentY);
+            sprintf(send, "%d,%d,%d,%d,%d", @INSTANCE, @nextX, @nextY, @currentX, @currentY);
         }
 
         //SEND A STRING VIA BROADCAST
@@ -238,11 +238,11 @@ Next, we created the message string and send it via ```NET_SEND```. The code bet
 
 In the section "generate a string to send via broadcast", we create the string ```send```, allocating memory using ```malloc```. In a simple way, we have created a string that can store text containing up to 18 characters.
 
-Then, we populated this string using the variables ```PLAYER```, ```nextX```, ```nextY```, ```currentX```, ```currentY``` with the ```@``` operator, since we are writing a C code and accessing Céu variables.
+Then, we populated this string using the variables ```INSTANCE```, ```nextX```, ```nextY```, ```currentX```, ```currentY``` with the ```@``` operator, since we are writing a C code and accessing Céu variables.
 The ```%d,%d,%d,%d,%d``` means that which variable will be located in one "%d", respectively, and all of them will be separated by a coma.
 
 > The string must supports 18 character because:
-- the ```PLAYER``` stores a integer that can assume the values 1 or 2. So, it only needs 1 character;
+- the ```INSTANCE``` stores a integer that can assume the values 1 or 2. So, it only needs 1 character;
 - ```nextX```, ```nextY```, ```currentX``` and ```currentY``` needs 3 characters each because they can contain numbers with 2 decimal places, with or without negative sign;
 - each coma counts a character;
 - until now there is 17 characters. The last is a special character, the ```\0```, that is not printable and is used to indicate that the string ended.
@@ -254,3 +254,100 @@ The ```%d,%d,%d,%d,%d``` means that which variable will be located in one "%d", 
 Finally, we send the message via ```NET_SEND```. Since ```send``` is a C variable, we needed to use the curly braces.
 
 ## Receiving and handling a message
+In the code below, the first trail waits for a incoming message and stores it the ```buf``` variable. We want to iterate over the caracter of the received string and store each information in a variable (these variables are defined in lines 7 to 11).
+
+This iteration is done in a C code. 
+-------------------------------------------------------------
+**C code explanation**  
+This code uses a control variable named ```controller``` to identify from which information the current character is. It's like the string was divided by a coma in 5 pieces, which one corresponding to an information/variable (in order, the instance, nextX, nextY and so on). The current character indicates in which place the character being analyzed in the loop is.
+
+Everytime the current character is a ",", the ```controller``` variable is incremented by 1, meanning our code will start to analyze other information, other piece of the string. 
+
+If the current character is not a coma, we will store it in the corresponding variable (lines 37 to 47). 
+The code ```strC[i] - '0'``` converts a character to an integer, and the ```@variable*10 + strC[i] - '0'``` simply concatenates the  converted integer with the current variable value, if this value is other than 0 (check [this video](https://youtu.be/3ut27s3wDAk) for a more detailed information).
+
+The position informations (nextX, nextY, currentX and currentY) can contain negative numbers. To support the negative numbers, we declared the ```nextXSignal```, ```nextYSignal```, ```currentXSignal``` and ```currentYSignal``` variables with the default value of 1.
+
+The code between lines 26 and 35 verifies if the current character is a "-". If it is, we store a -1 in one of these variables to simbolize that this information has a negative value.
+
+Then, in lines 52 to 56, we apply the negative signals identified to the position variables, multiplying.
+- If the number is negative, the signal variable is -1. The multiplication will result in a negative number;
+- If the number is positive, the signal variable is 1. The multiplication will result in a positive number;
+
+-------------------------------------------------------------
+
+```c#
+par do
+    var integer n;
+    var byte&&  buf;
+
+    //WAIT A MESSAGE ARRIVES FROM ALL PEERS, INCLUDING ITSELF
+    every (n, buf) in NET_RECEIVE do
+        var integer instance = 0;
+        var integer nextX = 0;
+        var integer nextY = 0;
+        var integer currentX = 0;
+        var integer currentY = 0;
+
+        {
+            //CONVERT A CÉU BYTE VECTOR INTO A C CHAR ARRAY
+            const char* strC = @&&buf[0] as _char&&;
+
+            int controller = 0, nextXSignal = 1, nextYSignal = 1, currentXSignal = 1, currentYSignal = 1, i;
+
+            //3. ITERATE OVER THE CHARACTER OF RECEIVED STRING (buf)
+            for (i = 0; strC[i] != '\0'; i++){
+                //THE RECEIVED STRING CONTAIN INFORMATIONS SEPARATED BY A COMA
+                //THE controller VARIABLE INDICATES WHICH INFORMATION WE ARE ACCESSING
+                if (strC[i] == ',') {
+                    controller = controller + 1;
+                } else {
+                    if (strC[i] == '-') {
+                        //VERIFY WHICH NUMBERS ARE NEGATIVE 
+                        if (controller == 1)
+                            nextXSignal = -1;
+                        else if (controller == 2)
+                            nextYSignal = -1;
+                        else if (controller == 3)
+                            currentXSignal = -1;
+                        else if (controller == 4)
+                            currentYSignal = -1;
+                    } else {
+                        //CONVERT THE CURRENT CHARACTER TO A NUMBER
+                        if (controller == 0)
+                            @instance = @instance*10 + (strC[i] - '0');
+                        else if (controller == 1)
+                            @nextX = @nextX*10 + (strC[i] - '0'); 
+                        else if (controller == 2)
+                            @nextY = @nextY*10 + (strC[i] - '0'); 
+                        else if (controller == 3)
+                            @currentX = @currentX*10 + (strC[i] - '0'); 
+                        else if (controller == 4)
+                            @currentY = @currentY*10 + (strC[i] - '0');
+                    }
+                }      
+            }
+            
+            //APPLY THE NEGATIVE SIGNAL
+            @nextX = nextXSignal * @nextX;
+            @nextY = nextYSignal * @nextY;
+            @currentX = currentXSignal * @currentX;
+            @currentY = currentYSignal * @currentY;
+        }
+
+        //CLEAN THE CURRENT POSITION
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+        emit GRAPHICS_DRAW_PIXEL(currentX, currentY);
+
+        //DRAW THE PIXEL IN A NEW POSITION
+        if instance == 1 then
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);       
+        else/if instance == 2 then
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);    
+        end 
+        emit GRAPHICS_DRAW_PIXEL(nextX, nextY);
+    end
+with
+```
+
+After the C code, we clean the current position using the ```currentX``` and ```currentY``` and draw the pixel in the new position using ```nextX``` and ```nextY```. The color of the new located pixel is chosen by analyzing the variable ```instance``` (acquired from the incoming message).
