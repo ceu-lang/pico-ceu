@@ -455,7 +455,7 @@ Note that we don't need the ```await FOREVER``` anymore, because the application
 Executing this code we can see that the pool is small for the quantity of pixels we are trying to spawn in it. The gaps in which should appear a pixel, the application simply don't spawn anything because of the lack of space. 
 In other words, every 1 second the application tries to spawn a Pixel in the pool, but sometimes there is no free space.
 
-We can increase the size of the pool (a pool of 6 positions should be enough) or even create an unbounded pool: ```c# pool[] Pixel pixels;```, that can stores how many Pixel the computer memory supports. For this tutorial, let's proceede with an unbounded pool.
+We can increase the size of the pool (a pool of 6 positions should be enough) or even create an unbounded pool: ```pool[] Pixel pixels;```, that can stores how many Pixel the computer memory supports. For this tutorial, let's proceede with an unbounded pool.
 
 ## Creating a Car procedure abstraction
 We can also enclose the car in a code/await abstraction. Even don't having multiple cars in our application, we can take advantage from a procedure abstraction enclosing all behaviour related to the car in a single place.
@@ -507,15 +507,10 @@ spawn Car();
 A way to identify the collisions between the obstacles (the pixels) and the car rectangle is identifying when an obstacle is inside the rectangle.
 
 ToDo: replace with a better image - unify in a single image
-![](images/collision_top_bottom.jpg)
-![](images/collision_left_right.jpg)
+![](images/CarColiision.png)
 In other words, defining the CarTop, CarBottom, CarLeft and CarRight as in the figure above, we can check if a collision occurs checking if:
 
 (CarLeft <= Pixel_X <= CarRight) and (CarBottom <= Pixel_Y <= CarTop)
-
-The image below illustrates four cases when a pixel do not collide with the car and two in which it collide.
-![](images/collision.jpg)
-ToDo: replace with a better image
 
 ### The implementation
 Until now we have two procedures abstractions in our code, the Pixel and the Car, and we want to include the collision detection. Where should we add code for that?
@@ -745,7 +740,7 @@ It's important to mention that the events are declared as public fields (on the 
 ## Emiting the decreseLife event
 Where should we emit the ```decreseLife``` event? As said, by the semantics of our game, we know that the life should be decresed when the car collides with an obstacle. So, the best place to emit this event is after verifing if a collision happened.
 
-Then, in the Pixel procedure, right after the collision check, add ```c# emit outer.lifeBar.decreaseLife; ```.
+Then, in the Pixel procedure, right after the collision check, add ```emit outer.lifeBar.decreaseLife; ```.
 
 ```c#
     code/await Pixel(none) -> none do
@@ -813,10 +808,10 @@ await 2s;
 
 Before drawing the text, we need to clean the window (line 2), and set the text color (line 4). Also, we changed the window size so the text could be well displayed. Try to comment the line 3 to see the changes.
 
-Now, the application will emit a gameover message before finallize. We added the last line ( ```c# await 2s;```) so that the user can have time to see the text before the application ends.
+Now, the application will emit a gameover message before finallize. We added the last line ( ```await 2s;```) so that the user can have time to see the text before the application ends.
 
 ## Awaiting for a key press
-Instead of waiting 2 seconds, we can await for a key press. To do that, simply replace the  ```c# await 2s;``` with  ```c# await KEY_PRESS;```. Now, when the game over message is displayed, the user has to press an key to the game finallize.
+Instead of waiting 2 seconds, we can await for a key press. To do that, simply replace the  ```await 2s;``` with  ```await KEY_PRESS;```. Now, when the game over message is displayed, the user has to press an key to the game finallize.
 
 ## Restarting the application
 To restart the application we need to neast our code insude a loop, so that the application don't finalize.
@@ -867,7 +862,7 @@ end
 ```
 
 The modifications were:
-- we moved the ```c# WINDOW_SET_SIZE``` from the top of the code to the beginning of the loop to redefine the window size every time the game restarts;
+- we moved the ```WINDOW_SET_SIZE``` from the top of the code to the beginning of the loop to redefine the window size every time the game restarts;
 - we need to restart all the application after an game over, so, intuitively, all the game elements (car, life bar and obstacles) must also restart. We could do that in 2 different ways:
     - adding code to the procedure to restart the element (set the default values to the fields, for example) that we could call externally;
     - kill the elements and spawn again.
