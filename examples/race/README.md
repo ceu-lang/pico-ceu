@@ -1,7 +1,35 @@
 # Developing a game with pico-Céu from scratch
 
-This tutorial will explain how to develop a race game using pico-Céu environment. It will cover graphics, parallel compositions and await statements. 
-ToDo: Sumário and Gif
+This tutorial will explain how to develop a game using pico-Céu environment. The game is basead in old race games, where the player movement a car to deflect obstacles.
+
+![](images/race.gif)
+
+# Summary
+1. Installation
+2. Starting to code
+3. Drawing pixels and rectangles
+    - Draw a pixel
+    - Draw multiple pixels and set its colors
+    - Draw a rectangle
+    - Change the anchor
+4. Styling the window
+5. Drawing the car the obstacles
+6. Moving a pixel
+7. Making a pixel positon random 
+8. Calling the Pixel abstraction
+9. Trying to spawn in a full pool]
+10. Making Pixel abstraction finalize
+11. Trying to spawn 4 pixels again
+12. Creating a Car procedure abstraction
+13. Creating the colisions
+    - The ideia
+    - The implementation
+14. Creating a life bar
+15. Emiting the decreseLife event
+16. Awaiting for the gameOver event
+17. Emiting the Game over message
+18. Awaiting for a key press
+19. Restarting the application
 
 > pico-Céu is a tiny programming environment for visual and interactive applications such as video games. It is composed of the programming language Céu and minimalist libraries for input, graphics, network, and sound.
 
@@ -128,7 +156,7 @@ emit GRAPHICS_DRAW_PIXEL(6, 15);
 ![](images/static_draw.png)
 
 
-## Move a pixel
+## Moving a pixel
 In our game, the pixels should move down to give the sensation that the car is in movement. Therefore, all the pixels should initiate in the same y-axis position(19) and, from time to time, this position should be decremented. The x-axis position can variate from -20 to 19, that corresponds to the limits of the Window.
 
 To demonstrate how to code the movement, let's start moving only one pixel.
@@ -305,7 +333,7 @@ end
 
 In the first line we defined a Pixel abstraction using ```code/await```. The abstration don't receive any parameters (because of that we use the ```none```) and ```NEVER``` ends. We can notice that by the ```every``` compositon, witch, as already mentioned in this tutorial, runs infinitely, like an infinite loop.
 
-## Make the pixel position random 
+## Making the pixel position random 
 With the Pixel abstraction, our pixels would appear in the same x position. Let's make it's x position random.
 
 To do that, we can use the C++ function ```rand``` to choose a number beetween -20 and 19 (respectively, the leftmost and the rightmost pixel of the Window).
