@@ -199,7 +199,7 @@ In line 1, we define an integer variable to store the current position on the y-
 In line 5, we decrement the y position only if it's not on the bottom of the window yet.
 Lines 8 and 9 are, as we already saw, responsible for setting the draw color and draw a pixel. The difference is that now we use the ```y``` variable in the ```GRAPHICS_DRAW_PIXEL``` instead of a static integer so it can draw its updated position.
 
-![animate one pixel](animateAPixelWithBugs.gif)
+![animate one pixel](images/animateAPixelWithBugs.gif)
 
 By running the above code, we can see some problems. The most notable is that the red pixel that we are trying to animate is not moving down, but drawing a line down. To solve this, we need to clean the current pixel before updating the y position and drawing it again on a new coordinate.
 
@@ -223,7 +223,7 @@ emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);
 emit GRAPHICS_DRAW_PIXEL(-10, 20);
 ```
 
-![animate one pixel](animateAPixelWithBugs-2.gif)
+![animate one pixel](images/animateAPixelWithBugs-2.gif)
 
 A second problem is that the pixels that are drawn after ```every``` construct are not showing up. This occurs because ```every``` works as an infinite loop, that executes every 150 milliseconds. So, our code are stuck in this loop and never reaches the line 16 from the above code.
 
@@ -253,7 +253,7 @@ with
     //draw more pixels if you want
 end
 ```
-![animate one pixel](animateAPixelWithBugs-3.gif)
+![animate one pixel](images/animateAPixelWithBugs-3.gif)
 
 ### "Copy and past" way
 Ok, we animated one pixel and found a way to display the other ones, but our original idea was to have every pixel animated. One way of doing this, though rudimentary, would be to add one trail per pixel, which one being responsible to animate it.

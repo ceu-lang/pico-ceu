@@ -77,7 +77,6 @@ code/await Car(none) -> (var integer top, var integer bottom, var integer left, 
     end
 end
 
-
 loop do
     emit WINDOW_SET_SIZE(40*20, 40*20, 40, 40);
 
