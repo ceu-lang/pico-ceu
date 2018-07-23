@@ -418,7 +418,7 @@ code/await Pixel(none) -> none do
 end
 ```
 
-The first change was on line 1, where we substitute ```-> NEVER``` with ```-> none```. This means that the code-await abstraction will no longer execute forever but still returns nothing. The other change was the addition of the lines 12 and 13, that breaks the ```every``` infinite loop when the pixel reaches the bottom of the screen.
+The first change was at line 1, where we substitute ```-> NEVER``` with ```-> none```. This means that the code-await abstraction will no longer execute forever but still returns nothing. The other change was the addition of the lines 12 and 13, that breaks the ```every``` infinite loop when the pixel reaches the bottom of the screen.
 Now, when a pixel reaches the bottom of the screen, the ```break``` will stop the ```every``` loop, and consequently finalize the procedure and release a position in the pool.
 
 ## Trying to spawn 4 pixels again
@@ -712,6 +712,40 @@ else
 
 When an obstacle collides with the car, we'll no longer paint the last position gray, but blue. However, if an obstacle collides with the car top pixels, it will continue to have its last position painted gray because its last position would be located outside the rectangle, more precisely, one pixel above it.
 
+#### Play a sound when there is collision
+Lastly, we want our game to play a sound when a collision occurs. To implement that, firstly create a folder named ```res``` in the same directory of ```race.ceu``` and download the sound from [pico-Céu repository](/res) to that folder.
+
+> Since we now have more than one file in our example, we can create a folder to hold them. Rename the ```race.ceu``` file to ```main.ceu``` so that you can drag and drop the entire folder to compile. Dragging and dropping the ```main.ceu``` also works.
+
+Then, we can use ```SOUND_PLAY``` to play that audio file:
+```c#
+//CHECK COLLISION
+if ( (y <= outer.car.top) and (y >= (outer.car.bottom-1)) and x <= outer.car.right and x >= outer.car.left) then
+    emit outer.lifeBar.decreaseLife;
+
+    emit SOUND_PLAY("res/click1.wav");
+
+    if (y < outer.car.top) then
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+        emit GRAPHICS_DRAW_PIXEL(x, y+1);       
+    end
+    break;
+else
+    // <...>
+```
+
+We can also set the sound volume. For this, use ```SOUND_SET_VOLUME```, passing as parameter the new sound volume in percentage (from 0 to 100). You don't need to set the volume every 150 millisecond, not even every time a pixel is spawned. A good place to add ```SOUND_SET_VOLUME``` is at the beginning of the application, with the window configurations:
+
+```c#
+emit SOUND_SET_VOLUME(80);
+emit WINDOW_SET_TITLE("Race game");
+emit WINDOW_SET_GRID(no);
+emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_GRAY);
+emit WINDOW_CLEAR();
+```
+
+That way, the sound volume will be set only one time.
+
 ## Creating a life bar
 As a new feature, we want to implement a life bar to show how many times a user can collide with the obstacles before the Game Over.
 
@@ -747,15 +781,15 @@ end
 The LifeBar procedure has two fields: the ```life```, that stores the currently life points the user have, and the ```maxLife```, that stores the maximum life points the user can have.
 In the line 3, we define that the user initiate the game with the maximum life, that is set in line 2 with the value 5, which means that the car have to collide 5 times to finalize the game with a Game Over message. 
 
-On lines 13 to 15 we draw a green rectangle in top left corner of the window with height equals 1 and length equals to the ```life``` variable content, what will produce a bar in which every pixel symbolize a life point. But before we draw the bar, we need to clean the window space reserved for the bar. This is done on lines 9 to 11, where we draw a gray (the color of the window background) rectangle to clean all the bar. We used the ```maxLife``` to ensure that all the bar will be cleaned. Try to replace the ```maxLife``` in line 11 with ```life``` to see the behavior difference.
+At lines 13 to 15 we draw a green rectangle in top left corner of the window with height equals 1 and length equals to the ```life``` variable content, what will produce a bar in which every pixel symbolize a life point. But before we draw the bar, we need to clean the window space reserved for the bar. This is done at lines 9 to 11, where we draw a gray (the color of the window background) rectangle to clean all the bar. We used the ```maxLife``` to ensure that all the bar will be cleaned. Try to replace the ```maxLife``` in line 11 with ```life``` to see the behavior difference.
 
-On line 16 we are awaiting an event. In Céu, we can use internal events as a signaling mechanism among trails. A program can ```await``` internal events, which can be signaled through the ```emit``` statement.
+At line 16 we are awaiting an event. In Céu, we can use internal events as a signaling mechanism among trails. A program can ```await``` internal events, which can be signaled through the ```emit``` statement.
 
 > Internal events, unlike external events, do not represent real devices and are defined by the programmer. Internal events serve as signalling and communication mechanisms among trails in a program.
 
 In the LifeBar procedure, we are awaiting a ```decreaseLife``` event and emitting a ```gameOver``` event. We didn't discuss yet from when the ```decreaseLife``` event will be emitted, but is certainly from other trail. By the semantics of our game, we also know that the life should be decreased when the car collides with an obstacle.
 
-When the LifeBar receives the ```decreaseLife``` event, the ```life``` variable is decremented. On line 20, we verify if the life points are over. If yes, we emit a ```gameOver``` event, that should be treated by other trail.
+When the LifeBar receives the ```decreaseLife``` event, the ```life``` variable is decremented. At line 20, we verify if the life points are over. If yes, we emit a ```gameOver``` event, that should be treated by other trail.
 
 It's important to mention that the events are declared as public fields (on the line 1) so that the rest of the application could emit or await them.
 
@@ -838,9 +872,7 @@ Now, the application will emit a game over message before finalize. We added the
 ![](images/gameover-1.png)
 
 ### Changing the font of the Game over message
-Let's change the message font to FreeSants.tff. Download the font from the [pico-Céu repository](/res) and create a folder named ```res``` in the same directory of ```race.ceu```.
-
-> Since now we have more than one file in our example, we can create a folder to hold them. Next, rename the ```race.ceu``` file to ```main.ceu``` so that you can drag and drop the entire folder to compile. Drag and drop the ```main.ceu``` file also works.
+Let's change the message font to FreeSants.tff. Download the font from the [pico-Céu repository](/res) and add it to the ```res``` folder.
 
 ```c#
 //GAME OVER
@@ -881,7 +913,7 @@ emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
 emit GRAPHICS_SET_SCALE(1.0, 1.0);
 ```
 
-The ```GRAPHICS_SET_SCALE``` receives as parameters the new horizontal and vertical scale. On line 9, we double the horizontal scale, producing a horizontal stretch effect. On line 12, we do a similar thing, but decreasing the vertical scale, what produces a vertical stretch effect.
+The ```GRAPHICS_SET_SCALE``` receives as parameters the new horizontal and vertical scale. At line 9, we double the horizontal scale, producing a horizontal stretch effect. At line 12, we do a similar thing, but decreasing the vertical scale, what produces a vertical stretch effect.
 
 ![](images/gameover-3.png)
 
@@ -895,6 +927,7 @@ Instead of waiting 2 seconds, we can await a key press. To do that, simply repla
 To restart the application we need to nest our code inside a loop.
 
 ```c#
+emit SOUND_SET_VOLUME(80);
 emit WINDOW_SET_TITLE("Race game");
 emit WINDOW_SET_GRID(no);
 emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_GRAY);

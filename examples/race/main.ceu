@@ -1,3 +1,4 @@
+emit SOUND_SET_VOLUME(80);
 emit WINDOW_SET_TITLE("Race game");
 emit WINDOW_SET_GRID(no);
 emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_GRAY);
@@ -77,9 +78,6 @@ code/await Car(none) -> (var integer top, var integer bottom, var integer left, 
     end
 end
 
-emit WINDOW_SET_SIZE(40*20, 40*20, 40, 40);
-await KEY_PRESS;
-
 loop do
     emit WINDOW_SET_SIZE(40*20, 40*20, 40, 40);
 
@@ -104,6 +102,8 @@ loop do
             //CHECK COLLISION
             if ( (y <= outer.car.top) and (y >= (outer.car.bottom-1)) and x <= outer.car.right and x >= outer.car.left) then
                 emit outer.lifeBar.decreaseLife;
+
+                emit SOUND_PLAY("res/click1.wav");
 
                 if (y < outer.car.top) then
                     emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
