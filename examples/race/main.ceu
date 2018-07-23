@@ -1,5 +1,7 @@
 emit WINDOW_SET_TITLE("Race game");
 emit WINDOW_SET_GRID(no);
+emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_GRAY);
+emit WINDOW_CLEAR();
 
 code/await LifeBar(none) -> (event none decreaseLife, event none gameOver) -> NEVER do
     var integer maxLife = 5;
@@ -10,7 +12,7 @@ code/await LifeBar(none) -> (event none decreaseLife, event none gameOver) -> NE
         emit GRAPHICS_SET_ANCHOR(HANCHOR_LEFT, VANCHOR_TOP);
 
         //CLEAN
-        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_GRAY);
         emit GRAPHICS_DRAW_RECT(-20, 20, maxLife, 1);
 
         //REDRAW
@@ -50,7 +52,7 @@ code/await Car(none) -> (var integer top, var integer bottom, var integer left, 
     every key in KEY_PRESS do
         //CLEAN
         emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_BOTTOM);
-        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_GRAY);
         emit GRAPHICS_DRAW_RECT(x, y, w, h);
 
         //UPDATE
@@ -88,7 +90,7 @@ loop do
 
         every 150ms do
             
-            emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_GRAY);
             emit GRAPHICS_DRAW_PIXEL(x, y);
             //updating the y postion
             if (y > -19) then
@@ -117,7 +119,7 @@ loop do
     par/or do
         pool[] Pixel pixels;
 
-        every 500ms do
+        every 1s do
             spawn Pixel() in pixels;
         end
     with
@@ -127,7 +129,7 @@ loop do
     //GAME OVER
     emit WINDOW_CLEAR();
     emit WINDOW_SET_SIZE(190*5, 120*5, 190, 120);
-    emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
     emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
     emit GRAPHICS_DRAW_TEXT(0, 20, "Game Over");
     emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
