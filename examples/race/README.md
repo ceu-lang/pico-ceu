@@ -32,6 +32,7 @@ This tutorial will explain how to develop a game using pico-Céu environment. Th
         - Including the CarLeft, CarRight, CarBottom and CarTop in the Car procedure
         - Accessing the Car public fields and checking the collision
         - Solving a bug in Pixel procedure
+        - Playing a sound when there is collision
 14. Creating a life bar
 15. Emitting the decreaseLife event
 16. Awaiting the gameOver event
@@ -712,7 +713,7 @@ else
 
 When an obstacle collides with the car, we'll no longer paint the last position gray, but blue. However, if an obstacle collides with the car top pixels, it will continue to have its last position painted gray because its last position would be located outside the rectangle, more precisely, one pixel above it.
 
-#### Play a sound when there is collision
+#### Playing a sound when there is collision
 Lastly, we want our game to play a sound when a collision occurs. To implement that, firstly create a folder named ```res``` in the same directory of ```race.ceu``` and download the sound from [pico-Céu repository](/res) to that folder.
 
 > Since we now have more than one file in our example, we can create a folder to hold them. Rename the ```race.ceu``` file to ```main.ceu``` so that you can drag and drop the entire folder to compile. Dragging and dropping the ```main.ceu``` also works.
