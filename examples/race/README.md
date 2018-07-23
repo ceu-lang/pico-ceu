@@ -36,6 +36,8 @@ This tutorial will explain how to develop a game using pico-Céu environment. Th
 15. Emitting the decreaseLife event
 16. Awaiting the gameOver event
 17. Emitting the Game over message
+    - Using GRAPHICS_SET_SCALE to stretch the Game over message
+    - Changing the font of the Game over message
 18. Awaiting a key press
 19. Restarting the application
 
@@ -833,6 +835,59 @@ Before drawing the text, we need to clean the window (line 12), and set the text
 
 Now, the application will emit a game over message before finalize. We added the last line ( ```await 2s;```) so that the user can have time to see the text before the application ends.
 
+![](images/gameover-1.png)
+
+### Changing the font of the Game over message
+Let's change the message font to FreeSants.tff. Download the font from the [pico-Céu repository](/res) and create a folder named ```res``` in the same directory of ```race.ceu```.
+
+> Since now we have more than one file in our example, we can create a folder to hold them. Next, rename the ```race.ceu``` file to ```main.ceu``` so that you can drag and drop the entire folder to compile. Drag and drop the ```main.ceu``` file also works.
+
+```c#
+//GAME OVER
+emit WINDOW_CLEAR();
+emit WINDOW_SET_SIZE(190*5, 120*5, 190, 120);
+emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
+
+emit GRAPHICS_SET_FONT("res/FreeSans.ttf", 15);
+
+emit GRAPHICS_DRAW_TEXT(0, 20, "Game Over");
+emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
+await 2s;
+```
+
+On the above code, we used ```GRAPHICS_SET_FONT``` to load the font passing its file path through the first parameter and the height of the new font in pixels through the second.
+
+![](images/gameover-2.png)
+
+### Using GRAPHICS_SET_SCALE to stretch the Game over message
+We use the ```GRAPHICS_SET_SCALE``` to produce an old game style in the message. First, we stretch the "Game Over" text vertically, and the "Press any key to restart" horizontally. On the last line, we defined the scale back to its default values.
+
+```c#
+//GAME OVER
+emit WINDOW_CLEAR();
+emit WINDOW_SET_SIZE(190*5, 120*5, 190, 120);
+emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
+
+emit GRAPHICS_SET_FONT("res/FreeSans.ttf", 15);
+
+emit GRAPHICS_SET_SCALE(1.0, 2.0);
+emit GRAPHICS_DRAW_TEXT(0, 20, "Game Over");
+
+emit GRAPHICS_SET_SCALE(1.0, 0.6);
+emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
+
+emit GRAPHICS_SET_SCALE(1.0, 1.0);
+```
+
+The ```GRAPHICS_SET_SCALE``` receives as parameters the new horizontal and vertical scale. On line 9, we double the horizontal scale, producing a horizontal stretch effect. On line 12, we do a similar thing, but decreasing the vertical scale, what produces a vertical stretch effect.
+
+![](images/gameover-3.png)
+
+> The ```GRAPHICS_SET_SCALE``` also can be used to change the scale of others subsequent drawing operations, not only the ```GRAPHICS_DRAW_TEXT```: ```GRAPHICS_DRAW_BMP```, ```GRAPHICS_DRAW_RECT``` .
+
+
 ## Awaiting a key press
 Instead of waiting 2 seconds, we can await a key press. To do that, simply replace the  ```await 2s;``` with  ```await KEY_PRESS;```. Now, when the game over message is displayed, the user has to press a key to the game finalize.
 
@@ -878,8 +933,16 @@ loop do
     emit WINDOW_SET_SIZE(190*5, 120*5, 190, 120);
     emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
     emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
+
+    emit GRAPHICS_SET_FONT("res/FreeSans.ttf", 15);
+
+    emit GRAPHICS_SET_SCALE(1.0, 2.0);
     emit GRAPHICS_DRAW_TEXT(0, 20, "Game Over");
+
+    emit GRAPHICS_SET_SCALE(1.0, 0.6);
     emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
+
+    emit GRAPHICS_SET_SCALE(1.0, 1.0);
 
     //WAIT A KEY_PRESS TO RESTART
     await KEY_PRESS; 
