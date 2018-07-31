@@ -79,7 +79,6 @@ code/call Intersects (var Rect rct, var Point point) -> yes/no do
 end
 
 loop do
-    await KEY_PRESS;
     do
         var& LifeBar lifeBar = spawn LifeBar();
         var& Car car = spawn Car();
