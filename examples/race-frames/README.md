@@ -2,7 +2,7 @@
 
 In the tutorial [Developing a game with pico-Céu from scratch](../race), we created a game based on old race games, where the player movement a car to deflect obstacles. Now, we'll create the same game but using frames, instead of drawing and cleaning graphics by ourselves. This tutorial will explain step by step how to create the game, but it's good to read the other tutorial to better understand the benefits of frames.
 
-![race-frame game]("images/race-frame.gif")
+![race-frame game](images/race-frame.gif)
 
 Create an empty file, named ```raceframes.ceu``` and add the following code to define the title of the window, its size and if a visual grid delimiting the screen pixels will be displayed or not (change the parameter from ```no``` to ```yes``` and check the difference). 
 
