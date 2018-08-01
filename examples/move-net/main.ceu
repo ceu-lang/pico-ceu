@@ -129,13 +129,20 @@ with
             end
         end
 
-        {
-            //GENERATE A STRING TO SEND VIA BROADCAST
-            char *send = (char*)malloc(18 * sizeof(char));
-            sprintf(send, "%d,%d,%d,%d,%d", @INSTANCE, @nextX, @nextY, @currentX, @currentY);
-        }
+        //GENERATE A STRING TO SEND VIA BROADCAST
+        var[18] byte send;
+        call String_Append_INT(&send, INSTANCE, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, nextX, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, nextY, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, currentX, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, currentY, _);
+        call String_Append_STR(&send, "\0");
 
         //SEND A STRING VIA BROADCAST
-        emit NET_SEND(18, {send}); //0,-00,-00,-00,-00 + \0
+        emit NET_SEND(18, &&send[0]); //0,-00,-00,-00,-00 + \0
     end 
 end

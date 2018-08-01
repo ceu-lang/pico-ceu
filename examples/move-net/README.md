@@ -216,14 +216,21 @@ with
             end
         end
 
-        {
-            //GENERATE A STRING TO SEND VIA BROADCAST
-            char *send = (char*)malloc(18 * sizeof(char));
-            sprintf(send, "%d,%d,%d,%d,%d", @INSTANCE, @nextX, @nextY, @currentX, @currentY);
-        }
+        //GENERATE A STRING TO SEND VIA BROADCAST
+        var[18] byte send;
+        call String_Append_INT(&send, INSTANCE, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, nextX, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, nextY, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, currentX, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, currentY, _);
+        call String_Append_STR(&send, "\0");
 
         //SEND A STRING VIA BROADCAST
-        emit NET_SEND(18, {send}); //0,-00,-00,-00,-00 + \0
+        emit NET_SEND(18, &&send[0]); //0,-00,-00,-00,-00 + \0
     end 
 end
 ```
@@ -232,14 +239,9 @@ We renamed the variable ```x``` and ```y``` to ```currentX``` and ```currentY```
 
 Next, there is the definition of ```nextX``` and ```nextY```. That variables are responsable to store the updated position after a user click. Initialy (i.e. before the user clicks anything), the ```nextX``` and ```nextY``` are equal the ```currentX``` and ```currentY```.
 
-As sad before, this trails must react to keyboard clicks, so we included the "Move in four directions" section, but now its update the ```nextX``` and ```nextY``` variables.
+As said before, this trails must react to keyboard clicks, so we included the "Move in four directions" section, but now its update the ```nextX``` and ```nextY``` variables.
 
-Next, we created the message string and send it via ```NET_SEND```. The code between curly braces is native C code. Basically, in Céu anything defined between ```{``` and ```}``` is a normal C code and can access Céu variables via ```@``` operator. [Learn more about C integration in the manual](https://ceu-lang.github.io/ceu/out/manual/v0.30/statements/#c-integration).
-
-In the section "generate a string to send via broadcast", we create the string ```send```, allocating memory using ```malloc```. In a simple way, we have created a string that can store text containing up to 18 characters.
-
-Then, we populated this string using the variables ```INSTANCE```, ```nextX```, ```nextY```, ```currentX```, ```currentY``` with the ```@``` operator, since we are writing a C code and accessing Céu variables.
-The ```%d,%d,%d,%d,%d``` means that which variable will be located in one "%d", respectively, and all of them will be separated by a coma.
+Next, we created the message string and send it via ```NET_SEND```. In the section "generate a string to send via broadcast", we create a byte vector named ```send``` to store the string to be sent and appended the variables ```INSTANCE```, ```nextX```, ```nextY```, ```currentX```, ```currentY```, separated by a coma. 
 
 > The string must supports 18 character because:
 - the ```INSTANCE``` stores a integer that can assume the values 1 or 2. So, it only needs 1 character;
@@ -251,7 +253,13 @@ The ```%d,%d,%d,%d,%d``` means that which variable will be located in one "%d", 
 0,-00,-00,-00,-00 + \0
 ```
 
-Finally, we send the message via ```NET_SEND```. Since ```send``` is a C variable, we needed to use the curly braces.
+Finally, we send the message via ```NET_SEND```.
+
+To use the string functions we need to include the ```string.ceu``` library in the beginning of the file:
+
+```
+#include "string.ceu"
+```
 
 ## Receiving and handling a message
 In the code below, the first trail waits for a incoming message and stores it the ```buf``` variable. We want to iterate over the caracter of the received string and store each information in a variable (these variables are defined in lines 7 to 11).
