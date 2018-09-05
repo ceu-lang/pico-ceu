@@ -189,7 +189,7 @@ Windows-only for now.</p>
 </ul>
 </li>
 <li>
-<p>Example: </p>
+<p>Example:</p>
 </li>
 </ul>
 <pre><code class="ceu">spawn Usart(3);
@@ -201,7 +201,8 @@ await Usart_TX(&amp;str);
 
 </code></pre>
 
-<p>Create a string and send it via serial using <code>Usart_TX</code>. Check <a href="#https://ceu-lang.github.io/ceu/out/manual/v0.30/string/#string_append_str"><code>String_Append_STR</code></a> to learn more string manipulation in Céu.</p>
+<p>Create a string and send it via serial using <code>Usart_TX</code>.
+Check <a href="#https://ceu-lang.github.io/ceu/out/manual/v0.30/string/#string_append_str"><code>String_Append_STR</code></a> to learn more string manipulation in Céu.</p>
 <h2 id="receive">Receive<a class="headerlink" href="#receive" title="Permanent link">&para;</a></h2>
 <h3 id="usart_rx">Usart_RX<a class="headerlink" href="#usart_rx" title="Permanent link">&para;</a></h3>
 <pre><code class="ceu">code/await Usart_RX (var&amp;[] byte str, var int nbChar) -&gt; none do
@@ -227,7 +228,7 @@ String_Print(&amp;buffer);
 
 </code></pre>
 
-<p>Receive a string of size 5 from serial port, counting the <code>0</code>.</p>
+<p>Receive a string of size 5 from serial port, counting the <code>\0</code>.</p>
               
             </div>
           </div>
@@ -280,5 +281,5 @@ String_Print(&amp;buffer);
 
 <!--
 MkDocs version : 1.0.3
-Build Date UTC : 2018-09-05 01:45:45
+Build Date UTC : 2018-09-05 02:07:57
 -->
