@@ -87,6 +87,10 @@
     
         <ul>
         
+            <li><a class="toctree-l3" href="#includes">Includes</a></li>
+        
+            <li><a class="toctree-l3" href="#initiate">Initiate</a></li>
+        
             <li><a class="toctree-l3" href="#send">Send</a></li>
         
             <li><a class="toctree-l3" href="#receive">Receive</a></li>
@@ -145,36 +149,85 @@
             <div class="section">
               
                 <h1 id="usart">Usart<a class="headerlink" href="#usart" title="Permanent link">&para;</a></h1>
+<p>A pico-Céu library to send and receive data using USART (Universal Synchronous and Asynchronous Receiver-Transmitter).
+Windows-only for now.</p>
+<h2 id="includes">Includes<a class="headerlink" href="#includes" title="Permanent link">&para;</a></h2>
+<pre><code class="c#">#include &quot;usart.ceu&quot;
+</code></pre>
+
+<h2 id="initiate">Initiate<a class="headerlink" href="#initiate" title="Permanent link">&para;</a></h2>
+<pre><code class="ceu">code/await Usart (var int portNumber) -&gt; NEVER do
+</code></pre>
+
+<ul>
+<li>
+<p>Parameters:</p>
+<ul>
+<li><code>var int</code>: Serial port number to use.</li>
+</ul>
+</li>
+<li>
+<p>Example:</p>
+</li>
+</ul>
+<pre><code class="ceu">spawn Usart(3);
+
+</code></pre>
+
+<p>Specify that we'll use the COM3 port.</p>
 <h2 id="send">Send<a class="headerlink" href="#send" title="Permanent link">&para;</a></h2>
-<h3 id="net_send">NET_SEND<a class="headerlink" href="#net_send" title="Permanent link">&para;</a></h3>
-<p>Broadcasts a message to all peers.</p>
-<pre><code class="ceu">output (integer,byte&amp;&amp;) NET_SEND;
+<h3 id="usart_tx">Usart_TX<a class="headerlink" href="#usart_tx" title="Permanent link">&para;</a></h3>
+<p>Send a byte vector via serial.</p>
+<pre><code class="ceu">code/await Usart_TX (var&amp;[] byte str) -&gt; none do
 </code></pre>
 
 <ul>
-<li>Parameters:<ul>
-<li><code>integer</code>: number of bytes to transmit</li>
-<li><code>byte&amp;&amp;</code>: stream of bytes</li>
+<li>
+<p>Parameters:</p>
+<ul>
+<li><code>var&amp;[] byte</code>: the byte vector to send.</li>
 </ul>
 </li>
+<li>
+<p>Example: </p>
+</li>
 </ul>
+<pre><code class="ceu">spawn Usart(3);
+
+var[5] byte str;
+call String_Append_STR(&amp;str, &quot;send&quot;);
+
+await Usart_TX(&amp;str);
+
+</code></pre>
+
+<p>Create a string and send it via serial using <code>Usart_TX</code>. Check <a href="#https://ceu-lang.github.io/ceu/out/manual/v0.30/string/#string_append_str"><code>String_Append_STR</code></a> to learn more string manipulation in Céu.</p>
 <h2 id="receive">Receive<a class="headerlink" href="#receive" title="Permanent link">&para;</a></h2>
-<h3 id="net_receive">NET_RECEIVE<a class="headerlink" href="#net_receive" title="Permanent link">&para;</a></h3>
-<p>Receives all messages from all peers, including itself.</p>
-<pre><code class="ceu">input (integer,byte&amp;&amp;) NET_RECEIVE;
+<h3 id="usart_rx">Usart_RX<a class="headerlink" href="#usart_rx" title="Permanent link">&para;</a></h3>
+<pre><code class="ceu">code/await Usart_RX (var&amp;[] byte str, var int nbChar) -&gt; none do
 </code></pre>
 
 <ul>
-<li>Occurrences:<ul>
-<li>on every received message</li>
+<li>
+<p>Payload:</p>
+<ul>
+<li><code>var&amp;[] byte</code>: byte vector to store the received data</li>
+<li><code>var int</code>: number of bytes to read</li>
 </ul>
 </li>
-<li>Payload:<ul>
-<li><code>integer</code>: number of received bytes</li>
-<li><code>byte&amp;&amp;</code>: stream of bytes</li>
-</ul>
+<li>
+<p>Example: </p>
 </li>
 </ul>
+<pre><code class="ceu">spawn Usart(3);
+
+var[5] byte buffer;
+await Usart_RX(&amp;buffer, 5);
+String_Print(&amp;buffer);
+
+</code></pre>
+
+<p>Receive a string of size 5 from serial port, counting the <code>0</code>.</p>
               
             </div>
           </div>
@@ -227,5 +280,5 @@
 
 <!--
 MkDocs version : 1.0.3
-Build Date UTC : 2018-09-04 22:24:40
+Build Date UTC : 2018-09-05 01:45:45
 -->
