@@ -6,7 +6,7 @@ Windows-only for now.
 ## Includes
 
 ```c#
-#include "usart.ceu"
+ #include "usart.ceu"
 ```
 
 ## Initiate
