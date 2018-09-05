@@ -7,9 +7,17 @@ The Reference Manual of pico-Céu uses MkDocs:
 ## Installing Dependencies
 
 ```
+sudo apt install fonts-lmodern
+sudo apt install lmodern
+sudo apt install pandoc
+sudo apt install texlive-base
+sudo apt install texlive-latex-extra
+sudo apt install texlive-fonts-recommended
+sudo apt install texlive-latex-recommended
+
 sudo apt install python-pip
-pip install mkdocs
-pip install pandoc
+
+pip install markdown
 pip install markdown-include
 pip install mkdocs-pandoc
 ```
@@ -34,3 +42,7 @@ make VERSION=v0.40
 ```
 
 mkdocs and pandoc will create the finals pdf and markdown at ```docs/manual/v[VERSION]/```. The html will be created at ```docs/out/v[VERSION]/```. This folder should store all versions of the reference manual, and its content will automatically be displayed on the reference manual website (if at master branch). Also in the Makefile, the ```docs/manual/index.md``` is converted to ```docs/out/index.html```.
+
+## Links
+- [ImportError: Failed loading extension 'markdown_include' from 'markdown_include', 'markdown.extensions.markdown_include' or 'mdx_markdown_include'](https://github.com/mkdocs/mkdocs/issues/777)
+- [mkdocs-pandoc](https://github.com/jgrassler/mkdocs-pandoc)
