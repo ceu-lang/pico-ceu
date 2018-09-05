@@ -13,17 +13,16 @@ ifeq ($(POSIX), true)
 endif
 
 ifndef CEU_SRC_DIR
-	#if didn't execute from bat file	
-      CEU_SRC_DIR = $(dir $(CEU_SRC_))
-
-	ifdef CEU_SRC
-		CEU_SRC_ = $(CEU_SRC)
-	ifneq ("$(wildcard $(CEU_SRC)/main.ceu)","")
-		CEU_SRC_ = $(CEU_SRC)/main.ceu
-	endif
-	else
-	$(error missing `CEU_SRC` path to compile)
-	endif     
+#if didn't execute from bat file	
+CEU_SRC_DIR = $(dir $(CEU_SRC_))
+ifdef CEU_SRC
+CEU_SRC_ = $(CEU_SRC)
+ifneq ("$(wildcard $(CEU_SRC)/main.ceu)","")
+CEU_SRC_ = $(CEU_SRC)/main.ceu
+endif
+else
+$(error missing `CEU_SRC` path to compile)
+endif     
 endif
 
 all:
