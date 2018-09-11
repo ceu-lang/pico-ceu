@@ -1,1 +1,4 @@
 .*.swp
+examples/tmp.exe
+examples/res/tiny.ttf
+Makefile.dirs
