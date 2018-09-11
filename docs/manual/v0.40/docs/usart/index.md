@@ -11,7 +11,7 @@ Windows-only for now.
 
 ## Initiate
 ```ceu
-code/await Usart (var int portNumber) -> NEVER do
+code/await Usart (var int portNumber) -> NEVER
 ```
 
 - Parameters:
@@ -32,7 +32,7 @@ Specify that we'll use the COM3 port.
 Send a byte vector via serial.
 
 ```ceu
-code/await Usart_TX (var&[] byte str) -> none do
+code/await Usart_TX (var&[] byte str) -> none
 ```
 
 - Parameters:
@@ -57,7 +57,7 @@ Check [`String_Append_STR`](#https://ceu-lang.github.io/ceu/out/manual/v0.30/str
 ### Usart_RX
 
 ```ceu
-code/await Usart_RX (var&[] byte str, var int nbChar) -> none do
+code/await Usart_RX (var&[] byte str, var int nbChar) -> none
 ```
 - Payload:
     - `var&[] byte`: byte vector to store the received data
