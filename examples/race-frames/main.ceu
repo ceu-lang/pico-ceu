@@ -1,0 +1,120 @@
+emit WINDOW_SET_TITLE("Race game using frames");
+emit WINDOW_SET_SIZE(40*20, 40*20, 40, 40);
+emit WINDOW_SET_GRID(no);
+emit FRAMES_SET(yes);
+
+code/await LifeBar(none) -> (event none decreaseLife, var integer life) -> NEVER do
+    life = 5;
+
+    par/or do
+        loop do
+            await decreaseLife;
+            life = life - 1;
+        end
+    with
+        every FRAMES_REDRAW do
+            emit GRAPHICS_SET_ANCHOR(HANCHOR_LEFT, VANCHOR_TOP);
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);
+            emit GRAPHICS_DRAW_RECT(-20, 20, life, 1); 
+        end
+    end
+end
+
+code/await Car(none) -> (var Rect rct) -> NEVER do
+    rct = val Rect(0, -18, 3, 6);
+
+    par do
+        var integer key = _;
+        every key in KEY_PRESS do
+            if key == KEY_LEFT then
+                if (rct.x > -19) then
+                    rct.x = rct.x - 1;
+                end
+            else/if key == KEY_RIGHT then
+                if (rct.x < 18) then
+                    rct.x = rct.x + 1;         
+                end
+            end        
+        end
+    with
+        every FRAMES_REDRAW do
+            emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_BOTTOM);
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+            emit GRAPHICS_DRAW_RECT(rct.x, rct.y, rct.w, rct.h);      
+        end
+    end    
+end
+
+code/await Obstacle(none) -> (var Point pt, event none collided) -> none do
+    pt = val Point({rand()%40 - 20}, 19);
+    
+    par/or do
+        var real y = pt.y;
+
+        var integer dt;
+        every dt in FRAMES_UPDATE do
+            var real v = dt * -5.5;
+            y = y + v/1000;
+            pt.y = y as integer;
+            
+            if (pt.y <= -19) then
+                escape;
+            end
+        end
+    with
+        every FRAMES_REDRAW do
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_RED);
+            emit GRAPHICS_DRAW_PIXEL(pt.x, pt.y);
+        end
+    with
+        await collided;
+    end
+end
+
+code/call Intersects (var Rect rct, var Point point) -> yes/no do
+    escape point.x <= rct.x + 1 and
+           point.x >= rct.x - 1 and
+           point.y <= rct.y + rct.h - 1 and
+           point.y >= rct.y - 1;
+end
+
+loop do
+    do
+        var& LifeBar lifeBar = spawn LifeBar();
+        var& Car car = spawn Car();
+
+        pool[] Obstacle obstacles;
+        par/or do
+            every 1s do
+                spawn Obstacle() in obstacles;
+            end
+        with
+            every FRAMES_UPDATE do
+                var&? Obstacle obstacle;  
+                loop obstacle in obstacles do
+                    if (call Intersects(car.rct, obstacle!.pt)) then
+                        emit lifeBar.decreaseLife;
+                        emit obstacle!.collided;
+                    end
+                end
+            end
+        with
+            every FRAMES_UPDATE do
+                if (lifeBar.life == 0) then
+                    break;
+                end                
+            end
+        end
+    end
+
+    //GAME OVER MESSAGE
+    emit FRAMES_SET(no);
+    emit WINDOW_SET_SIZE(190*5, 120*5, 190, 120);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);
+    emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
+    emit GRAPHICS_DRAW_TEXT(0, 20, "Game Over");
+    emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
+    await KEY_PRESS;
+    emit WINDOW_SET_SIZE(40*20, 40*20, 40, 40);
+    emit FRAMES_SET(yes);
+end

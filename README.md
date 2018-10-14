@@ -75,11 +75,29 @@ end         // ...and terminates when they both terminate (par/and)
 # Installation
 
 ## Windows
+<https://github.com/ceu-lang/ceu-maker>
 
-<https://github.com/ceu-lang/pico-ceu/tree/master/windows>
+## Linux
+### Install Céu:
+[https://github.com/ceu-lang/ceu/](https://github.com/ceu-lang/ceu/)
+
+### Install Céu-SDL:
+[https://github.com/ceu-lang/ceu-sdl/](https://github.com/ceu-lang/ceu-sdl/)
+
+### Compile and Run
+Edit `Makefile.dirs` to point to your `ceu` and `ceu-sdl` directories. To compile and run an application, run `make` and set `CEU_SRC`:
+```
+$ make CEU_SRC=<path-to-pico-ceu-application>
+```
+If necessary, configure the variables in the `Makefile`.
+
+Examples
+========
+
+The `samples/` directory contains a number of examples.
 
 # Documentation
 
 ## API Manual:
 
-<https://ceu-lang.github.io/pico-ceu/out/manual/v0.30/>
+<https://fsantanna.github.io/pico-ceu/out/manual/v0.30/>

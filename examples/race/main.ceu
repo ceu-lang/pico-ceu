@@ -1,0 +1,148 @@
+emit SOUND_SET_VOLUME(80);
+emit WINDOW_SET_TITLE("Race game");
+emit WINDOW_SET_GRID(no);
+emit WINDOW_SET_CLEAR_COLOR_NAME(COLOR_GRAY);
+emit WINDOW_CLEAR();
+
+code/await LifeBar(none) -> (event none decreaseLife, event none gameOver) -> NEVER do
+    var integer maxLife = 5;
+    var integer life = maxLife;
+
+    loop do
+        //ANCHOR
+        emit GRAPHICS_SET_ANCHOR(HANCHOR_LEFT, VANCHOR_TOP);
+
+        //CLEAN
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_GRAY);
+        emit GRAPHICS_DRAW_RECT(-20, 20, maxLife, 1);
+
+        //REDRAW
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);
+        emit GRAPHICS_DRAW_RECT(-20, 20, life, 1);
+
+        await decreaseLife;
+        life = life - 1;
+
+        if (life <= 0) then
+            emit gameOver;
+        end
+    end
+
+end
+
+code/await Car(none) -> (var integer top, var integer bottom, var integer left, var integer right) -> NEVER do
+    var integer x =   0;
+    var integer y = -18;
+
+    var integer w =   3;
+    var integer h =   6;
+
+    //DIMENTIONS DEFAULT VALUES
+    bottom = y;
+    top    = y + h - 1;
+    left   = x - 1;
+    right  = x + 1;
+
+    //INITIAL DRAW
+    emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_BOTTOM);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+    emit GRAPHICS_DRAW_RECT(x, y, w, h);    
+
+    var integer key = _;
+
+    every key in KEY_PRESS do
+        //CLEAN
+        emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_BOTTOM);
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_GRAY);
+        emit GRAPHICS_DRAW_RECT(x, y, w, h);
+
+        //UPDATE
+        if key == KEY_LEFT then
+            if (x > -19) then
+                x      = x - 1;
+                left   = x - 1;
+                right  = x + 1;
+            end
+        else/if key == KEY_RIGHT then
+            if (x < 18) then
+                x      = x + 1;
+                left   = x - 1;
+                right  = x + 1;                
+            end
+        end        
+
+        //DRAW
+        emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_BOTTOM);
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+        emit GRAPHICS_DRAW_RECT(x, y, w, h);
+    end
+end
+
+loop do
+    emit WINDOW_SET_SIZE(40*20, 40*20, 40, 40);
+
+    var& LifeBar lifeBar = spawn LifeBar();
+    var& Car car = spawn Car();
+
+    code/await Pixel(none) -> none do
+        var integer y = 19;
+        var integer x = {rand()%40 - 20};
+
+        every 150ms do
+            
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_GRAY);
+            emit GRAPHICS_DRAW_PIXEL(x, y);
+            //updating the y postion
+            if (y > -19) then
+                y = y - 1;
+            else
+                break;
+            end
+
+            //CHECK COLLISION
+            if ( (y <= outer.car.top) and (y >= (outer.car.bottom-1)) and x <= outer.car.right and x >= outer.car.left) then
+                emit outer.lifeBar.decreaseLife;
+
+                emit SOUND_PLAY("res/click1.wav");
+
+                if (y < outer.car.top) then
+                    emit GRAPHICS_SET_COLOR_NAME(COLOR_BLUE);
+                    emit GRAPHICS_DRAW_PIXEL(x, y+1);       
+                end
+                break;
+            else
+                //drawing a new pixel with updated y position
+                emit GRAPHICS_SET_COLOR_NAME(COLOR_RED);
+                emit GRAPHICS_DRAW_PIXEL(x, y);
+            end
+        end
+    end
+
+    par/or do
+        pool[] Pixel pixels;
+
+        every 1s do
+            spawn Pixel() in pixels;
+        end
+    with
+        await lifeBar.gameOver;
+    end
+
+    //GAME OVER
+    emit WINDOW_CLEAR();
+    emit WINDOW_SET_SIZE(190*5, 120*5, 190, 120);
+    emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+    emit GRAPHICS_SET_ANCHOR(HANCHOR_CENTER, VANCHOR_CENTER);
+
+    emit GRAPHICS_SET_FONT("res/FreeSans.ttf", 15);
+
+    emit GRAPHICS_SET_SCALE(1.0, 2.0);
+    emit GRAPHICS_DRAW_TEXT(0, 20, "Game Over");
+
+    emit GRAPHICS_SET_SCALE(1.0, 0.6);
+    emit GRAPHICS_DRAW_TEXT(0, 0, "Press any key to restart");
+
+    emit GRAPHICS_SET_SCALE(1.0, 1.0);
+    //WAIT A KEY_PRESS TO RESTART
+    await KEY_PRESS; 
+end

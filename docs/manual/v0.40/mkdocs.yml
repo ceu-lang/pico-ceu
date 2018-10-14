@@ -1,0 +1,22 @@
+site_name: pico-Céu v0.40 - Reference Manual
+theme:     readthedocs
+#site_dir:  site/v0.40
+
+markdown_extensions:
+    - markdown_include.include:
+        base_path: docs
+    - toc:
+        permalink: True
+    #- codehilite(linenums=true)
+
+pages:
+    - Introduction:         'index.md'
+    - Resources:            'resource/index.md'
+    - Graphics:             'graphics/index.md'
+    - Input Devices:        'input/index.md'
+    - Sound:                'sound/index.md'
+    - Network:              'net/index.md'
+    - Usart:                'usart/index.md'
+    - Frame Management:     'frames/index.md'
+    - Window Management:    'window/index.md'
+    - License:              'license.md'

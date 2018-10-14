@@ -1,0 +1,86 @@
+native/pre do
+    ##include <windows.h>
+
+    HANDLE hSerial;
+end 
+    
+code/await Usart (var int portNumber) -> NEVER do
+    {
+        char portStr[15];
+
+        if (@portNumber > 9){
+            sprintf(portStr, "\\\\.\\COM%d", @portNumber);
+        }else{
+            sprintf(portStr, "COM%d", @portNumber);
+        }
+
+        // OPEN
+        hSerial = CreateFile(portStr,
+                GENERIC_READ | GENERIC_WRITE,
+                0,
+                NULL,
+                OPEN_EXISTING,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL);
+
+        //To-Do check when this error occurs
+        ceu_assert(hSerial != INVALID_HANDLE_VALUE, "bug found. Check if the Arduino board is connect on the used port and if this port is busy.");
+
+        DCB dcbSerialParams = {0};
+        ceu_assert(GetCommState(hSerial,&dcbSerialParams), "bug found in Usart on GetCommState invocation");
+
+        dcbSerialParams.BaudRate    = CBR_9600;
+        dcbSerialParams.ByteSize    = 8;
+        dcbSerialParams.StopBits    = ONESTOPBIT;
+        dcbSerialParams.Parity      = NOPARITY;
+        dcbSerialParams.fDtrControl = DTR_CONTROL_ENABLE;
+        ceu_assert(SetCommState(hSerial, &dcbSerialParams), "bug found in Usart on SetCommState invocation");
+
+        PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
+    } 
+
+    do finalize with
+        {CloseHandle(hSerial);}
+    end
+    await FOREVER;
+end
+
+code/await Usart_TX (var&[] byte str) -> none do
+    // WRITE
+    // envia a string "str"
+    // @&&str[0] as _char&& converte de um vetor de bytes em Céu para um ponteiro de char em C
+    {
+        const char* strC = @&&str[0] as _char&&;
+        int nbChar = strlen(strC);
+        DWORD bytesSend;
+
+        ceu_assert(WriteFile(hSerial, (void*)strC, nbChar, &bytesSend, 0), "bug found in Usart_TX on WriteFile invocation");
+        ceu_assert(bytesSend == nbChar, "bug found in Usart_TX on bytesSend verification");
+    }
+end
+
+code/await Usart_RX (var&[] byte str, var int nbChar) -> none do
+    // READ
+    // prints out the received string
+
+    every 10ms do
+        {
+            DWORD errors;
+            COMSTAT status;
+
+            ClearCommError(hSerial, &errors, &status);
+            if (status.cbInQue >= @nbChar)
+                break;
+        }
+    end
+
+    {
+        DWORD bytesRead;
+        char buffer[@nbChar];
+
+        const char* strC = @&&str[0] as _char&&;
+
+        ceu_assert(ReadFile(hSerial, strC, @nbChar, &bytesRead, NULL), "bug found");
+        ceu_assert(bytesRead == @nbChar, "bug found");
+    }
+end

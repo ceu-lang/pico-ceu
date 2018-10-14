@@ -98,6 +98,67 @@ output (int,byte&&)      SERIAL_SEND;
 #define NET_SET_UDP_PORT_RECV 2000
 #endif
 
+native/pre do
+    ##define ceu_callback_output_WINDOW_SET_TITLE(ps,trace) SDL_SetWindowTitle(WIN, *((char**)ps))
+    ##define ceu_callback_output_WINDOW_SET_SIZE(ps,trace) ceu_pico_callback_output_WINDOW_SET_SIZE(ps,trace)
+    ##define ceu_callback_output_WINDOW_SET_CLEAR_COLOR_RGB(ps,trace) ceu_pico_callback_output_WINDOW_SET_CLEAR_COLOR_RGB(ps,trace)
+    ##define ceu_callback_output_WINDOW_SET_CLEAR_COLOR_NAME(ps,trace) ceu_pico_callback_output_WINDOW_SET_CLEAR_COLOR_NAME(ps,trace)
+    ##define ceu_callback_output_WINDOW_SET_GRID(ps,trace) ceu_pico_callback_output_WINDOW_SET_GRID(ps,trace)
+    ##define ceu_callback_output_WINDOW_CLEAR(ps,trace) ceu_pico_callback_output_WINDOW_CLEAR(ps,trace)
+    ##define ceu_callback_output_FRAMES_SET(ps,trace) ceu_pico_callback_output_FRAMES_SET(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SET_ANCHOR(ps,trace) ceu_pico_callback_output_GRAPHICS_SET_ANCHOR(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SET_BMP_FRAME(ps,trace) ceu_pico_callback_output_GRAPHICS_SET_BMP_FRAME(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SET_BMP_SIZE(ps,trace) ceu_pico_callback_output_GRAPHICS_SET_BMP_SIZE(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SET_COLOR_RGB(ps,trace) ceu_pico_callback_output_GRAPHICS_SET_COLOR_RGB(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SET_COLOR_NAME(ps,trace) ceu_pico_callback_output_GRAPHICS_SET_COLOR_NAME(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SET_FONT(ps,trace) ceu_pico_callback_output_GRAPHICS_SET_FONT(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SET_SCALE(ps,trace) ceu_pico_callback_output_GRAPHICS_SET_SCALE(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SET_WRITE_CURSOR(ps,trace) ceu_pico_callback_output_GRAPHICS_SET_WRITE_CURSOR(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_SCREENSHOT(ps,trace) ceu_pico_callback_output_GRAPHICS_SCREENSHOT(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_DRAW_PIXEL(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_PIXEL(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_DRAW_LINE(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_LINE(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_DRAW_RECT(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_RECT(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_DRAW_BMP(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_BMP(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_DRAW_TEXT(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_TEXT(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_WRITE(ps,trace) ceu_pico_callback_output_GRAPHICS_WRITE(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_WRITELN(ps,trace) ceu_pico_callback_output_GRAPHICS_WRITELN(ps,trace)
+    ##define ceu_callback_output_SOUND_SET_VOLUME(ps,trace) ceu_pico_callback_output_SOUND_SET_VOLUME(ps,trace)
+    ##define ceu_callback_output_SOUND_PLAY(ps,trace) ceu_pico_callback_output_SOUND_PLAY(ps,trace)
+    ##define ceu_callback_output_NET_SEND(ps,trace) ceu_pico_callback_output_NET_SEND(ps,trace)
+
+    int ceu_pico_callback_output_WINDOW_SET_SIZE (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_WINDOW_SET_CLEAR_COLOR_RGB (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_WINDOW_SET_CLEAR_COLOR_NAME (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_WINDOW_SET_GRID (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_WINDOW_CLEAR (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_WINDOW_CLEAR (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_WINDOW_CLEAR (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_WINDOW_CLEAR (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_ANCHOR (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_BMP_FRAME (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_BMP_SIZE (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_COLOR_RGB (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_COLOR_RGB (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_COLOR_NAME (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_COLOR_NAME (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_FONT (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_FONT (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_SCALE (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SET_WRITE_CURSOR (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_SCREENSHOT (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_DRAW_PIXEL (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_DRAW_LINE (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_DRAW_RECT (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_DRAW_BMP (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_DRAW_TEXT (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_WRITE (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_WRITELN (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_SOUND_SET_VOLUME (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_SOUND_PLAY (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_NET_SEND (void* ps, tceu_trace trace);
+    //int ceu_pico_callback_output_WINDOW_SET_FULLSCREEN (void* ps, tceu_trace trace);
+end
+
 native/pos do
     SDL_Window*   WIN;
     #define REN (SDL_GetRenderer(WIN))
@@ -191,437 +252,425 @@ native/pos do
         Mix_FreeChunk(SOUND_VEC[channel]);
     }
 
-    int ceu_callback_sdl_pico (int cmd, tceu_callback_val p1, tceu_callback_val p2, tceu_trace trace)
-    {
-        switch (cmd) {
-            case CEU_CALLBACK_OUTPUT:
-                switch (p1.num) {
-                    case CEU_OUTPUT_WINDOW_SET_TITLE: {
-                        char** title = (char**) p2.ptr;
-                        SDL_SetWindowTitle(WIN, *title);
-                        break;
-                    }
-                    case CEU_OUTPUT_WINDOW_SET_SIZE: {
-                        tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) p2.ptr;
-                        int win_w = ps->_1;
-                        int win_h = ps->_2;
-                        int log_w = ps->_3;
-                        int log_h = ps->_4;
-                        ceu_assert_ex(win_w%log_w == 0, "invalid dimensions", trace);
-                        ceu_assert_ex(win_h%log_h == 0, "invalid dimensions", trace);
+    int ceu_pico_callback_output_WINDOW_SET_SIZE (void* ps, tceu_trace trace) {
+        tceu_output_WINDOW_SET_SIZE* ps_ = (tceu_output_WINDOW_SET_SIZE*) ps;
+        int win_w = ps_->_1;
+        int win_h = ps_->_2;
+        int log_w = ps_->_3;
+        int log_h = ps_->_4;
+        ceu_assert_ex(win_w%log_w == 0, "invalid dimensions", trace);
+        ceu_assert_ex(win_h%log_h == 0, "invalid dimensions", trace);
 
-                        SDL_SetWindowSize(WIN, win_w, win_h);
-                        SDL_RenderSetLogicalSize(REN, log_w, log_h);
-                        LOG_W = log_w;
-                        LOG_H = log_h;
+        SDL_SetWindowSize(WIN, win_w, win_h);
+        SDL_RenderSetLogicalSize(REN, log_w, log_h);
+        LOG_W = log_w;
+        LOG_H = log_h;
 #if 1
-                        // TODO: w/o delay, set_size + clear doesn't work
-                        SDL_Delay(500);
+        // TODO: w/o delay, set_size + clear doesn't work
+        SDL_Delay(500);
 #endif
 
-                        if (!(win_w/log_w>1 && win_h/log_h>1)) {
-                            WINDOW_SET_GRID = 0;
-                        }
+        if (!(win_w/log_w>1 && win_h/log_h>1)) {
+            WINDOW_SET_GRID = 0;
+        }
 
-                        { // clears the window
-                            p1.num = CEU_OUTPUT_WINDOW_CLEAR;
-                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, trace);
-                        }
+        ceu_pico_callback_output_WINDOW_CLEAR(ps, trace);
 
-                        break;
-                    }
-                    case CEU_OUTPUT_WINDOW_SET_CLEAR_COLOR_RGB: {
-                        tceu_output_WINDOW_SET_CLEAR_COLOR_RGB* clr = (tceu_output_WINDOW_SET_CLEAR_COLOR_RGB*) p2.ptr;
-                        WINDOW_SET_CLEAR_COLOR_RGB.r = clr->_1;
-                        WINDOW_SET_CLEAR_COLOR_RGB.g = clr->_2;
-                        WINDOW_SET_CLEAR_COLOR_RGB.b = clr->_3;
-                        WINDOW_SET_CLEAR_COLOR_RGB.a = 0xFF;
-                        break;
-                    }
-                    case CEU_OUTPUT_WINDOW_SET_CLEAR_COLOR_NAME: {
-                        tceu_data_Color* clr = (tceu_data_Color*) p2.ptr;
-                        WINDOW_SET_CLEAR_COLOR_RGB.r = clr->r;
-                        WINDOW_SET_CLEAR_COLOR_RGB.g = clr->g;
-                        WINDOW_SET_CLEAR_COLOR_RGB.b = clr->b;
-                        WINDOW_SET_CLEAR_COLOR_RGB.a = 0xFF;
-                        break;
-                    }
-#if 0
-                    case CEU_OUTPUT_WINDOW_SET_FULLSCREEN: {
-                        bool* full = (bool*) p2.ptr;
-                        SDL_SetWindowFullscreen(WIN, (full ? SDL_WINDOW_FULLSCREEN : 0));
-                        {
-                            int win_w, win_h;
-                            int log_w, log_h;
-                            tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) p2.ptr;
-                            SDL_GetWindowSize(WIN, &win_w, &win_h);
-                            SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
-                            p1.num = CEU_OUTPUT_WINDOW_SET_SIZE;
-                            ps->_1 = win_w;
-                            ps->_2 = win_h;
-                            ps->_3 = log_w;
-                            ps->_4 = log_h;
-                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2);
-                        }
-                        break;
-                    }
-#endif
-                    case CEU_OUTPUT_WINDOW_SET_GRID: {
-                        bool* on = (bool*) p2.ptr;
-                        WINDOW_SET_GRID = *on;
+        return 0;
+    }
 
-                        int win_w,win_h, log_w,log_h;
-                        SDL_GetWindowSize(WIN, &win_w, &win_h);
-                        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
-                        ceu_assert_ex(win_w/log_w>1 && win_h/log_h>1, "invalid dimensions", trace);
+    int ceu_pico_callback_output_WINDOW_SET_CLEAR_COLOR_RGB (void* ps, tceu_trace trace) {
+        tceu_output_WINDOW_SET_CLEAR_COLOR_RGB* clr = (tceu_output_WINDOW_SET_CLEAR_COLOR_RGB*) ps;
+        WINDOW_SET_CLEAR_COLOR_RGB.r = clr->_1;
+        WINDOW_SET_CLEAR_COLOR_RGB.g = clr->_2;
+        WINDOW_SET_CLEAR_COLOR_RGB.b = clr->_3;
+        WINDOW_SET_CLEAR_COLOR_RGB.a = 0xFF;
+        return 0;
+    }
 
-                        { // clears the window
-                            p1.num = CEU_OUTPUT_WINDOW_CLEAR;
-                            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, trace);
-                        }
+    int ceu_pico_callback_output_WINDOW_SET_CLEAR_COLOR_NAME (void* ps, tceu_trace trace) {
+        tceu_data_Color* clr = (tceu_data_Color*) ps;
+        WINDOW_SET_CLEAR_COLOR_RGB.r = clr->r;
+        WINDOW_SET_CLEAR_COLOR_RGB.g = clr->g;
+        WINDOW_SET_CLEAR_COLOR_RGB.b = clr->b;
+        WINDOW_SET_CLEAR_COLOR_RGB.a = 0xFF;
+        return 0;
+    }
 
-                        break;
-                    }
+    int ceu_pico_callback_output_WINDOW_SET_GRID (void* ps, tceu_trace trace) {
+        bool* on = (bool*) ps;
+        WINDOW_SET_GRID = *on;
 
-                    case CEU_OUTPUT_WINDOW_CLEAR: {
-                        SDL_SetRenderDrawColor(REN,
-                                               WINDOW_SET_CLEAR_COLOR_RGB.r,
-                                               WINDOW_SET_CLEAR_COLOR_RGB.g,
-                                               WINDOW_SET_CLEAR_COLOR_RGB.b,
-                                               0xFF);
-                        SDL_RenderClear(REN);
-                        SDL_SetRenderDrawColor(REN,
-                                               GRAPHICS_SET_CLEAR_COLOR_RGB.r,
-                                               GRAPHICS_SET_CLEAR_COLOR_RGB.g,
-                                               GRAPHICS_SET_CLEAR_COLOR_RGB.b,
-                                               0xFF);
+        int win_w,win_h, log_w,log_h;
+        SDL_GetWindowSize(WIN, &win_w, &win_h);
+        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+        ceu_assert_ex(win_w/log_w>1 && win_h/log_h>1, "invalid dimensions", trace);
 
-                        if (GRAPHICS_SET_WRITE_CURSOR) {
-                            GRAPHICS_CUR_WRITE_CURSOR_X = GRAPHICS_SET_WRITE_CURSOR_X;
-                            GRAPHICS_CUR_WRITE_CURSOR_Y = GRAPHICS_SET_WRITE_CURSOR_Y;
-                        } else {
-                            GRAPHICS_CUR_WRITE_CURSOR_X = -LOG_W/2;
-                            GRAPHICS_CUR_WRITE_CURSOR_Y =  LOG_H/2;
-                        }
+        ceu_pico_callback_output_WINDOW_CLEAR(ps, trace);
 
-                        WINDOW_Present();
-                        break;
-                    }
+        return 0;
+    }
 
+    int ceu_pico_callback_output_WINDOW_CLEAR (void* ps, tceu_trace trace) {
+        SDL_SetRenderDrawColor(REN,
+                               WINDOW_SET_CLEAR_COLOR_RGB.r,
+                               WINDOW_SET_CLEAR_COLOR_RGB.g,
+                               WINDOW_SET_CLEAR_COLOR_RGB.b,
+                               0xFF);
+        SDL_RenderClear(REN);
+        SDL_SetRenderDrawColor(REN,
+                               GRAPHICS_SET_CLEAR_COLOR_RGB.r,
+                               GRAPHICS_SET_CLEAR_COLOR_RGB.g,
+                               GRAPHICS_SET_CLEAR_COLOR_RGB.b,
+                               0xFF);
 
-                    case CEU_OUTPUT_FRAMES_SET: {
-                        bool* on = (bool*) p2.ptr;
-                        FRAMES_SET = *on;
-                        break;
-                    }
+        if (GRAPHICS_SET_WRITE_CURSOR) {
+            GRAPHICS_CUR_WRITE_CURSOR_X = GRAPHICS_SET_WRITE_CURSOR_X;
+            GRAPHICS_CUR_WRITE_CURSOR_Y = GRAPHICS_SET_WRITE_CURSOR_Y;
+        } else {
+            GRAPHICS_CUR_WRITE_CURSOR_X = -LOG_W/2;
+            GRAPHICS_CUR_WRITE_CURSOR_Y =  LOG_H/2;
+        }
 
-                    case CEU_OUTPUT_GRAPHICS_SET_ANCHOR: {
-                        tceu_output_GRAPHICS_SET_ANCHOR* ps = (tceu_output_GRAPHICS_SET_ANCHOR*) p2.ptr;
-                        GRAPHICS_SET_ANCHOR_X = ps->_1;
-                        GRAPHICS_SET_ANCHOR_Y = ps->_2;
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_SET_BMP_FRAME: {
-                        tceu_output_GRAPHICS_SET_BMP_FRAME* ps = (tceu_output_GRAPHICS_SET_BMP_FRAME*) p2.ptr;
-                        ceu_assert_ex( ps->_1.is_set  &&  ps->_2.is_set ||
-                                    !ps->_1.is_set && !ps->_2.is_set, "invalid arguments", trace);
-                        GRAPHICS_SET_BMP_FRAME = ps->_1.is_set;
-                        if (GRAPHICS_SET_BMP_FRAME) {
-                            GRAPHICS_SET_BMP_FRAME_N   = ps->_1.value;
-                            GRAPHICS_SET_BMP_FRAME_DIV = ps->_2.value;
-                        } else {
-                            GRAPHICS_SET_BMP_FRAME_N   = 0;
-                            GRAPHICS_SET_BMP_FRAME_DIV = 1;
-                        }
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_SET_BMP_SIZE: {
-                        tceu_output_GRAPHICS_SET_BMP_SIZE* ps = (tceu_output_GRAPHICS_SET_BMP_SIZE*) p2.ptr;
-                        GRAPHICS_SET_BMP_SIZE = *ps;
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_SET_COLOR_RGB: {
-                        tceu_output_GRAPHICS_SET_COLOR_RGB* clr = (tceu_output_GRAPHICS_SET_COLOR_RGB*) p2.ptr;
-                        GRAPHICS_SET_CLEAR_COLOR_RGB.r = clr->_1;
-                        GRAPHICS_SET_CLEAR_COLOR_RGB.g = clr->_2;
-                        GRAPHICS_SET_CLEAR_COLOR_RGB.b = clr->_3;
-                        GRAPHICS_SET_CLEAR_COLOR_RGB.a = 0xFF;
-                        SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_SET_COLOR_NAME: {
-                        tceu_data_Color* clr = (tceu_data_Color*) p2.ptr;
-                        GRAPHICS_SET_CLEAR_COLOR_RGB.r = clr->r;
-                        GRAPHICS_SET_CLEAR_COLOR_RGB.g = clr->g;
-                        GRAPHICS_SET_CLEAR_COLOR_RGB.b = clr->b;
-                        GRAPHICS_SET_CLEAR_COLOR_RGB.a = 0xFF;
-                        SDL_SetRenderDrawColor(REN, clr->r, clr->g, clr->b, 0xFF);
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_SET_FONT: {
-                        tceu_output_GRAPHICS_SET_FONT* fnt = (tceu_output_GRAPHICS_SET_FONT*) p2.ptr;
-                        FNT_H = fnt->_2;
-                        if (FNT != NULL) {
-                            TTF_CloseFont(FNT);
-                        }
-                        FNT = TTF_OpenFont(fnt->_1, FNT_H);
-                        if (FNT == NULL) {
-                            char msg[255];
-                            snprintf(msg, 255, "file not found: \"%s\"", fnt->_1);
-                            ceu_assert_ex(0, msg, trace);
-                        }
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_SET_SCALE: {
-                        tceu_output_GRAPHICS_SET_SCALE* ps = (tceu_output_GRAPHICS_SET_SCALE*) p2.ptr;
-                        GRAPHICS_SET_SCALE_W = ps->_1;
-                        GRAPHICS_SET_SCALE_H = ps->_2;
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_SET_WRITE_CURSOR: {
-                        tceu_output_GRAPHICS_SET_WRITE_CURSOR* pt = (tceu_output_GRAPHICS_SET_WRITE_CURSOR*) p2.ptr;
+        WINDOW_Present();
+        return 0;
+    }
 
-                        GRAPHICS_SET_WRITE_CURSOR   = 1;
-                        GRAPHICS_SET_WRITE_CURSOR_X = pt->_1;
-                        GRAPHICS_SET_WRITE_CURSOR_Y = pt->_2;
+    int ceu_pico_callback_output_FRAMES_SET (void* ps, tceu_trace trace) {
+        bool* on = (bool*) ps;
+        FRAMES_SET = *on;
+        return 0;
+    }
 
-                        GRAPHICS_CUR_WRITE_CURSOR_X = pt->_1;
-                        GRAPHICS_CUR_WRITE_CURSOR_Y = pt->_2;
-                        break;
-                    }
+    int ceu_pico_callback_output_GRAPHICS_SET_ANCHOR (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_SET_ANCHOR* ps_ = (tceu_output_GRAPHICS_SET_ANCHOR*) ps;
+        GRAPHICS_SET_ANCHOR_X = ps_->_1;
+        GRAPHICS_SET_ANCHOR_Y = ps_->_2;
+        return 0;
+    }
 
-                    case CEU_OUTPUT_GRAPHICS_SCREENSHOT: {
-                        char** path = (char**) p2.ptr;
-                        int win_w,win_h, log_w,log_h;
-                        SDL_GetWindowSize(WIN, &win_w, &win_h);
-                        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+    int ceu_pico_callback_output_GRAPHICS_SET_BMP_FRAME (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_SET_BMP_FRAME* ps_ = (tceu_output_GRAPHICS_SET_BMP_FRAME*) ps;
+        ceu_assert_ex( ps_->_1.is_set  &&  ps_->_2.is_set ||
+                    !ps_->_1.is_set && !ps_->_2.is_set, "invalid arguments", trace);
+        GRAPHICS_SET_BMP_FRAME = ps_->_1.is_set;
+        if (GRAPHICS_SET_BMP_FRAME) {
+            GRAPHICS_SET_BMP_FRAME_N   = ps_->_1.value;
+            GRAPHICS_SET_BMP_FRAME_DIV = ps_->_2.value;
+        } else {
+            GRAPHICS_SET_BMP_FRAME_N   = 0;
+            GRAPHICS_SET_BMP_FRAME_DIV = 1;
+        }
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_SET_BMP_SIZE (void* ps, tceu_trace trace) {
+        GRAPHICS_SET_BMP_SIZE = *((tceu_output_GRAPHICS_SET_BMP_SIZE*) ps);
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_SET_COLOR_RGB (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_SET_COLOR_RGB* clr = (tceu_output_GRAPHICS_SET_COLOR_RGB*) ps;
+        GRAPHICS_SET_CLEAR_COLOR_RGB.r = clr->_1;
+        GRAPHICS_SET_CLEAR_COLOR_RGB.g = clr->_2;
+        GRAPHICS_SET_CLEAR_COLOR_RGB.b = clr->_3;
+        GRAPHICS_SET_CLEAR_COLOR_RGB.a = 0xFF;
+        SDL_SetRenderDrawColor(REN, clr->_1, clr->_2, clr->_3, 0xFF);
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_SET_COLOR_NAME (void* ps, tceu_trace trace) {
+        tceu_data_Color* clr = (tceu_data_Color*) ps;
+        GRAPHICS_SET_CLEAR_COLOR_RGB.r = clr->r;
+        GRAPHICS_SET_CLEAR_COLOR_RGB.g = clr->g;
+        GRAPHICS_SET_CLEAR_COLOR_RGB.b = clr->b;
+        GRAPHICS_SET_CLEAR_COLOR_RGB.a = 0xFF;
+        SDL_SetRenderDrawColor(REN, clr->r, clr->g, clr->b, 0xFF);
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_SET_FONT (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_SET_FONT* fnt = (tceu_output_GRAPHICS_SET_FONT*) ps;
+        FNT_H = fnt->_2;
+        if (FNT != NULL) {
+            TTF_CloseFont(FNT);
+        }
+        FNT = TTF_OpenFont(fnt->_1, FNT_H);
+        if (FNT == NULL) {
+            char msg[255];
+            snprintf(msg, 255, "file not found: \"%s\"", fnt->_1);
+            ceu_assert_ex(0, msg, trace);
+        }
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_SET_SCALE (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_SET_SCALE* ps_ = (tceu_output_GRAPHICS_SET_SCALE*) ps;
+        GRAPHICS_SET_SCALE_W = ps_->_1;
+        GRAPHICS_SET_SCALE_H = ps_->_2;
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_SET_WRITE_CURSOR (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_SET_WRITE_CURSOR* pt = (tceu_output_GRAPHICS_SET_WRITE_CURSOR*) ps;
+
+        GRAPHICS_SET_WRITE_CURSOR   = 1;
+        GRAPHICS_SET_WRITE_CURSOR_X = pt->_1;
+        GRAPHICS_SET_WRITE_CURSOR_Y = pt->_2;
+
+        GRAPHICS_CUR_WRITE_CURSOR_X = pt->_1;
+        GRAPHICS_CUR_WRITE_CURSOR_Y = pt->_2;
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_SCREENSHOT (void* ps, tceu_trace trace) {
+        char** path = (char**) ps;
+        int win_w,win_h, log_w,log_h;
+        SDL_GetWindowSize(WIN, &win_w, &win_h);
+        SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
 
 
-                        SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, win_w, win_h, 32,
-                                                0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-                        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, src_sfc->pixels, src_sfc->pitch);
-                        SDL_Texture* src_tex = SDL_CreateTextureFromSurface(REN, src_sfc);
-                        SDL_FreeSurface(src_sfc);
+        SDL_Surface* src_sfc = SDL_CreateRGBSurface(0, win_w, win_h, 32,
+                                0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, src_sfc->pixels, src_sfc->pitch);
+        SDL_Texture* src_tex = SDL_CreateTextureFromSurface(REN, src_sfc);
+        SDL_FreeSurface(src_sfc);
 
-                        SDL_Texture* dst_tex = SDL_CreateTexture(REN, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, log_w, log_h);
-                        SDL_SetRenderTarget(REN, dst_tex);
+        SDL_Texture* dst_tex = SDL_CreateTexture(REN, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, log_w, log_h);
+        SDL_SetRenderTarget(REN, dst_tex);
 
-                        // TODO: linux requires flipping (why?)
-                        SDL_RenderCopy(REN, src_tex, NULL, NULL);
-                        //SDL_RenderCopyEx(REN, src_tex, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
+        // TODO: linux requires flipping (why?)
+        SDL_RenderCopy(REN, src_tex, NULL, NULL);
+        //SDL_RenderCopyEx(REN, src_tex, NULL, NULL, 0, NULL, SDL_FLIP_VERTICAL);
 
-                        SDL_DestroyTexture(src_tex);
+        SDL_DestroyTexture(src_tex);
 
-                        SDL_Surface* sav_sfc = SDL_CreateRGBSurface(0, log_w, log_h, 32,
-                                                0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-                        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, sav_sfc->pixels, sav_sfc->pitch);
-                        int ret = SDL_SaveBMP(sav_sfc,*path);
-                        if (ret != 0) {
-                            char msg[255];
-                            snprintf(msg, 255, "cannot save screenshot to \"%s\"", *path);
-                            ceu_assert_ex(0, msg, trace);
-                        }
-                        SDL_FreeSurface(sav_sfc);
+        SDL_Surface* sav_sfc = SDL_CreateRGBSurface(0, log_w, log_h, 32,
+                                0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+        SDL_RenderReadPixels(REN, NULL, SDL_PIXELFORMAT_ARGB8888, sav_sfc->pixels, sav_sfc->pitch);
+        int ret = SDL_SaveBMP(sav_sfc,*path);
+        if (ret != 0) {
+            char msg[255];
+            snprintf(msg, 255, "cannot save screenshot to \"%s\"", *path);
+            ceu_assert_ex(0, msg, trace);
+        }
+        SDL_FreeSurface(sav_sfc);
 
-                        SDL_SetRenderTarget(REN, NULL);
-                        SDL_DestroyTexture(dst_tex);
-                        break;
-                    }
+        SDL_SetRenderTarget(REN, NULL);
+        SDL_DestroyTexture(dst_tex);
+        return 0;
+    }
 
-                    case CEU_OUTPUT_GRAPHICS_DRAW_PIXEL: {
-                        tceu_output_GRAPHICS_DRAW_PIXEL* pt = (tceu_output_GRAPHICS_DRAW_PIXEL*) p2.ptr;
-                        SDL_Rect rct = { X(pt->_1), Y(pt->_2), 1, 1 };
-                        SDL_RenderFillRect(REN, &rct);
-                        WINDOW_Present();
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_DRAW_LINE: {
-                        tceu_output_GRAPHICS_DRAW_LINE* ps = (tceu_output_GRAPHICS_DRAW_LINE*) p2.ptr;
+    int ceu_pico_callback_output_GRAPHICS_DRAW_PIXEL (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_DRAW_PIXEL* pt = (tceu_output_GRAPHICS_DRAW_PIXEL*) ps;
+        SDL_Rect rct = { X(pt->_1), Y(pt->_2), 1, 1 };
+        SDL_RenderFillRect(REN, &rct);
+        WINDOW_Present();
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_DRAW_LINE (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_DRAW_LINE* ps_ = (tceu_output_GRAPHICS_DRAW_LINE*) ps;
 //int win_w,win_h, log_w,log_h;
 //SDL_GetWindowSize(REN, &win_w, &win_h);
 //SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
 //SDL_RenderSetScale(REN, 10,10);
-                        SDL_RenderDrawLine(REN, X(ps->_1), Y(ps->_2), X(ps->_3), Y(ps->_4));
+        SDL_RenderDrawLine(REN, X(ps_->_1), Y(ps_->_2), X(ps_->_3), Y(ps_->_4));
 //SDL_RenderSetScale(REN, 1, 1);
-                        WINDOW_Present();
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_DRAW_RECT: {
-                        tceu_output_GRAPHICS_DRAW_RECT* ps = (tceu_output_GRAPHICS_DRAW_RECT*) p2.ptr;
-                        SDL_Rect rct;
-
-                        // SCALE
-                        rct.w = ps->_3 * GRAPHICS_SET_SCALE_W;
-                        rct.h = ps->_4 * GRAPHICS_SET_SCALE_H;
-
-                        // ANCHOR
-                        rct.x = GRAPHICS_ANCHOR_X(X(ps->_1),rct.w);
-                        rct.y = GRAPHICS_ANCHOR_Y(Y(ps->_2),rct.h);
-
-                        SDL_RenderFillRect(REN, &rct);
-                        WINDOW_Present();
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_DRAW_BMP: {     // TODO: cache
-                        tceu_output_GRAPHICS_DRAW_BMP* ps = (tceu_output_GRAPHICS_DRAW_BMP*) p2.ptr;
-                        SDL_Surface* sfc = SDL_LoadBMP(ps->_3);
-                        if (sfc == NULL) {
-                            char msg[255];
-                            snprintf(msg, 255, "file not found: \"%s\"", ps->_3);
-                            ceu_assert_ex(0, msg, trace);
-                        }
-                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
-                        ceu_assert_ex(tex != NULL, "draw error", trace);
-
-                        SDL_Rect rct;
-                                 rct.h = sfc->h;
-                        SDL_Rect clip = { 0, 0, sfc->w, sfc->h };
-                        int frame_w = sfc->w/GRAPHICS_SET_BMP_FRAME_DIV;
-
-                        // FRAME
-                        rct.w  = frame_w;
-                        clip.x = GRAPHICS_SET_BMP_FRAME_N * frame_w;
-                        clip.w = frame_w;
-                        ceu_assert_ex(sfc->w%GRAPHICS_SET_BMP_FRAME_DIV == 0, "invalid arguments", trace);
-                        ceu_assert_ex(sfc->w > clip.x, "invalid arguments", trace);
-
-                        // SIZE
-                        tceu_output_GRAPHICS_SET_BMP_SIZE* sz = &GRAPHICS_SET_BMP_SIZE;
-                        if (sz->_1.is_set || sz->_2.is_set) {
-                            rct.w = sz->_1.value;
-                            rct.h = sz->_2.value;
-                            if (!sz->_1.is_set) {
-                                rct.w = frame_w*rct.h/sfc->h;
-                            }
-                            if (!sz->_2.is_set) {
-                                rct.h = sfc->h*rct.w/frame_w;
-                            }
-                        }
-
-                        // SCALE
-                        rct.w = rct.w * GRAPHICS_SET_SCALE_W;
-                        rct.h = rct.h * GRAPHICS_SET_SCALE_H;
-
-                        // ANCHOR
-                        rct.x = GRAPHICS_ANCHOR_X(X(ps->_1),rct.w);
-                        rct.y = GRAPHICS_ANCHOR_Y(Y(ps->_2),rct.h);
-
-                        SDL_RenderCopy(REN, tex, &clip, &rct);
-                        WINDOW_Present();
-
-                        SDL_DestroyTexture(tex);
-                        SDL_FreeSurface(sfc);
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_DRAW_TEXT: {     // TODO: cache
-                        tceu_output_GRAPHICS_DRAW_TEXT* ps = (tceu_output_GRAPHICS_DRAW_TEXT*) p2.ptr;
-
-                        u8 r, g, b;
-                        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
-                        SDL_Surface* sfc = TTF_RenderText_Blended(FNT, ps->_3, (SDL_Color){r,g,b,0xFF});
-                        ceu_assert_ex(sfc != NULL, "draw error", trace);
-                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
-                        ceu_assert_ex(tex != NULL, "draw error", trace);
-
-                        SDL_Rect rct;
-
-                        // SCALE
-                        rct.w = sfc->w * GRAPHICS_SET_SCALE_W;
-                        rct.h = sfc->h * GRAPHICS_SET_SCALE_H;
-
-                        // ANCHOR
-                        rct.x = GRAPHICS_ANCHOR_X(X(ps->_1),rct.w);
-                        rct.y = GRAPHICS_ANCHOR_Y(Y(ps->_2),rct.h);
-
-                        SDL_RenderCopy(REN, tex, NULL, &rct);
-                        WINDOW_Present();
-
-                        SDL_DestroyTexture(tex);
-                        SDL_FreeSurface(sfc);
-                        break;
-                    }
-
-                    case CEU_OUTPUT_GRAPHICS_WRITE: {        // TODO: cache
-                        char** str = (char**) p2.ptr;
-                        ceu_assert_ex(FNT != NULL, "font error", trace);
-
-                        u8 r, g, b;
-                        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
-                        SDL_Surface* sfc = TTF_RenderText_Blended(FNT, *str, (SDL_Color){r,g,b,0xFF});
-                        ceu_assert_ex(sfc != NULL, "font error", trace);
-                        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
-                        ceu_assert_ex(tex != NULL, "font error", trace);
-
-                        int w, h;
-                        TTF_SizeText(FNT, *str, &w,&h);
-                        SDL_Rect rct = { X(GRAPHICS_CUR_WRITE_CURSOR_X),Y(GRAPHICS_CUR_WRITE_CURSOR_Y), w,h };
-                        SDL_RenderCopy(REN, tex, NULL, &rct);
-                        WINDOW_Present();
-
-                        GRAPHICS_CUR_WRITE_CURSOR_X += w;
-
-                        SDL_DestroyTexture(tex);
-                        SDL_FreeSurface(sfc);
-                        break;
-                    }
-                    case CEU_OUTPUT_GRAPHICS_WRITELN: {
-                        int cursor_x = GRAPHICS_CUR_WRITE_CURSOR_X;
-                        p1.num = CEU_OUTPUT_GRAPHICS_WRITE;
-                        ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2, trace);
-                        GRAPHICS_CUR_WRITE_CURSOR_X = (GRAPHICS_SET_WRITE_CURSOR ? GRAPHICS_SET_WRITE_CURSOR_X : -LOG_W/2);
-                        GRAPHICS_CUR_WRITE_CURSOR_Y -= FNT_H;
-                        break;
-                    }
-
-                    case CEU_OUTPUT_SOUND_SET_VOLUME: {
-                        int* vol = (int*) p2.ptr;
-                        SOUND_SET_VOLUME = *vol;
-                        break;
-                    }
-                    case CEU_OUTPUT_SOUND_PLAY: {     // TODO: cache
-                        char** path = (char**) p2.ptr;
-                        Mix_Chunk* snd = Mix_LoadWAV(*path);
-                        if (snd == NULL) {
-                            char msg[255];
-                            snprintf(msg, 255, "file not found: \"%s\"", *path);
-                            ceu_assert_ex(0, msg, trace);
-                        }
-                        Mix_VolumeChunk(snd, MIX_MAX_VOLUME*SOUND_SET_VOLUME/100);
-                        int channel = Mix_PlayChannel(-1, snd, 0);
-// TODO: print warning?
-                        //ceu_assert_ex(channel>=0 && channel<5);
-                        if (!(channel>=0 && channel<5)) {
-                            SOUND_VEC[channel] = snd;
-                        }
-                        break;
-                    }
-
-                    case CEU_OUTPUT_NET_SEND: {
-                        tceu_output_NET_SEND* ps = (tceu_output_NET_SEND*) p2.ptr;
-                        NET_send_pkt->len  = ps->_1;
-                        NET_send_pkt->data = ps->_2;
-                        for (int i=0; i<10; i++) {
-                            IPaddress addr;
-                            u16 port = (NET_SET_UDP_PORT_RECV/1000)*1000 + i;
-                            SDLNet_ResolveHost(&addr, "255.255.255.255", port);
-                            NET_send_pkt->address.host = addr.host;
-                            NET_send_pkt->address.port = addr.port;
-                            SDLNet_UDP_Send(NET_send, -1, NET_send_pkt);
-                        }
-                        break;
-                    }
-
-                    default:
-                        return 0;
-                }
-                break;
-
-            default:
-                return 0;
-        }
-        return 1;
+        WINDOW_Present();
+        return 0;
     }
-    static tceu_callback CEU_CALLBACK_PICO = { &ceu_callback_sdl_pico, NULL };
+
+    int ceu_pico_callback_output_GRAPHICS_DRAW_RECT (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_DRAW_RECT* ps_ = (tceu_output_GRAPHICS_DRAW_RECT*) ps;
+        SDL_Rect rct;
+
+        // SCALE
+        rct.w = ps_->_3 * GRAPHICS_SET_SCALE_W;
+        rct.h = ps_->_4 * GRAPHICS_SET_SCALE_H;
+
+        // ANCHOR
+        rct.x = GRAPHICS_ANCHOR_X(X(ps_->_1),rct.w);
+        rct.y = GRAPHICS_ANCHOR_Y(Y(ps_->_2),rct.h);
+
+        SDL_RenderFillRect(REN, &rct);
+        WINDOW_Present();
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_DRAW_BMP (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_DRAW_BMP* ps_ = (tceu_output_GRAPHICS_DRAW_BMP*) ps;
+        SDL_Surface* sfc = SDL_LoadBMP(ps_->_3);
+        if (sfc == NULL) {
+            char msg[255];
+            snprintf(msg, 255, "file not found: \"%s\"", ps_->_3);
+            ceu_assert_ex(0, msg, trace);
+        }
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+        ceu_assert_ex(tex != NULL, "draw error", trace);
+
+        SDL_Rect rct;
+                 rct.h = sfc->h;
+        SDL_Rect clip = { 0, 0, sfc->w, sfc->h };
+        int frame_w = sfc->w/GRAPHICS_SET_BMP_FRAME_DIV;
+
+        // FRAME
+        rct.w  = frame_w;
+        clip.x = GRAPHICS_SET_BMP_FRAME_N * frame_w;
+        clip.w = frame_w;
+        ceu_assert_ex(sfc->w%GRAPHICS_SET_BMP_FRAME_DIV == 0, "invalid arguments", trace);
+        ceu_assert_ex(sfc->w > clip.x, "invalid arguments", trace);
+
+        // SIZE
+        tceu_output_GRAPHICS_SET_BMP_SIZE* sz = &GRAPHICS_SET_BMP_SIZE;
+        if (sz->_1.is_set || sz->_2.is_set) {
+            rct.w = sz->_1.value;
+            rct.h = sz->_2.value;
+            if (!sz->_1.is_set) {
+                rct.w = frame_w*rct.h/sfc->h;
+            }
+            if (!sz->_2.is_set) {
+                rct.h = sfc->h*rct.w/frame_w;
+            }
+        }
+
+        // SCALE
+        rct.w = rct.w * GRAPHICS_SET_SCALE_W;
+        rct.h = rct.h * GRAPHICS_SET_SCALE_H;
+
+        // ANCHOR
+        rct.x = GRAPHICS_ANCHOR_X(X(ps_->_1),rct.w);
+        rct.y = GRAPHICS_ANCHOR_Y(Y(ps_->_2),rct.h);
+
+        SDL_RenderCopy(REN, tex, &clip, &rct);
+        WINDOW_Present();
+
+        SDL_DestroyTexture(tex);
+        SDL_FreeSurface(sfc);
+        return 0;
+    }
+
+
+    int ceu_pico_callback_output_GRAPHICS_DRAW_TEXT (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_DRAW_TEXT* ps_ = (tceu_output_GRAPHICS_DRAW_TEXT*) ps;
+
+        u8 r, g, b;
+        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+        SDL_Surface* sfc = TTF_RenderText_Blended(FNT, ps_->_3, (SDL_Color){r,g,b,0xFF});
+        ceu_assert_ex(sfc != NULL, "draw error", trace);
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+        ceu_assert_ex(tex != NULL, "draw error", trace);
+
+        SDL_Rect rct;
+
+        // SCALE
+        rct.w = sfc->w * GRAPHICS_SET_SCALE_W;
+        rct.h = sfc->h * GRAPHICS_SET_SCALE_H;
+
+        // ANCHOR
+        rct.x = GRAPHICS_ANCHOR_X(X(ps_->_1),rct.w);
+        rct.y = GRAPHICS_ANCHOR_Y(Y(ps_->_2),rct.h);
+
+        SDL_RenderCopy(REN, tex, NULL, &rct);
+        WINDOW_Present();
+
+        SDL_DestroyTexture(tex);
+        SDL_FreeSurface(sfc);
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_WRITE (void* ps, tceu_trace trace) {
+        char** str = (char**) ps;
+        ceu_assert_ex(FNT != NULL, "font error", trace);
+
+        u8 r, g, b;
+        SDL_GetRenderDrawColor(REN, &r,&g,&b, NULL);
+        SDL_Surface* sfc = TTF_RenderText_Blended(FNT, *str, (SDL_Color){r,g,b,0xFF});
+        ceu_assert_ex(sfc != NULL, "font error", trace);
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(REN, sfc);
+        ceu_assert_ex(tex != NULL, "font error", trace);
+
+        int w, h;
+        TTF_SizeText(FNT, *str, &w,&h);
+        SDL_Rect rct = { X(GRAPHICS_CUR_WRITE_CURSOR_X),Y(GRAPHICS_CUR_WRITE_CURSOR_Y), w,h };
+        SDL_RenderCopy(REN, tex, NULL, &rct);
+        WINDOW_Present();
+
+        GRAPHICS_CUR_WRITE_CURSOR_X += w;
+
+        SDL_DestroyTexture(tex);
+        SDL_FreeSurface(sfc);
+        return 0;
+    }
+
+
+    int ceu_pico_callback_output_GRAPHICS_WRITELN (void* ps, tceu_trace trace) {
+        int cursor_x = GRAPHICS_CUR_WRITE_CURSOR_X;
+        ceu_pico_callback_output_GRAPHICS_WRITE(ps, trace);
+        GRAPHICS_CUR_WRITE_CURSOR_X = (GRAPHICS_SET_WRITE_CURSOR ? GRAPHICS_SET_WRITE_CURSOR_X : -LOG_W/2);
+        GRAPHICS_CUR_WRITE_CURSOR_Y -= FNT_H;
+        return 0;
+    }
+
+    int ceu_pico_callback_output_SOUND_SET_VOLUME (void* ps, tceu_trace trace) {
+        SOUND_SET_VOLUME = *((int*) ps);
+        return 0;
+    }
+
+    int ceu_pico_callback_output_SOUND_PLAY (void* ps, tceu_trace trace) {
+        char** path = (char**) ps;
+        Mix_Chunk* snd = Mix_LoadWAV(*path);
+        if (snd == NULL) {
+            char msg[255];
+            snprintf(msg, 255, "file not found: \"%s\"", *path);
+            ceu_assert_ex(0, msg, trace);
+        }
+        Mix_VolumeChunk(snd, MIX_MAX_VOLUME*SOUND_SET_VOLUME/100);
+        int channel = Mix_PlayChannel(-1, snd, 0);
+// TODO: print warning?
+        //ceu_assert_ex(channel>=0 && channel<5);
+        if (!(channel>=0 && channel<5)) {
+            SOUND_VEC[channel] = snd;
+        }
+        return 0;
+    }
+
+    int ceu_pico_callback_output_NET_SEND (void* ps, tceu_trace trace) {
+        tceu_output_NET_SEND* ps_ = (tceu_output_NET_SEND*) ps;
+        NET_send_pkt->len  = ps_->_1;
+        NET_send_pkt->data = ps_->_2;
+        for (int i=0; i<10; i++) {
+            IPaddress addr;
+            u16 port = (NET_SET_UDP_PORT_RECV/1000)*1000 + i;
+            SDLNet_ResolveHost(&addr, "255.255.255.255", port);
+            NET_send_pkt->address.host = addr.host;
+            NET_send_pkt->address.port = addr.port;
+            SDLNet_UDP_Send(NET_send, -1, NET_send_pkt);
+        }
+        return 0;
+    }
+
+#if 0
+    int ceu_pico_callback_output_WINDOW_SET_FULLSCREEN (void* ps, tceu_trace trace) {
+        bool* full = (bool*) ps;
+        SDL_SetWindowFullscreen(WIN, (full ? SDL_WINDOW_FULLSCREEN : 0));
+        {
+            int win_w, win_h;
+            int log_w, log_h;
+            tceu_output_WINDOW_SET_SIZE* ps = (tceu_output_WINDOW_SET_SIZE*) ps;
+            SDL_GetWindowSize(WIN, &win_w, &win_h);
+            SDL_RenderGetLogicalSize(REN, &log_w, &log_h);
+            p1.num = CEU_OUTPUT_WINDOW_SET_SIZE;
+            ps->_1 = win_w;
+            ps->_2 = win_h;
+            ps->_3 = log_w;
+            ps->_4 = log_h;
+            ceu_callback_sdl_pico(CEU_CALLBACK_OUTPUT, p1, p2);
+        }
+        return 0;
+    }
+#endif
+
 end
 
 #define HANCHOR_LEFT   ({HANCHOR_LEFT}   as HAnchor)
@@ -631,10 +680,6 @@ end
 #define VANCHOR_TOP    ({VANCHOR_TOP}    as VAnchor)
 #define VANCHOR_CENTER ({VANCHOR_CENTER} as VAnchor)
 #define VANCHOR_BOTTOM ({VANCHOR_BOTTOM} as VAnchor)
-
-{
-    ceu_callback_register(&CEU_CALLBACK_PICO);
-}
 
 var&? SDL_Init sdl = spawn SDL_Init("pico-Ceu", WIN_DIM,WIN_DIM, _);
 watching sdl do

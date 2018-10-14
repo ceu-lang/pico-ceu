@@ -1,0 +1,148 @@
+#include "string.ceu"
+
+#define INSTANCE 1
+
+//EACH INSTANCE INITIATES WITH A DIFFERENT COLOR AND POSITION
+#if INSTANCE == 1
+    #define MAIN_COLOR COLOR_WHITE
+    #define INITIAL_POSITION_X -10
+    #define INITIAL_POSITION_Y 0
+#elif INSTANCE == 2
+    #define MAIN_COLOR COLOR_GREEN
+    #define INITIAL_POSITION_X 10
+    #define INITIAL_POSITION_Y 0    
+#endif
+
+//CONFIG THE WINDOW
+emit WINDOW_SET_SIZE(30*20, 30*20, 30, 30);
+emit WINDOW_SET_TITLE("Moving Around Using Network");
+
+//DISPLAY A RECTANGLE ON THE TOP OF THE SCREEN TO INDICATE WHICH INSTANCE YOU ARE
+emit GRAPHICS_SET_COLOR_NAME(MAIN_COLOR);
+emit GRAPHICS_DRAW_RECT(0, 15, 30, 1);
+
+par do
+    var integer n;
+    var byte&&  buf;
+
+    //WAIT A MESSAGE ARRIVES FROM ALL PEERS, INCLUDING ITSELF
+    every (n, buf) in NET_RECEIVE do
+        var integer instance = 0;
+        var integer nextX = 0;
+        var integer nextY = 0;
+        var integer currentX = 0;
+        var integer currentY = 0;
+
+        {
+            //CONVERT A CÉU BYTE VECTOR INTO A C CHAR ARRAY
+            const char* strC = @&&buf[0] as _char&&;
+
+            int controller = 0, nextXSignal = 1, nextYSignal = 1, currentXSignal = 1, currentYSignal = 1, i;
+
+            //ITERATE OVER THE CHARACTER OF RECEIVED STRING (buf)
+            for (i = 0; strC[i] != '\0'; i++){
+                //THE RECEIVED STRING CONTAIN INFORMATIONS SEPARATED BY A COMA
+                //THE controller VARIABLE INDICATES WHICH INFORMATION WE ARE ACCESSING
+                if (strC[i] == ',') {
+                    controller = controller + 1;
+                } else {
+                    if (strC[i] == '-') {
+                        //VERIFY WHICH NUMBERS ARE NEGATIVE 
+                        if (controller == 1)
+                            nextXSignal = -1;
+                        else if (controller == 2)
+                            nextYSignal = -1;
+                        else if (controller == 3)
+                            currentXSignal = -1;
+                        else if (controller == 4)
+                            currentYSignal = -1;
+                    } else {
+                        //CONVERT THE CURRENT CHARACTER TO A NUMBER
+                        if (controller == 0)
+                            @instance = @instance*10 + (strC[i] - '0');
+                        else if (controller == 1)
+                            @nextX = @nextX*10 + (strC[i] - '0'); 
+                        else if (controller == 2)
+                            @nextY = @nextY*10 + (strC[i] - '0'); 
+                        else if (controller == 3)
+                            @currentX = @currentX*10 + (strC[i] - '0'); 
+                        else if (controller == 4)
+                            @currentY = @currentY*10 + (strC[i] - '0');
+                    }
+                }      
+            }
+            
+            //APPLY THE NEGATIVE SIGNAL
+            @nextX = nextXSignal * @nextX;
+            @nextY = nextYSignal * @nextY;
+            @currentX = currentXSignal * @currentX;
+            @currentY = currentYSignal * @currentY;
+        }
+
+        //CLEAN THE CURRENT POSITION
+        emit GRAPHICS_SET_COLOR_NAME(COLOR_BLACK);
+        emit GRAPHICS_DRAW_PIXEL(currentX, currentY);
+
+        //DRAW THE PIXEL IN A NEW POSITION
+        if instance == 1 then
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_WHITE);       
+        else/if instance == 2 then
+            emit GRAPHICS_SET_COLOR_NAME(COLOR_GREEN);    
+        end 
+        emit GRAPHICS_DRAW_PIXEL(nextX, nextY);
+    end
+with
+    var integer currentX = INITIAL_POSITION_X;
+    var integer currentY = INITIAL_POSITION_Y;
+    var integer nextX = currentX;
+    var integer nextY = currentY;   
+    var integer key;
+
+    //DRAW THE PIXEL IN THE INITIAL POSITION
+    emit GRAPHICS_DRAW_PIXEL(currentX, currentY);
+
+    //EXECUTE ON EVERY KEY PRESS
+    every key in KEY_PRESS do
+        currentX = nextX;
+        currentY = nextY;
+        
+        //MOVE IN FOUR DIRECTIONS
+        if key == KEY_LEFT then
+            //WINDOW COLLISION WITH LEFT SIDE
+            if nextX > -15 then
+                nextX = nextX - 1; 
+            end
+        else/if key == KEY_RIGHT then
+            //WINDOW COLLISION WITH RIGHT SIDE
+            if nextX < 14 then
+                nextX = nextX + 1;
+            end
+        else/if key == KEY_UP then
+            //WINDOW COLLISION WITH TOP SIDE
+            if nextY < 13 then
+                nextY = nextY + 1;
+            end
+        else/if key == KEY_DOWN then
+            //WINDOW COLLISION WITH BOTTOM SIDE
+            if nextY > -14 then
+                nextY = nextY - 1;
+            end
+        end
+
+        //GENERATE A STRING TO SEND VIA BROADCAST
+        var[18] byte send;
+        call String_Append_INT(&send, INSTANCE, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, nextX, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, nextY, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, currentX, _);
+        call String_Append_STR(&send, ",");
+        call String_Append_INT(&send, currentY, _);
+        call String_Append_STR(&send, "\0");
+
+        //SEND A STRING VIA BROADCAST
+        emit NET_SEND(18, &&send[0]); //0,-00,-00,-00,-00 + \0
+    end 
+end
