@@ -225,6 +225,7 @@ native/pos do
         if (FRAMES_SET) return;
         WINDOW_Show_Grid();
         SDL_RenderPresent(REN);
+        SDL_Delay(10);  // prevents flickering in Linux (probably related to double buffering)
     }
 
     int GRAPHICS_ANCHOR_X (int x, int w) {
@@ -339,6 +340,7 @@ native/pos do
     int ceu_pico_callback_output_FRAMES_SET (void* ps, tceu_trace trace) {
         bool* on = (bool*) ps;
         FRAMES_SET = *on;
+        CEU_SDL_FRAMES_SET = *on;
         return 0;
     }
 
@@ -680,6 +682,8 @@ end
 #define VANCHOR_TOP    ({VANCHOR_TOP}    as VAnchor)
 #define VANCHOR_CENTER ({VANCHOR_CENTER} as VAnchor)
 #define VANCHOR_BOTTOM ({VANCHOR_BOTTOM} as VAnchor)
+
+{ CEU_SDL_FRAMES_SET = 0; }
 
 var&? SDL_Init sdl = spawn SDL_Init("pico-Ceu", WIN_DIM,WIN_DIM, _);
 watching sdl do
