@@ -1,4 +1,4 @@
-include Makefile.dirs
+include Makefile.conf
 
 CEU_EXE ?= ceu
 CP_EXE  ?= cp
