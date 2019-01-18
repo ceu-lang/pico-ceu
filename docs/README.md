@@ -1,10 +1,10 @@
-# Reference Manual of pico-Céu
+# Reference manual of pico-Céu
 
 The Reference Manual of pico-Céu uses MkDocs:
 
 [http://www.mkdocs.org/](http://www.mkdocs.org/)
 
-## Installing Dependencies
+## Installing mkdocs and its dependencies
 
 ```
 sudo apt install fonts-lmodern
@@ -13,16 +13,20 @@ sudo apt install pandoc
 sudo apt install texlive-base
 sudo apt install texlive-latex-extra
 sudo apt install texlive-fonts-recommended
+sudo apt install texlive-fonts-extra
 sudo apt install texlive-latex-recommended
+sudo apt install texlive-latex-base
 
 sudo apt install python-pip
+
+pip install mkdocs
 
 pip install markdown
 pip install markdown-include
 pip install mkdocs-pandoc
 ```
 
-## Updating the Reference Manual
+## Updating the reference manual
 
 Every version of pico-Céu has its own reference manual, which is stored in a folder prefixed by "v". All content can be updated using the markdown files located at ```docs/manual/v[VERSION]/docs```.
 
@@ -35,7 +39,7 @@ pages:
 
 The ```docs/manual/index.md``` should contain a list of the reference manuals versions available, and need to be maintained manually.
 
-## Generating a new Release of Reference Manual
+## Generating a new release of reference manual
 After updating the markdown files and sections, you can generate a new release of the reference manual in pdf, markdown and html formats simply navigating to ```docs/``` folder and running ```make``` (passing the pico-Céu version). Below, there is an example of generating the reference manual for pico-Céu 0.40:
 ```
 make VERSION=v0.40
