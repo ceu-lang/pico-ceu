@@ -45,7 +45,7 @@ After updating the markdown files and sections, you can generate a new release o
 make VERSION=v0.40
 ```
 
-mkdocs and pandoc will create the finals pdf and markdown at ```docs/manual/v[VERSION]/```. The html will be created at ```docs/out/v[VERSION]/```. This folder should store all versions of the reference manual, and its content will automatically be displayed on the reference manual website (if at master branch). Also in the Makefile, the ```docs/manual/index.md``` is converted to ```docs/out/index.html```.
+mkdocs and pandoc will create the finals pdf and markdown at ```docs/manual/v[VERSION]/```. The html will be created at ```docs/out/manual/v[VERSION]/```. This folder should store all versions of the reference manual, and its content will automatically be displayed on the reference manual website (if at master branch). Also in the Makefile, the ```docs/manual/index.md``` is converted to ```docs/out/manual/index.html```.
 
 ## Links
 - [ImportError: Failed loading extension 'markdown_include' from 'markdown_include', 'markdown.extensions.markdown_include' or 'mdx_markdown_include'](https://github.com/mkdocs/mkdocs/issues/777)
