@@ -1,0 +1,5 @@
+#define MOUSE_LEFT {1}
+#define MOUSE_MIDDLE {2}
+#define MOUSE_RIGHT {3}
+#define MOUSE_X1 {4}
+#define MOUSE_X2 {5}

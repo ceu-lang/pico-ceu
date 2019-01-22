@@ -2,6 +2,7 @@
 
 #include "c.ceu"
 #include "sdl/sdl.ceu"
+#include "pico/mouse.ceu"
 #include "pico/keys.ceu"
 #include "pico/colors.ceu"
 
@@ -799,27 +800,27 @@ watching sdl do
         /* MOUSE */
         par do
             // DOWN -> CLICK
-            code/await SDL_MouseDown (var int x, var int y) -> none do
-                await async (x,y) do
-                    emit MOUSE_CLICK(0,_X(x),_Y(y));
+            code/await SDL_MouseDown (var int button, var int x, var int y) -> none do
+                await async (button, x,y) do
+                    emit MOUSE_CLICK(button,_X(x),_Y(y));
                 end
             end
             pool[] SDL_MouseDown mses;
             var _SDL_MouseButtonEvent&& mse;
             every mse in SDL_MOUSEBUTTONDOWN do
-                spawn SDL_MouseDown(mse:x,mse:y) in mses;
+                spawn SDL_MouseDown(mse:button, mse:x,mse:y) in mses;
             end
         with
             // UP -> UNCLICK
-            code/await SDL_MouseUp (var int x, var int y) -> none do
-                await async (x,y) do
-                    emit MOUSE_UNCLICK(0,_X(x),_Y(y));
+            code/await SDL_MouseUp (var int button, var int x, var int y) -> none do
+                await async (button,x,y) do
+                    emit MOUSE_UNCLICK(button,_X(x),_Y(y));
                 end
             end
             pool[] SDL_MouseUp mses;
             var _SDL_MouseButtonEvent&& mse;
             every mse in SDL_MOUSEBUTTONUP do
-                spawn SDL_MouseUp(mse:x,mse:y) in mses;
+                spawn SDL_MouseUp(mse:button, mse:x,mse:y) in mses;
             end
         with
             // MOTION -> MOVE

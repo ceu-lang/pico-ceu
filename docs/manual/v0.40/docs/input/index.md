@@ -15,6 +15,20 @@ input (integer) KEY_PRESS
 - Payload:
     - `integer`: numeric key code
 
+
+Examples:
+```
+var int c = await KEY_PRESS;
+
+_printf("%c\n", c);
+```
+
+```
+var int c = await KEY_PRESS until c==KEY_a;
+
+_printf("%c\n", c);
+```
+
 `TODO: key codes`
 
 ### KEY_UNPRESS
@@ -41,9 +55,25 @@ input (integer,integer,integer) MOUSE_CLICK
 - Occurrences:
     - whenever a mouse button is pressed
 - Payload:
-    - `integer`:  numeric button code (`TODO: left, middle, right?`)
+    - `integer`:  numeric button code  
+        - MOUSE_LEFT
+        - MOUSE_MIDDLE
+        - MOUSE_RIGHT
+        - MOUSE_X1
+        - MOUSE_X2
     - `integer`:  current mouse position in the `x-axis`
-    - `integer`:  current mouse position in the `y-axis`
+    - `integer`:  current mouse position in the `y-axis`    
+
+Example:
+```
+var int c;
+var int x;
+var int y;
+
+(c,x,y) = await MOUSE_CLICK until c==MOUSE_LEFT;
+
+_printf("(%d,%d)\n", x,y);
+```
 
 ### MOUSE_UNCLICK
 
@@ -54,7 +84,7 @@ input (integer,integer,integer) MOUSE_UNCLICK
 - Occurrences:
     - whenever a mouse button is released
 - Payload:
-    - `integer`:  numeric button code (`TODO: left, middle, right?`)
+    - `integer`:  numeric button code (same as [`MOUSE_CLICK`](#mouse_click))
     - `integer`:  current mouse position in the `x-axis`
     - `integer`:  current mouse position in the `y-axis`
 

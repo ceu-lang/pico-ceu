@@ -161,6 +161,17 @@
 </ul>
 </li>
 </ul>
+<p>Examples:</p>
+<pre><code>var int c = await KEY_PRESS;
+
+_printf(&quot;%c\n&quot;, c);
+</code></pre>
+
+<pre><code>var int c = await KEY_PRESS until c==KEY_a;
+
+_printf(&quot;%c\n&quot;, c);
+</code></pre>
+
 <p><code>TODO: key codes</code></p>
 <h3 id="key_unpress">KEY_UNPRESS<a class="headerlink" href="#key_unpress" title="Permanent link">&para;</a></h3>
 <pre><code class="ceu">input (integer) KEY_UNPRESS
@@ -188,12 +199,29 @@
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>integer</code>:  numeric button code (<code>TODO: left, middle, right?</code>)</li>
+<li><code>integer</code>:  numeric button code  <ul>
+<li>MOUSE_LEFT</li>
+<li>MOUSE_MIDDLE</li>
+<li>MOUSE_RIGHT</li>
+<li>MOUSE_X1</li>
+<li>MOUSE_X2</li>
+</ul>
+</li>
 <li><code>integer</code>:  current mouse position in the <code>x-axis</code></li>
-<li><code>integer</code>:  current mouse position in the <code>y-axis</code></li>
+<li><code>integer</code>:  current mouse position in the <code>y-axis</code>    </li>
 </ul>
 </li>
 </ul>
+<p>Example:</p>
+<pre><code>var int c;
+var int x;
+var int y;
+
+(c,x,y) = await MOUSE_CLICK until c==MOUSE_LEFT;
+
+_printf(&quot;(%d,%d)\n&quot;, x,y);
+</code></pre>
+
 <h3 id="mouse_unclick">MOUSE_UNCLICK<a class="headerlink" href="#mouse_unclick" title="Permanent link">&para;</a></h3>
 <pre><code class="ceu">input (integer,integer,integer) MOUSE_UNCLICK
 </code></pre>
@@ -204,7 +232,7 @@
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>integer</code>:  numeric button code (<code>TODO: left, middle, right?</code>)</li>
+<li><code>integer</code>:  numeric button code (same as <a href="#mouse_click"><code>MOUSE_CLICK</code></a>)</li>
 <li><code>integer</code>:  current mouse position in the <code>x-axis</code></li>
 <li><code>integer</code>:  current mouse position in the <code>y-axis</code></li>
 </ul>
@@ -277,5 +305,5 @@
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-01-22 17:38:39
+Build Date UTC : 2019-01-22 22:03:24
 -->
