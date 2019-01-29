@@ -45,7 +45,7 @@ The possible values for `HAnchor` are `HANCHOR_LEFT`, `HANCHOR_CENTER`,
 and `HANCHOR_RIGHT`.
 The initial value is `HANCHOR_CENTER`.
 
-The possible values for `HVnchor` are `VANCHOR_TOP`, `VANCHOR_CENTER`,
+The possible values for `VAnchor` are `VANCHOR_TOP`, `VANCHOR_CENTER`,
 and `VANCHOR_BOTTOM`.
 The initial value is `VANCHOR_CENTER`.
 

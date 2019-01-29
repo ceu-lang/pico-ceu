@@ -1,0 +1,15 @@
+par do
+    loop do
+        var int c;
+        var int x;
+        var int y;
+        (c,x,y) = await MOUSE_CLICK until c==MOUSE_LEFT;
+        _printf("(%d,%d)\n", x,y);
+    end
+with
+    loop do
+        var int c;
+        c = await KEY_PRESS until c==KEY_a;
+        _printf("%c\n", c);
+    end
+end
