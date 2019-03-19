@@ -108,4 +108,4 @@ The `examples/` directory contains a number of examples.
 
 ## API Manual:
 
-<https://fsantanna.github.io/pico-ceu/out/manual/v0.40/>
+<https://ceu-lang.github.io/pico-ceu/out/manual/v0.40/>
