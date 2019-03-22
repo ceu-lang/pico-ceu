@@ -24,7 +24,7 @@ endif
 all:
 	$(CEU_EXE) --pre --pre-args="-I$(CEU_DIR)/include -I$(CEU_SDL_DIR)/include -I./include $(D_SERIAL) $(D_POSIX) -DCEUMAKER_PICO -DCEU_SRC=\"$(CEU_SRC_)\" $(CEU_ARGS)"    \
 	          --pre-input=pico.ceu                                          \
-	    --ceu --ceu-err-unused=pass --ceu-err-uninitialized=pass --ceu-line-directives=false			\
+	    --ceu --ceu-err-unused=pass --ceu-err-uninitialized=pass --ceu-line-directives=true			\
 	          --ceu-features-trace=true --ceu-features-exception=true          \
 	          --ceu-features-dynamic=true \
 	          --ceu-features-pool=true \
