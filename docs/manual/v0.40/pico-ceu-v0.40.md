@@ -13,6 +13,81 @@ minimalist libraries for input, graphics, network, and sound.
 
 Resource is any external file used by a pico-Céu application, such as images, fonts, and audio files. Every resource should be located in a ```res``` folder, in the root of the application, and can be used in [`GRAPHICS_DRAW_BMP`](#graphics_draw_bmp), [`GRAPHICS_SET_FONT`](#graphics_set_font), or [`SOUND_PLAY`](#sound_play).
 
+# Data Types
+
+## Data Types
+
+pico-Céu already provides some data types
+
+### Color
+
+```
+data Color with
+    var integer r;
+    var integer g;
+    var integer b;
+end
+```
+
+- Parameters:
+    - `integer`: red component
+    - `integer`: green component
+    - `integer`: blue component
+
+Example:
+```
+var Color color = val Color(255,1,1);
+emit GRAPHICS_SET_COLOR_NAME(color);
+emit GRAPHICS_DRAW_PIXEL(0,0);
+emit GRAPHICS_SET_COLOR_RGB(color.r, color.g, color.b);
+emit GRAPHICS_DRAW_PIXEL(1,1);
+```
+
+
+### Point
+
+```
+data Point with
+    var integer x;
+    var integer y;
+end
+```
+
+- Parameters:
+    - `integer`: position in the `x-axis`
+    - `integer`: position in the `y-axis`
+
+
+Example:
+```
+var Point pt = val Rect(0,0);
+emit GRAPHICS_DRAW_POINT(pt.x, pt.y);
+```
+
+### Rect
+
+```
+data Rect with
+    var integer x;
+    var integer y;
+    var integer w;
+    var integer h;
+end
+```
+
+- Parameters:
+    - `integer`: position in the `x-axis`
+    - `integer`: position in the `y-axis`
+    - `integer`: rectangle width
+    - `integer`: rectangle height
+
+
+Example:
+```
+var Rect rect = val Rect(0,0,4,5);
+emit GRAPHICS_DRAW_RECT(rect.x, rect.y, rect.w, rect.h);
+```
+
 # Graphics
 
 ## Graphics

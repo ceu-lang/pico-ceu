@@ -12,6 +12,7 @@ markdown_extensions:
 pages:
     - Introduction:         'index.md'
     - Resources:            'resource/index.md'
+    - Data Types:           'data/index.md'
     - Graphics:             'graphics/index.md'
     - Input Devices:        'input/index.md'
     - Sound:                'sound/index.md'

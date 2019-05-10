@@ -8,7 +8,7 @@
   <meta name="description" content="None">
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Network - pico-Céu v0.40 - Reference Manual</title>
+  <title>Frame Management - pico-Céu v0.30 - Reference Manual</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Network";
-    var mkdocs_page_input_path = "net/index.md";
+    var mkdocs_page_name = "Frame Management";
+    var mkdocs_page_input_path = "frames/index.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> pico-Céu v0.40 - Reference Manual</a>
+        <a href=".." class="icon icon-home"> pico-Céu v0.30 - Reference Manual</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -55,16 +55,6 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="../resource/">Resources</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../data/">Data Types</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
     <a class="" href="../graphics/">Graphics</a>
 	    </li>
           
@@ -78,33 +68,28 @@
     <a class="" href="../sound/">Sound</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../net/">Network</a>
+	    </li>
+          
             <li class="toctree-l1 current">
 		
-    <a class="current" href="./">Network</a>
+    <a class="current" href="./">Frame Management</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#network">Network</a></li>
+    <li class="toctree-l2"><a href="#frame-management">Frame Management</a></li>
     
         <ul>
         
-            <li><a class="toctree-l3" href="#send">Send</a></li>
+            <li><a class="toctree-l3" href="#configuration">Configuration</a></li>
         
-            <li><a class="toctree-l3" href="#receive">Receive</a></li>
+            <li><a class="toctree-l3" href="#inputs">Inputs</a></li>
         
         </ul>
     
 
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../usart/">Usart</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../frames/">Frame Management</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -127,7 +112,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">pico-Céu v0.40 - Reference Manual</a>
+        <a href="..">pico-Céu v0.30 - Reference Manual</a>
       </nav>
 
       
@@ -139,7 +124,7 @@
     
       
     
-    <li>Network</li>
+    <li>Frame Management</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -149,38 +134,58 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h1>
-<p>Provides unreliable broadcast communication between peers.</p>
-<h2 id="send">Send<a class="headerlink" href="#send" title="Permanent link">&para;</a></h2>
-<h3 id="net_send">NET_SEND<a class="headerlink" href="#net_send" title="Permanent link">&para;</a></h3>
-<p>Broadcasts a message to all peers.</p>
-<pre><code class="ceu">output (integer,byte&amp;&amp;) NET_SEND;
+                <h1 id="frame-management">Frame Management<a class="headerlink" href="#frame-management" title="Permanent link">&para;</a></h1>
+<p>Manages the game frames, such as for updating animations and redrawing the
+screen.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="frames_set">FRAMES_SET<a class="headerlink" href="#frames_set" title="Permanent link">&para;</a></h3>
+<p>Enables or disables the generation of periodic
+<a href="#frames_update"><code>FRAMES_UPDATE</code></a> and <a href="#frames_redraw"><code>FRAMES_REDRAW</code></a>
+inputs to the application.</p>
+<pre><code class="ceu">output (yes/no) FRAMES_SET
 </code></pre>
 
 <ul>
 <li>Parameters:<ul>
-<li><code>integer</code>: number of bytes to transmit</li>
-<li><code>byte&amp;&amp;</code>: stream of bytes</li>
+<li><code>yes/no</code>: new state<ul>
+<li><code>yes</code>: enables the generation of frames</li>
+<li><code>no</code>: disables the generation of frames</li>
 </ul>
 </li>
 </ul>
-<h2 id="receive">Receive<a class="headerlink" href="#receive" title="Permanent link">&para;</a></h2>
-<h3 id="net_receive">NET_RECEIVE<a class="headerlink" href="#net_receive" title="Permanent link">&para;</a></h3>
-<p>Receives all messages from all peers, including itself.</p>
-<pre><code class="ceu">input (integer,byte&amp;&amp;) NET_RECEIVE;
+</li>
+</ul>
+<h2 id="inputs">Inputs<a class="headerlink" href="#inputs" title="Permanent link">&para;</a></h2>
+<h3 id="frames_update">FRAMES_UPDATE<a class="headerlink" href="#frames_update" title="Permanent link">&para;</a></h3>
+<pre><code class="ceu">input (integer) FRAMES_UPDATE
 </code></pre>
 
 <ul>
 <li>Occurrences:<ul>
-<li>on every received message</li>
+<li>on every frame, before <a href="#frames_redraw"><code>FRAMES_REDRAW</code></a></li>
 </ul>
 </li>
 <li>Payload:<ul>
-<li><code>integer</code>: number of received bytes</li>
-<li><code>byte&amp;&amp;</code>: stream of bytes</li>
+<li><code>integer</code>: the number of milliseconds elapsed since the previous frame</li>
 </ul>
 </li>
 </ul>
+<h3 id="frames_redraw">FRAMES_REDRAW<a class="headerlink" href="#frames_redraw" title="Permanent link">&para;</a></h3>
+<pre><code class="ceu">input (none) FRAMES_REDRAW
+</code></pre>
+
+<ul>
+<li>Occurrences:<ul>
+<li>on every frame, after <a href="#frames_update"><code>FRAMES_UPDATE</code></a></li>
+</ul>
+</li>
+<li>Payload:<ul>
+<li><code>none</code>: no payload</li>
+</ul>
+</li>
+</ul>
+<p>Before the input occurs, the screen is automatically cleared with
+<a href="../window/#window_clear"><code>WINDOW_CLEAR</code></a>.</p>
               
             </div>
           </div>
@@ -188,10 +193,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../usart/" class="btn btn-neutral float-right" title="Usart">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../window/" class="btn btn-neutral float-right" title="Window Management">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../sound/" class="btn btn-neutral" title="Sound"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../net/" class="btn btn-neutral" title="Network"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -217,10 +222,10 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../sound/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../net/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../usart/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../window/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
@@ -233,5 +238,5 @@
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-05-10 14:37:10
+Build Date UTC : 2019-05-10 14:35:06
 -->
