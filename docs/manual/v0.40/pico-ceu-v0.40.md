@@ -60,8 +60,8 @@ end
 
 Example:
 ```
-var Point pt = val Rect(0,0);
-emit GRAPHICS_DRAW_POINT(pt.x, pt.y);
+var Point pt = val Point(0,0);
+emit GRAPHICS_DRAW_PIXEL(pt.x, pt.y);
 ```
 
 ### Rect
