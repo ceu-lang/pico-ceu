@@ -1,0 +1,26 @@
+{srand(time(NULL));}
+
+code/call Random_Int(var int lower, var int upper) -> int do
+    escape (_rand() % (upper - lower + 1)) + lower; 
+end
+
+code/call Random_Point_In_Rect(var int min_x, var int min_y, var int max_x, var int max_y) -> Point do
+    var integer x = call Random_Int(min_x, max_x);
+    var integer y = call Random_Int(min_y, max_y);
+
+    var Point pt = val Point(x,y);
+
+    escape pt;
+end
+
+code/call Random_Point(none) -> Point do
+    var integer log_w=0;
+    var integer log_h=0;
+
+    {SDL_RenderGetLogicalSize(REN, &(@log_w), &(@log_h));}
+
+    var integer max_x = log_w/2;
+    var integer max_y = log_h/2;
+
+    escape call Random_Point_In_Rect(-max_x, -max_y, max_x, max_y);
+end
