@@ -79,6 +79,8 @@ output (int,int)              GRAPHICS_DRAW_PIXEL;
 output (int,int,int,int)      GRAPHICS_DRAW_LINE;
 output (int,int,int,int)      GRAPHICS_DRAW_RECT;
 output (int,int,text)         GRAPHICS_DRAW_TEXT;
+output (int,int,int)          GRAPHICS_DRAW_INT;
+output (int,int,real)          GRAPHICS_DRAW_REAL;
 output (text)                 GRAPHICS_WRITE;
 output (text)                 GRAPHICS_WRITELN;
 output (text)                 GRAPHICS_SCREENSHOT;
@@ -121,6 +123,8 @@ native/pre do
     ##define ceu_callback_output_GRAPHICS_DRAW_RECT(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_RECT(ps,trace)
     ##define ceu_callback_output_GRAPHICS_DRAW_BMP(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_BMP(ps,trace)
     ##define ceu_callback_output_GRAPHICS_DRAW_TEXT(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_TEXT(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_DRAW_INT(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_INT(ps,trace)
+    ##define ceu_callback_output_GRAPHICS_DRAW_REAL(ps,trace) ceu_pico_callback_output_GRAPHICS_DRAW_REAL(ps,trace)
     ##define ceu_callback_output_GRAPHICS_WRITE(ps,trace) ceu_pico_callback_output_GRAPHICS_WRITE(ps,trace)
     ##define ceu_callback_output_GRAPHICS_WRITELN(ps,trace) ceu_pico_callback_output_GRAPHICS_WRITELN(ps,trace)
     ##define ceu_callback_output_SOUND_SET_VOLUME(ps,trace) ceu_pico_callback_output_SOUND_SET_VOLUME(ps,trace)
@@ -152,6 +156,8 @@ native/pre do
     int ceu_pico_callback_output_GRAPHICS_DRAW_RECT (void* ps, tceu_trace trace);
     int ceu_pico_callback_output_GRAPHICS_DRAW_BMP (void* ps, tceu_trace trace);
     int ceu_pico_callback_output_GRAPHICS_DRAW_TEXT (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_DRAW_INT (void* ps, tceu_trace trace);
+    int ceu_pico_callback_output_GRAPHICS_DRAW_REAL (void* ps, tceu_trace trace);
     int ceu_pico_callback_output_GRAPHICS_WRITE (void* ps, tceu_trace trace);
     int ceu_pico_callback_output_GRAPHICS_WRITELN (void* ps, tceu_trace trace);
     int ceu_pico_callback_output_SOUND_SET_VOLUME (void* ps, tceu_trace trace);
@@ -553,7 +559,6 @@ native/pos do
         return 0;
     }
 
-
     int ceu_pico_callback_output_GRAPHICS_DRAW_TEXT (void* ps, tceu_trace trace) {
         tceu_output_GRAPHICS_DRAW_TEXT* ps_ = (tceu_output_GRAPHICS_DRAW_TEXT*) ps;
 
@@ -579,6 +584,26 @@ native/pos do
 
         SDL_DestroyTexture(tex);
         SDL_FreeSurface(sfc);
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_DRAW_INT (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_DRAW_TEXT* ps_ = (tceu_output_GRAPHICS_DRAW_TEXT*) ps;
+
+        char textBuffer[64];
+        sprintf(textBuffer, "%d", ps_->_3);
+        ps_->_3 = textBuffer;
+        ceu_pico_callback_output_GRAPHICS_DRAW_TEXT(ps, trace);
+        return 0;
+    }
+
+    int ceu_pico_callback_output_GRAPHICS_DRAW_REAL (void* ps, tceu_trace trace) {
+        tceu_output_GRAPHICS_DRAW_TEXT* ps_ = (tceu_output_GRAPHICS_DRAW_TEXT*) ps;
+        
+        char textBuffer[64];
+        sprintf(textBuffer, "%.2f", ps_->_3);
+        ps_->_3 = textBuffer;
+        ceu_pico_callback_output_GRAPHICS_DRAW_TEXT(ps, trace);
         return 0;
     }
 
