@@ -271,8 +271,10 @@ size.</p>
 <h3 id="graphics_set_scale">GRAPHICS_SET_SCALE<a class="headerlink" href="#graphics_set_scale" title="Permanent link">&para;</a></h3>
 <p>Changes the drawing scale of all subsequent drawing operations
 <a href="#graphics_draw_bmp"><code>GRAPHICS_DRAW_BMP</code></a>,
-<a href="#graphics_draw_rect"><code>GRAPHICS_DRAW_RECT</code></a>, and
-<a href="#graphics_draw_text"><code>GRAPHICS_DRAW_TEXT</code></a>.</p>
+<a href="#graphics_draw_rect"><code>GRAPHICS_DRAW_RECT</code></a>,
+<a href="#graphics_draw_text"><code>GRAPHICS_DRAW_TEXT</code></a>,
+<a href="#graphics_draw_int"><code>GRAPHICS_DRAW_INT</code></a>, and
+<a href="#graphics_draw_real"><code>GRAPHICS_DRAW_REAL</code></a>.</p>
 <pre><code class="ceu">output (real,real) GRAPHICS_SET_SCALE;
 </code></pre>
 
@@ -381,6 +383,32 @@ size.</p>
 The drawing color is specified with
 <a href="#graphics_set_color_name"><code>GRAPHICS_SET_COLOR_NAME</code></a> or
 <a href="#graphics_set_color_rgb"><code>GRAPHICS_SET_COLOR_RGB</code></a>.</p>
+<h3 id="graphics_draw_int">GRAPHICS_DRAW_INT<a class="headerlink" href="#graphics_draw_int" title="Permanent link">&para;</a></h3>
+<p>Similar to <a href="#graphics_draw_text"><code>GRAPHICS_DRAW_TEXT</code></a>, but draws a integer on the screen.</p>
+<pre><code class="ceu">output (int,int,int) GRAPHICS_DRAW_INT;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>integer</code>: position in the <code>x-axis</code></li>
+<li><code>integer</code>: position in the <code>y-axis</code></li>
+<li><code>int</code>: int to draw</li>
+</ul>
+</li>
+</ul>
+<h3 id="graphics_draw_real">GRAPHICS_DRAW_REAL<a class="headerlink" href="#graphics_draw_real" title="Permanent link">&para;</a></h3>
+<p>Similar to <a href="#graphics_draw_real"><code>GRAPHICS_DRAW_REAL</code></a>, but draws a real on the screen.</p>
+<pre><code class="ceu">output (int,int,real) GRAPHICS_DRAW_REAL;
+</code></pre>
+
+<ul>
+<li>Parameters:<ul>
+<li><code>integer</code>: position in the <code>x-axis</code></li>
+<li><code>integer</code>: position in the <code>y-axis</code></li>
+<li><code>real</code>: real to draw    </li>
+</ul>
+</li>
+</ul>
 <h2 id="writing">Writing<a class="headerlink" href="#writing" title="Permanent link">&para;</a></h2>
 <h3 id="graphics_write">GRAPHICS_WRITE<a class="headerlink" href="#graphics_write" title="Permanent link">&para;</a></h3>
 <p>Writes a text on the screen.</p>
@@ -477,5 +505,5 @@ The drawing color is specified with
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-05-10 14:43:06
+Build Date UTC : 2019-05-14 17:36:17
 -->

@@ -11,7 +11,7 @@ minimalist libraries for input, graphics, network, and sound.
 
 ## Resources
 
-Resource is any external file used by a pico-Céu application, such as images, fonts, and audio files. Every resource should be located in a ```res``` folder, in the root of the application, and can be used in [`GRAPHICS_DRAW_BMP`](#graphics_draw_bmp), [`GRAPHICS_SET_FONT`](#graphics_set_font), or [`SOUND_PLAY`](#sound_play).
+Resource is any external file used by a pico-Céu application, such as images, fonts, and audio files. Every resource should be located in a ```res``` folder, in the root of the application, and can be used in [`GRAPHICS_DRAW_BMP`](../graphics/#graphics_draw_bmp), [`GRAPHICS_SET_FONT`](../graphics/#graphics_set_font), or [`SOUND_PLAY`](../graphics/#sound_play).
 
 # Data Types
 
@@ -221,8 +221,10 @@ output (text,integer) GRAPHICS_SET_FONT
 
 Changes the drawing scale of all subsequent drawing operations
 [`GRAPHICS_DRAW_BMP`](#graphics_draw_bmp),
-[`GRAPHICS_DRAW_RECT`](#graphics_draw_rect), and
-[`GRAPHICS_DRAW_TEXT`](#graphics_draw_text).
+[`GRAPHICS_DRAW_RECT`](#graphics_draw_rect),
+[`GRAPHICS_DRAW_TEXT`](#graphics_draw_text),
+[`GRAPHICS_DRAW_INT`](#graphics_draw_int), and
+[`GRAPHICS_DRAW_REAL`](#graphics_draw_real).
 
 ```ceu
 output (real,real) GRAPHICS_SET_SCALE;
@@ -336,6 +338,30 @@ The drawing font is specified with [`GRAPHICS_SET_FONT`](#graphics_set_font).
 The drawing color is specified with
 [`GRAPHICS_SET_COLOR_NAME`](#graphics_set_color_name) or
 [`GRAPHICS_SET_COLOR_RGB`](#graphics_set_color_rgb).
+
+#### GRAPHICS_DRAW_INT
+Similar to [`GRAPHICS_DRAW_TEXT`](#graphics_draw_text), but draws a integer on the screen.
+
+```ceu
+output (int,int,int) GRAPHICS_DRAW_INT;
+```
+
+- Parameters:
+    - `integer`: position in the `x-axis`
+    - `integer`: position in the `y-axis`
+    - `int`: int to draw
+
+#### GRAPHICS_DRAW_REAL
+Similar to [`GRAPHICS_DRAW_REAL`](#graphics_draw_real), but draws a real on the screen.
+
+```ceu
+output (int,int,real) GRAPHICS_DRAW_REAL;
+```
+
+- Parameters:
+    - `integer`: position in the `x-axis`
+    - `integer`: position in the `y-axis`
+    - `real`: real to draw
 
 ### Writing
 
