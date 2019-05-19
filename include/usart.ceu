@@ -1,11 +1,31 @@
 native/pre do
-    ##include <windows.h>
+    ##if _WIN32 || _WIN64
+        ##define WIN_OS
+    ##endif
+end
 
-    HANDLE hSerial;
+native/pre do
+    ##ifdef WIN_OS
+        ##include <windows.h>
+        HANDLE hSerial;
+    ##else
+        // ver o que realmente é necessário
+        ##include <errno.h>
+        ##include <fcntl.h> 
+        ##include <stdio.h>
+        ##include <stdlib.h>
+        ##include <string.h>
+        ##include <termios.h>
+        ##include <unistd.h>
+    ##endif
 end 
+
+{##ifndef WIN_OS}
+var int fd=_;
+{##endif}
     
 code/await Usart (var int portNumber) -> NEVER do
-    {
+    {##ifdef WIN_OS
         char portStr[15];
 
         if (@portNumber > 9){
@@ -37,50 +57,81 @@ code/await Usart (var int portNumber) -> NEVER do
         ceu_assert(SetCommState(hSerial, &dcbSerialParams), "bug found in Usart on SetCommState invocation");
 
         PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
-    } 
+    ##endif} 
+
+    {##ifndef WIN_OS}
+        outer.fd = _open("/dev/ttyACM0", {O_RDWR});
+        _ceu_assert(outer.fd != -1, "serial error");
+        var int flags = _fcntl(outer.fd, _F_GETFL, 0);
+        var int ok    = _fcntl(outer.fd, _F_SETFL, flags|_O_NONBLOCK);
+        _ceu_assert(ok == 0, "serial error");
+    {##endif}
+
 
     do finalize with
-        {CloseHandle(hSerial);}
+        {
+            ##ifdef WIN_OS
+                CloseHandle(hSerial);
+            ##else
+                close(@(outer.fd));
+            ##endif
+        }
     end
+
+
     await FOREVER;
 end
 
 code/await Usart_TX (var&[] byte str) -> none do
-    // WRITE
-    // envia a string "str"
-    // @&&str[0] as _char&& converte de um vetor de bytes em Céu para um ponteiro de char em C
     {
         const char* strC = @&&str[0] as _char&&;
         int nbChar = strlen(strC);
-        DWORD bytesSend;
+    }
 
-        ceu_assert(WriteFile(hSerial, (void*)strC, nbChar, &bytesSend, 0), "bug found in Usart_TX on WriteFile invocation");
-        ceu_assert(bytesSend == nbChar, "bug found in Usart_TX on bytesSend verification");
+    {
+        ##ifdef WIN_OS    
+            DWORD bytesSend;
+
+            ceu_assert(WriteFile(hSerial, (void*)strC, nbChar, &bytesSend, 0), "bug found in Usart_TX on WriteFile invocation");
+            ceu_assert(bytesSend == nbChar, "bug found in Usart_TX on bytesSend verification");
+        ##else
+            int bytesSend = write(@(outer.fd), strC, nbChar);
+            ceu_assert(bytesSend == nbChar, "bug found in Usart_TX on bytesSend verification");
+            tcdrain(@(outer.fd));
+        
+        ##endif
     }
 end
 
 code/await Usart_RX (var&[] byte str, var int nbChar) -> none do
-    // READ
-    // prints out the received string
+    {##ifdef WIN_OS}
+        every 10ms do
+            {
+                DWORD errors;
+                COMSTAT status;
 
-    every 10ms do
+                ClearCommError(hSerial, &errors, &status);
+                if (status.cbInQue >= @nbChar)
+                    break;
+            }
+        end
+
         {
-            DWORD errors;
-            COMSTAT status;
+            DWORD bytesRead;
 
-            ClearCommError(hSerial, &errors, &status);
-            if (status.cbInQue >= @nbChar)
-                break;
+            const char* strC = @&&str[0] as _char&&;
+
+            ceu_assert(ReadFile(hSerial, strC, @nbChar, &bytesRead, NULL), "bug found");
+            ceu_assert(bytesRead == @nbChar, "bug found");
         }
-    end
-
-    {
-        DWORD bytesRead;
-        char buffer[@nbChar];
-
-        const char* strC = @&&str[0] as _char&&;
-
-        ceu_assert(ReadFile(hSerial, strC, @nbChar, &bytesRead, NULL), "bug found");
-        ceu_assert(bytesRead == @nbChar, "bug found");
-    }
+    {##else}
+        every 10ms do
+            {
+                char* strC = @&&str[0] as _char&&;
+                int n = read (@(outer.fd), strC, @nbChar);
+                if (n >= @nbChar)
+                    break;
+            }
+        end
+    {##endif}
 end
