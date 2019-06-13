@@ -117,7 +117,7 @@ code/await USART_Init (var text port, var int? baudRate) -> NEVER do
             tcgetattr(@outer.fd, &settings);
             // set baud rate
             int baudRate = get_baud(@baudRate!);
-            ceu_assert(baudRate == -1, "invalid baudRate"); // ToDo: ñ está exibindo erro
+            ceu_assert(baudRate != -1, "invalid baudRate");
             cfsetospeed(&settings, baudRate);
             // apply the settings
             tcsetattr(@outer.fd, TCSANOW, &settings);
