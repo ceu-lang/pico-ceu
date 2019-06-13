@@ -24,8 +24,14 @@ end
 var int fd=_;
 {##endif}
     
-code/await Usart (var int portNumber) -> NEVER do
-    {##ifdef WIN_OS
+code/await USART_Init (var text port, var int? baudRate) -> NEVER do
+    if (not baudRate?) then
+        baudRate = 9600;
+    end
+
+    {##ifdef WIN_OS}
+        var int portNumber = {atoi(@port)};
+        {
         char portStr[15];
 
         if (@portNumber > 9){
@@ -43,13 +49,13 @@ code/await Usart (var int portNumber) -> NEVER do
                 FILE_ATTRIBUTE_NORMAL,
                 NULL);
 
-        //To-Do check when this error occurs
+        //ToDo check when this error occurs
         ceu_assert(hSerial != INVALID_HANDLE_VALUE, "bug found. Check if the Arduino board is connect on the used port and if this port is busy.");
 
         DCB dcbSerialParams = {0};
         ceu_assert(GetCommState(hSerial,&dcbSerialParams), "bug found in Usart on GetCommState invocation");
 
-        dcbSerialParams.BaudRate    = CBR_9600;
+        dcbSerialParams.BaudRate    = @baudRate!;
         dcbSerialParams.ByteSize    = 8;
         dcbSerialParams.StopBits    = ONESTOPBIT;
         dcbSerialParams.Parity      = NOPARITY;
@@ -60,8 +66,10 @@ code/await Usart (var int portNumber) -> NEVER do
     ##endif} 
 
     {##ifndef WIN_OS}
-        outer.fd = _open("/dev/ttyACM0", {O_RDWR});
+        outer.fd = _open(port, {O_RDWR});
         _ceu_assert(outer.fd != -1, "serial error");
+        //ToDo: Set baudRate 
+        //set_interface_attribs(fd, B115200);
         var int flags = _fcntl(outer.fd, _F_GETFL, 0);
         var int ok    = _fcntl(outer.fd, _F_SETFL, flags|_O_NONBLOCK);
         _ceu_assert(ok == 0, "serial error");
@@ -82,7 +90,7 @@ code/await Usart (var int portNumber) -> NEVER do
     await FOREVER;
 end
 
-code/await Usart_TX (var&[] byte str) -> none do
+code/await USART_Tx (var&[] byte str) -> none do
     {
         const char* strC = @&&str[0] as _char&&;
         int nbChar = strlen(strC);
@@ -103,7 +111,11 @@ code/await Usart_TX (var&[] byte str) -> none do
     }
 end
 
-code/await Usart_RX (var&[] byte str, var int nbChar) -> none do
+code/await USART_Rx (var&[] byte str, var int? nbChar) -> none do
+    if (not nbChar?) then
+        nbChar = $$str as int;
+    end
+    
     {##ifdef WIN_OS}
         every 10ms do
             {
@@ -111,7 +123,7 @@ code/await Usart_RX (var&[] byte str, var int nbChar) -> none do
                 COMSTAT status;
 
                 ClearCommError(hSerial, &errors, &status);
-                if (status.cbInQue >= @nbChar)
+                if (status.cbInQue >= @nbChar!)
                     break;
             }
         end
@@ -119,17 +131,17 @@ code/await Usart_RX (var&[] byte str, var int nbChar) -> none do
         {
             DWORD bytesRead;
 
-            const char* strC = @&&str[0] as _char&&;
+            char* strC = @&&str[0] as _char&&;
 
-            ceu_assert(ReadFile(hSerial, strC, @nbChar, &bytesRead, NULL), "bug found");
-            ceu_assert(bytesRead == @nbChar, "bug found");
+            ceu_assert(ReadFile(hSerial, strC, @nbChar!, &bytesRead, NULL), "bug found");
+            ceu_assert(bytesRead ==  @nbChar!, "bug found");
         }
     {##else}
         every 10ms do
             {
                 char* strC = @&&str[0] as _char&&;
-                int n = read (@(outer.fd), strC, @nbChar);
-                if (n >= @nbChar)
+                int n = read (@(outer.fd), strC, @nbChar!);
+                if (n >= @nbChar!)
                     break;
             }
         end
