@@ -24,9 +24,9 @@ end
 var int fd=_;
 {##endif}
     
-code/await USART_Init (var text port, var int? baudRate) -> NEVER do
-    if (not baudRate?) then
-        baudRate = 9600;
+code/await USART_Init (var text port, var int? bps) -> NEVER do
+    if (not bps?) then
+        bps = 9600;
     end
 
     {##ifdef WIN_OS}
@@ -55,7 +55,7 @@ code/await USART_Init (var text port, var int? baudRate) -> NEVER do
         DCB dcbSerialParams = {0};
         ceu_assert(GetCommState(hSerial,&dcbSerialParams), "bug found in Usart on GetCommState invocation");
 
-        dcbSerialParams.BaudRate    = @baudRate!;
+        dcbSerialParams.BaudRate    = @bps!;
         dcbSerialParams.ByteSize    = 8;
         dcbSerialParams.StopBits    = ONESTOPBIT;
         dcbSerialParams.Parity      = NOPARITY;
@@ -68,7 +68,7 @@ code/await USART_Init (var text port, var int? baudRate) -> NEVER do
     {##ifndef WIN_OS}
         outer.fd = _open(port, {O_RDWR});
         _ceu_assert(outer.fd != -1, "serial error");
-        // Set baudRate 
+        // Set bps 
         {
             int get_baud(int baud){
                 switch (baud) {
@@ -116,9 +116,9 @@ code/await USART_Init (var text port, var int? baudRate) -> NEVER do
             struct termios settings;
             tcgetattr(@outer.fd, &settings);
             // set baud rate
-            int baudRate = get_baud(@baudRate!);
-            ceu_assert(baudRate != -1, "invalid baudRate");
-            cfsetospeed(&settings, baudRate);
+            int bps = get_baud(@bps!);
+            ceu_assert(bps != -1, "invalid bps");
+            cfsetospeed(&settings, bps);
             // apply the settings
             tcsetattr(@outer.fd, TCSANOW, &settings);
             tcflush(@outer.fd, TCOFLUSH);
@@ -144,9 +144,9 @@ code/await USART_Init (var text port, var int? baudRate) -> NEVER do
     await FOREVER;
 end
 
-code/await USART_Tx (var&[] byte str) -> none do
+code/await USART_Tx (var&[] byte buf) -> none do
     {
-        const char* strC = @&&str[0] as _char&&;
+        const char* strC = @&&buf[0] as _char&&;
         int nbChar = strlen(strC);
     }
 
@@ -165,9 +165,9 @@ code/await USART_Tx (var&[] byte str) -> none do
     }
 end
 
-code/await USART_Rx (var&[] byte str, var int? nbChar) -> none do
-    if (not nbChar?) then
-        nbChar = $$str as int;
+code/await USART_Rx (var&[] byte buf, var usize? n) -> none do
+    if (not n?) then
+        n = 1; //default: as soon as something is received
     end
     
     {##ifdef WIN_OS}
@@ -177,7 +177,7 @@ code/await USART_Rx (var&[] byte str, var int? nbChar) -> none do
                 COMSTAT status;
 
                 ClearCommError(hSerial, &errors, &status);
-                if (status.cbInQue >= @nbChar!)
+                if (status.cbInQue >= @n!)
                     break;
             }
         end
@@ -185,17 +185,17 @@ code/await USART_Rx (var&[] byte str, var int? nbChar) -> none do
         {
             DWORD bytesRead;
 
-            char* strC = @&&str[0] as _char&&;
+            char* strC = @&&buf[0] as _char&&;
 
-            ceu_assert(ReadFile(hSerial, strC, @nbChar!, &bytesRead, NULL), "bug found");
-            ceu_assert(bytesRead ==  @nbChar!, "bug found");
+            ceu_assert(ReadFile(hSerial, strC, @n!, &bytesRead, NULL), "bug found");
+            ceu_assert(bytesRead ==  @n!, "bug found");
         }
     {##else}
         every 10ms do
             {
-                char* strC = @&&str[0] as _char&&;
-                int n = read (@(outer.fd), strC, @nbChar!);
-                if (n >= @nbChar!)
+                char* strC = @&&buf[0] as _char&&;
+                int nRead = read (@(outer.fd), strC, @n!);
+                if (nRead >= @n!)
                     break;
             }
         end
